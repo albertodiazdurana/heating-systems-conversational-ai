@@ -3,7 +3,7 @@
 <!-- BEGIN DSM_0.2 ALIGNMENT - do not edit manually, managed by /dsm-align -->
 ## 1. DSM_0.2 Alignment (managed by /dsm-align)
 
-**Project type:** Documentation (DSM 5.0)
+**Project type:** Application (DSM 4.0)
 **Participation pattern:** Spoke
 
 ### Session Transcript Protocol (reinforces inherited protocol)
@@ -61,6 +61,12 @@ Use "," instead of "—" for connecting phrases in any language.
 - Before wrap-up, cross-reference sprint plan if one exists (verify all deliverables accounted for)
 - At minimum: commit pending changes, push to remote, update MEMORY.md
 - Create a handoff document if complex work remains pending
+
+### App Development Protocol (reinforces inherited protocol)
+- Explain why before each action
+- Create files via Write/Edit tools; user approves via permission window
+- Wait for user confirmation before proceeding to next step
+- Build incrementally: imports -> constants -> one function -> test -> next function
 <!-- END DSM_0.2 ALIGNMENT -->
 
 ## 2. Participation Pattern
@@ -69,10 +75,47 @@ Spoke project in the DSM ecosystem. Governance artifacts route through DSM Centr
 
 ## 3. Project Type
 
-Documentation project (DSM 5.0). Markdown-only, no notebooks or application code.
+Application project (DSM 4.0). LangGraph-based conversational AI with Python backend, Streamlit UI, ChromaDB vector store, and MLflow evaluation.
 
 ## 4. Project Specific
 
-**Project:** Utility Conversational AI
-**Objective:** [TO BE DEFINED]
-**Structure:** `_reference/` contains sprint plans and user interaction documentation.
+**Project:** Heating Systems Conversational Assistant
+**Objective:** LangGraph-based conversational AI for residential heating domain, RAG over existing 6K-line documentation. Portfolio project targeting AI Engineer roles in energy/utility sector.
+**Alignment:** Agentic workflows, LLM reasoning, RAG pipelines, evaluation frameworks, prompt engineering, German C1+
+
+### Structure
+
+```
+_reference/          # Sprint plans and interaction design documents
+src/                 # Application code (LangGraph, tools, RAG pipeline)
+tests/               # pytest test suite
+```
+
+### Knowledge Base (external, read-only)
+
+- `~/dsm-residential-heating-ds-guide/` — 6 markdown documents (~5,800 lines) covering German heating standards, ML/DS applications, MLOps, technical stack, applied scenarios
+- `~/dsm-residential-energy/` — Companion Streamlit app (heating curve simulator, DIN EN 12831, VDI 6030), source for deterministic tool logic
+
+### Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Orchestration | LangGraph |
+| LLM | OpenAI / Ollama (configurable) |
+| Vector store | ChromaDB |
+| Embeddings | HuggingFace multilingual-e5 or OpenAI |
+| UI | Streamlit |
+| Evaluation | MLflow |
+| Testing | pytest |
+| Deployment | Docker |
+
+### Sprint Plan
+
+3 sprints defined in `_reference/sprint-plan.md`:
+1. Conversation engine + deterministic tools + Streamlit chat UI
+2. RAG pipeline + knowledge retrieval over heating guide
+3. Evaluation framework + production polish
+
+### Domain Context
+
+German residential heating systems. Key domain terms: Heizkennlinie (heating curve), Vorlauftemperatur (flow temperature), Spreizung (temperature spread), hydraulischer Abgleich (hydraulic balancing). Agent must handle bilingual (EN/DE) queries and respond in the user's language.
