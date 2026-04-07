@@ -1,3 +1,5 @@
+**Consumed at:** Session 3 resume (2026-04-07)
+
 # Session 3 Checkpoint (light)
 
 **Date:** 2026-04-07
