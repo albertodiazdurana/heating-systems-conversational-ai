@@ -1,7 +1,7 @@
 [project]
 name = "heating-systems-conversational-ai"
 version = "0.1.0"
-description = "LangGraph-based conversational AI for residential heating domain"
+description = "LangGraph-based conversational AI for residential heating domain (hybrid with Haystack RAG in Sprint 2)"
 requires-python = ">=3.11"
 dependencies = [
     "langgraph>=0.2.0",
