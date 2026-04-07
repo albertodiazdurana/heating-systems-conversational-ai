@@ -1,57 +1,36 @@
-# Session 2 Transcript
-**Started:** 2026-04-07T00:00:00+02:00
-**Project:** utility_conversational_ai
+# Session 3 Transcript (resume)
+**Started:** 2026-04-07T13:51:59+02:00
+**Project:** Heating Systems Conversational AI
 
 ---
 
-<------------Start Thinking / 00:00------------>
-Session 2 start. Steps 0-6 completed:
-- Git available, on main, no open task/session branches
-- Created session-2/2026-04-07
-- Scaffold complete (9/9 dsm-docs folders, _inbox present)
-- Alignment: pass, DSM 1.4.5, no action needed
-- Last wrap-up: full (session 1)
-- Ecosystem file present
-- Reasoning lessons: none
-- Inbox: 1 entry (2026-04-06_dsm-align-update.md), Notification/Low priority, no action required
-- No handoffs, no checkpoints
-- Previous transcript archived to .claude/transcripts/2026-04-06T23:01-ST.md
-- Baseline saved
-- MEMORY.md context: Session 1 completed Sprint 1 research, pending = formalize Sprint 1 plan in dsm-docs/plans/
+<------------Start Thinking / 23:54------------>
+Research complete (Tracks A+B). User approved all five plan updates (A-E) as a batch and reminded me to append to session-transcript per the protocol (I had been missing this throughout the session).
 
-<------------Start Thinking / 00:15------------>
-[RETROACTIVE - protocol violation: turns below were not appended at the time]
+Executing A-E in order:
+1. Revert pyproject.toml (D): remove haystack-ai + ollama-haystack; restore langgraph, langchain, langchain-core, langchain-ollama, langchain-openai
+2. Update decision record (A): downgrade Ollama risk language from "material" to "minor + contribution opportunity" per Track B finding (OllamaChatGenerator source confirms tools parameter exists)
+3. Archive old haystack plans to dsm-docs/plans/done/ with superseded headers
+4. Write new backbone plan (B): 2026-04-07_e2e_hybrid_backbone.md reflecting canonical LangGraph stack from Track A + hybrid architecture from Track B
+5. Write new Sprint 1 plan (C): 2026-04-07_sprint1_langgraph_plan.md with create_react_agent + ChatOllama + InMemorySaver stack, build order starting from existing unit_converter.py
+6. Keep as-is (E): unit_converter.py, scaffolding __init__.py files (framework-agnostic, no rework needed)
 
-User asked when README.md would be drafted. Checked filesystem, no README exists. My answer: not yet, naturally drafted at end of Sprint 1 (something runnable to document) or end of Sprint 3 (polish). Recommended NOT drafting now since it would be speculative.
+Key research findings driving these updates:
+- Haystack OllamaChatGenerator DOES support tools (source confirmed) — docs gap only
+- Hybrid LangGraph+Haystack is a published pattern (Packt book exists)
+- Canonical Sprint 1 stack: create_react_agent + ChatOllama(qwen2.5:7b) + InMemorySaver + @tool + bilingual system prompt
+- MarkdownHeaderTextSplitter (LangChain) is better than Haystack's splitters for the heating-guide corpus, even inside the Haystack RAG subsystem
 
-User then said they want to push to public GitHub, so a README is needed even pre-implementation. Pivoted: a planning-phase README is honest if it states status clearly. Proposed structure (title, status badge, objective, planned architecture, tech stack, roadmap, domain context, repo layout, license). Asked about license and DSM mention.
+Sunk cost is minimal: unit_converter.py is framework-agnostic, no rework needed.
 
-User said "create the repo in github". Checked gh auth (logged in as albertodiazdurana). Asked for confirmation on name, visibility, description, push behavior.
+<------------Start Output / 23:58------------>
+Executed A-E batch:
+A. Decision record updated (2 edits): Ollama risk downgraded from "material" to "minor + contribution opportunity" per source confirmation; contribution goal refined to "docs PR expected path" with caveats/issue as fallbacks
+B. Backbone plan written: dsm-docs/plans/2026-04-07_e2e_hybrid_backbone.md (10 sections: architecture, tech stack, per-sprint scope, file layout, cross-cutting concerns, risks, success criteria)
+C. Sprint 1 plan written: dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md (12-step build order, 9 gates, 5 tools total, bilingual system prompt, InMemorySaver + thread_id pattern)
+D. pyproject.toml reverted: removed haystack-ai + ollama-haystack, restored langgraph + langchain-* stack; description updated to reflect hybrid
+E. No-op (framework-agnostic files kept): src/__init__.py, src/tools/__init__.py, tests/__init__.py, src/tools/unit_converter.py, tests/test_unit_converter.py
 
-User chose "heating-systems-conversational-ai". Switched to main, ran gh repo create with --public --source=. --push. Repo live at https://github.com/albertodiazdurana/heating-systems-conversational-ai. Note: switched to main for the push, session-transcript.md modification carried across (harmless, both branches have it modified vs HEAD).
+Archives: both haystack plans moved to dsm-docs/plans/done/ with "Superseded" headers; plain mv used (git mv failed because files were new-to-tree).
 
-User said "yes both" to (1) switch back to session branch and draft README there, (2) handle license. Switched to session-2/2026-04-07. Wrote README.md with planning-phase framing, MIT LICENSE file with 2026 copyright. Both files on session branch, will reach main at wrap-up merge.
-
-<------------Start Thinking / 00:25------------>
-User caught the protocol violation: I have not been writing to session-transcript.md across multiple turns since the initial session-start append. Doing root cause analysis now. Will append catch-up thinking (this block), write feedback to dsm-central, document in transcript.
-
-Root causes identified:
-1. No mechanical enforcement - protocol is instruction-only
-2. Competing instructions (output efficiency, parallel calls, conciseness) crowd it out
-3. Session-start framing makes it feel like a one-time ritual
-4. No turn-boundary checkpoint described in protocol
-5. IDE monitoring is itself evidence of unreliability
-
-<------------Start Output / 00:30------------>
-- Appended retroactive thinking blocks for the 4 missed turns
-- Created dsm-docs/feedback-to-dsm/2026-04-07_s2_transcript_protocol_decay.md with full root cause analysis and recommendations (short-term instruction tweaks, medium-term hook enforcement, long-term protocol redesign)
-- Compliance score: 2/10, Detection 0/10, Recovery 7/10
-
-<------------Start Thinking / 00:32------------>
-Saving feedback memory so future sessions of this project catch transcript decay earlier. Memory should encode: the failure mode, the self-check rule (first tool call of every turn = transcript append), and the retroactive recovery approach.
-
-<------------Start Output / 00:33------------>
-- Saving feedback_transcript_protocol.md memory and adding to MEMORY.md index
-
-<------------Start Thinking / 00:35------------>
-Wrap-up. Session 2 work: README.md, LICENSE, GitHub repo created (heating-systems-conversational-ai), feedback_transcript_protocol document, memory file. Need to extract reasoning lessons, update MEMORY, push feedback to dsm-central, commit, PR-merge to main.
+Next step on user approval: begin Sprint 1 implementation gate 1 (run uv sync, then add @tool wrappers to existing unit_converter.py).
