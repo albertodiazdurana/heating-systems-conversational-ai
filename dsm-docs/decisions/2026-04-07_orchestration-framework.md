@@ -249,6 +249,8 @@ collaboration producing upstream value). Coordinate with `graph-explorer`
 or other take-ai-bite tooling if a documentation contribution workflow
 exists by Sprint 2.
 
+**Playbook reference:** `dsm-docs/research/2026-04-14_upstream-contribution-playbook.md` adapts the graph-explorer FalkorDBLite pattern to this contribution opportunity. Activate at Sprint 2 start.
+
 ## References
 
 - `dsm-docs/research/haystack-vs-langchain-preliminary-research.md` — input
