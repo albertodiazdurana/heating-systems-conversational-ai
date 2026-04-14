@@ -1,8 +1,9 @@
 # BL-002 — Apply Sprint Plans Groundedness Assessment Edits
 
-**Status:** Open
+**Status:** Done
 **Priority:** Medium (precedes Sprint 1 implementation resume beyond gate 1 Step 2)
 **Date Created:** 2026-04-14
+**Date Completed:** 2026-04-14
 **Origin:** Follow-on to parallel session 4.1 (BL-001 + groundedness assessment)
 **Input:** `dsm-docs/research/2026-04-14_sprint-plans-groundedness-assessment.md` §"Recommended plan edits"
 **Intended execution:** Main session, short turn (plan-hygiene edits; no new research or code)

@@ -65,6 +65,8 @@ tests/
   test_standard_lookup.py
   test_heating_curve.py
   test_graph.py                  # smoke test: build_agent() succeeds
+  test_tool_error_handling.py    # BL-002 edit 4: raises from a stub tool,
+                                 #   asserts agent recovers gracefully
 ```
 
 ## 4. Build order (10 steps)
@@ -163,6 +165,14 @@ model, which may retry or respond with an explanation). Wrap the
 top-level `agent.invoke()` in Streamlit with a try/except for user-facing
 errors.
 
+**Assumed-pending-verification (BL-002 edit 4):** the canonical
+`create_react_agent` error-propagation path is documented as "error →
+model → retry-or-explain" but has not been empirically validated in
+this repo. Step 6 must include `test_tool_error_handling` (see §3 test
+list) that raises from a test tool and asserts graceful recovery. If
+observed behavior diverges, update this section with actual behavior
+rather than propagating the assumption.
+
 ## 6. Exit criteria
 
 - [ ] All 5 tool unit tests green
@@ -170,7 +180,13 @@ errors.
 - [ ] `streamlit run app.py` starts without error
 - [ ] All 5 manual smoke test queries (section 4.11) produce expected
       tool call or deflection
-- [ ] Bilingual DE query works
+- [ ] **Gating: German tool-call works end-to-end on the default Ollama
+      model.** Query "Berechne die Vorlauftemperatur bei -10°C mit Steigung
+      1.2" must trigger the `heating_curve` tool and return a correct
+      German-language response. If this fails on `qwen2.5:7b`, document the
+      observed failure and switch `LLM_PROVIDER=openai` as the Sprint 1
+      baseline; do not treat the failure as a decision reversal (per
+      groundedness assessment, BL-002 edit 1)
 - [ ] README has "run locally" section
 - [ ] `pyproject.toml` pinned deps, no haystack-* deps yet
 
