@@ -1,9 +1,24 @@
-# Session baseline - 2026-04-07T13:51:50+02:00
+# Session baseline - 2026-04-14T15:09:54+02:00
 # Session branch
-session-3/2026-04-07
+session-4/2026-04-14
 # HEAD commit
-a2e4ee5fdd483028d225db6bcbd86261994832e5
+36020beb7bdc3756da6432546a9813a6e510c929
 # Working tree
+ M .claude/CLAUDE.md
+ M .claude/last-align.txt
  M .claude/session-baseline.txt
- M .claude/session-transcript.md
-?? .claude/transcripts/2026-04-07T00:00-ST.md
+?? .claude/hooks/
+?? .claude/last-align-report.md
+?? .claude/reasoning-lessons.md
+?? .claude/settings.json
+?? _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md
+?? _inbox/2026-04-14_dsm-align-update.md
+# Checksums
+11479b4359ef676cceb57b09bd0a303e  .claude/CLAUDE.md
+bacd56007f033371bc907fd62310ad20  .claude/last-align.txt
+d273affb59f328248a3e6f6780761355  .claude/session-baseline.txt
+fdca78be135097ca0c576ea14e9bcf02  .claude/last-align-report.md
+4b4a0876e3225987cae37a485adce3f7  .claude/reasoning-lessons.md
+39ab84de55dad4b7ba7e6a1a018fd47e  .claude/settings.json
+976a12b74dffc755a28cea4c3035e026  _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md
+ffa95c6e4bee5ab3483980487495de7d  _inbox/2026-04-14_dsm-align-update.md

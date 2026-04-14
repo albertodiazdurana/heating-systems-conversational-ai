@@ -2,7 +2,6 @@
 
 **Status:** Done
 **Date:** 2026-04-14
-**Author:** albertodiazdurana (with Claude, parallel session 4.1)
 **BL:** [BL-001](../plans/BL-001_hybrid-agent-rag-architecture-precedents.md)
 **Related decision:** [2026-04-07 orchestration framework](../decisions/2026-04-07_orchestration-framework.md)
 
