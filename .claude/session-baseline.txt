@@ -22,3 +22,4 @@ fdca78be135097ca0c576ea14e9bcf02  .claude/last-align-report.md
 39ab84de55dad4b7ba7e6a1a018fd47e  .claude/settings.json
 976a12b74dffc755a28cea4c3035e026  _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md
 ffa95c6e4bee5ab3483980487495de7d  _inbox/2026-04-14_dsm-align-update.md
+mode: light
