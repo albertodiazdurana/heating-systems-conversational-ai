@@ -1,11 +1,19 @@
 # BACKLOG-001 — Hybrid Agent + RAG Architecture: Precedent Research
 
-**Status:** Implemented by parallel session #4.1
+**Status:** Done (validated by main session, 2026-04-14)
 **Priority:** Medium (informs Sprint 2 scoping; does not block Sprint 1)
 **Date Created:** 2026-04-14
+**Date Implemented:** 2026-04-14
 **Date Completed:** 2026-04-14
-**Deliverable:** `dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md`
-**Outcome summary:** 4 strict-lens precedents found (Funderburk Packt book 2025; Panta Medium 2026; scrapegraphai multi-agent post; LlamaIndex `QueryEngineTool` canonical) + 1 near-miss (Elastic/LangGraph direct-node). Pattern is established in published tutorials with a consistent boundary contract (`RAG-framework.query_engine` → LangChain `@tool` → LangGraph `ToolNode`) but lacks academic or official-vendor canonization. Not novel-ish; no full decision-record addendum needed, only a one-paragraph validation-criteria note added to `dsm-docs/decisions/2026-04-07_orchestration-framework.md`. Journal entry added.
+**Follow-on:** `dsm-docs/plans/BL-002_apply-sprint-plans-groundedness-edits.md` (applies 6 recommended plan edits)
+**Outcome summary:** 4 strict-lens precedents found (Funderburk Packt book 2025; Panta Medium 2026; scrapegraphai multi-agent post; LlamaIndex `QueryEngineTool` canonical) + 1 near-miss (Elastic/LangGraph direct-node). Pattern is established in published tutorials with a consistent boundary contract (`RAG-framework.query_engine` → LangChain `@tool` → LangGraph `ToolNode`) but lacks academic or official-vendor canonization. Not novel-ish; no full decision-record addendum needed, only a one-paragraph validation-criteria note added to `dsm-docs/decisions/2026-04-07_orchestration-framework.md`. Journal entry added. Follow-on in-session scope extension produced a plan-groundedness assessment that cross-checks the Sprint 1 and backbone plans against all four research files.
+
+**Generated Artifacts:**
+- `dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md` — primary deliverable (4 strict-lens precedents + 1 near-miss)
+- `dsm-docs/research/2026-04-14_sprint-plans-groundedness-assessment.md` — follow-on, produced under mid-session authorized scope extension (main session to formalize)
+- `dsm-docs/blog/journal.md` — new entry "The pattern is in the tutorials, not in the papers"
+- `dsm-docs/decisions/2026-04-07_orchestration-framework.md` — one-paragraph precedent-research note added to Validation criteria (no full addendum)
+- `dsm-docs/plans/BL-001_hybrid-agent-rag-architecture-precedents.md` — status update (this file)
 **Origin:** Session 4 follow-up to `dsm-docs/decisions/2026-04-07_orchestration-framework.md`
 **Author:** albertodiazdurana (with Claude)
 **Intended execution:** Parallel DSM session (`/dsm-parallel-session-go`); read-only research with bounded writes

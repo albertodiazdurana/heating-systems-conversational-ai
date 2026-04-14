@@ -7,4 +7,10 @@ Active backlog items and project plans. Completed items move to `done/`.
 
 | BL# | Title | Priority |
 |-----|-------|----------|
-| 001 | Hybrid Agent + RAG Architecture: Precedent Research | Medium |
+| 002 | Apply Sprint Plans Groundedness Assessment Edits | Medium |
+
+**Closed (see `done/`):**
+
+| BL# | Title | Completed |
+|-----|-------|-----------|
+| 001 | Hybrid Agent + RAG Architecture: Precedent Research | 2026-04-14 |
