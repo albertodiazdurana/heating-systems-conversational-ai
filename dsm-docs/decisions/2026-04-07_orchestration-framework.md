@@ -229,6 +229,14 @@ pipeline does not import LangGraph.
 - In either case, reopen this decision with a new record citing the
   empirical findings
 
+**Precedent-research note (added 2026-04-14, BL-001):** Pattern is
+established in published tutorials (Funderburk 2025 Packt book; Panta
+2026 Medium enterprise guide) with a consistent boundary contract
+(`RAG-framework.query_engine` → LangChain `@tool` → LangGraph `ToolNode`).
+No academic paper or official vendor blog canonizes it. Decision stands;
+no full addendum needed. See
+`dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md`.
+
 ## Contribution goal (companion to this decision)
 
 Given the source-code confirmation that `OllamaChatGenerator` already

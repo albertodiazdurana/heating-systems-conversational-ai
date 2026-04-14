@@ -1,8 +1,11 @@
 # BACKLOG-001 — Hybrid Agent + RAG Architecture: Precedent Research
 
-**Status:** Open
+**Status:** Implemented by parallel session #4.1
 **Priority:** Medium (informs Sprint 2 scoping; does not block Sprint 1)
 **Date Created:** 2026-04-14
+**Date Completed:** 2026-04-14
+**Deliverable:** `dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md`
+**Outcome summary:** 4 strict-lens precedents found (Funderburk Packt book 2025; Panta Medium 2026; scrapegraphai multi-agent post; LlamaIndex `QueryEngineTool` canonical) + 1 near-miss (Elastic/LangGraph direct-node). Pattern is established in published tutorials with a consistent boundary contract (`RAG-framework.query_engine` → LangChain `@tool` → LangGraph `ToolNode`) but lacks academic or official-vendor canonization. Not novel-ish; no full decision-record addendum needed, only a one-paragraph validation-criteria note added to `dsm-docs/decisions/2026-04-07_orchestration-framework.md`. Journal entry added.
 **Origin:** Session 4 follow-up to `dsm-docs/decisions/2026-04-07_orchestration-framework.md`
 **Author:** albertodiazdurana (with Claude)
 **Intended execution:** Parallel DSM session (`/dsm-parallel-session-go`); read-only research with bounded writes

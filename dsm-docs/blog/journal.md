@@ -47,3 +47,38 @@ DSM core, but it is worth naming locally and watching for a third instance.
 Captured as a method reference in
 `dsm-docs/research/2026-04-14_upstream-contribution-playbook.md` for Sprint 2
 pickup.
+
+### [2026-04-14] The pattern is in the tutorials, not in the papers
+
+BL-001 asked whether anyone had published about the hybrid "agent framework +
+RAG framework, one tool-call boundary" architecture we chose on 2026-04-07.
+The strict-lens search returned four credible precedents: a 2025 Packt book
+(Funderburk, Haystack 2.0 + LangGraph 1.0), a 2026 Medium enterprise guide
+(Panta, LlamaIndex + LangGraph + LangChain) with code that is nearly
+isomorphic to what we will write in Sprint 2, a multi-agent pattern post
+(scrapegraphai, three-framework stack), and LlamaIndex's `QueryEngineTool`
+primitive. So the pattern is not novel.
+
+What surprised me is the shape of the gap. Four tutorial-level precedents,
+zero arXiv papers, zero deepset or LangChain official-blog reference
+architectures, zero named conference talks. The pattern propagates through
+books, Medium posts, and YouTube-style tutorials but has no institutional
+canonization. Every framework's marketing site pitches itself as complete:
+Haystack ships an `Agent` component, LangGraph has Corrective RAG recipes,
+LlamaIndex has its own agents. Cross-framework composition is anti-marketing
+for each of them individually, so no vendor has an incentive to write the
+reference piece.
+
+This has two implications. First, our architecture is conventional among
+practitioners even though it looks opinionated from any single framework's
+documentation. Second, a worked "Haystack pipeline as LangGraph tool" doc in
+deepset's tutorials or on their blog would be a defensible contribution
+because that exact combination is not covered officially, even though the
+Packt book covers it in paid chapters. That is a contribution shape (docs,
+not code, not issue) to revisit in Sprint 2 or later.
+
+The underlying lesson for my own reading habits: when assessing whether a
+chosen architecture is idiosyncratic, searching framework vendor blogs
+produces a biased null result, because vendors under-publish compositions
+that de-center their product. Tutorial content and books are the honest
+signal.
