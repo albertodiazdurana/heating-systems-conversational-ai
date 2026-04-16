@@ -64,6 +64,14 @@ Anchor for reasoning-lessons append: read last 3 lines, anchor on last non-empty
 
 For decision record: need to find where OllamaChatGenerator contribution is currently framed to know where to add the cross-reference.
 
+<------------Start Thinking / 15:22------------>
+Workspace explanation requested. Gathering repo layout, active file context, and current architecture notes.
+
+<------------Start Thinking / 14:24------------>
+User requesting explanation of "stub tool" from sprint plan file section 3, test layout.
+References test_tool_error_handling.py comment: "BL-002 edit 4: raises from a stub tool, asserts agent recovers gracefully"
+Will provide paragraph explanation of what stub tool means in this error-handling test context.
+
 <------------Start Output / 15:20------------>
 Task 1 complete:
 - dsm-docs/blog/journal.md: appended 2026-04-14 entry "When the spike IS the contribution pipeline" (~35 lines, narrative + naming the pattern locally, links to the research doc)
@@ -704,3 +712,883 @@ Light wrap-up steps:
 7. Write last-wrap-up.txt marker
 
 Session summary for MEMORY: completed Sprint 1 gate 1 (uv sync + all 5 deterministic tools) + BL-001 (precedent research) + BL-002 (groundedness edits applied). Tests 43/43.
+
+<------------Start Thinking / 23:19------------>
+User invoked /dsm-light-go. Safety gate: last-wrap-up.txt says type:light, proceed normally. Branch cadence: session-4/2026-04-14 matches today 2026-04-14, same-day continuation ok. Scaffold: 8/9 folders present (missing only inbox), >=5 threshold satisfied.
+
+Now working through the steps:
+- Step 1: MEMORY.md already loaded via context, skip re-read.
+- Step 1.5: on session-4/2026-04-14, session branch, proceed.
+- Step 1.6: stale branch cleanup (fetch --prune + check merged branches).
+- Step 2: find + read latest checkpoint, then move to done/.
+- Step 3: git status.
+- Step 4: save session baseline with mode: light appended.
+- Step 5: append transcript session boundary marker (this thinking block is already the first append but the step expects a session marker — will add after reading checkpoint).
+- Step 6: report summary.
+- Step 7: config recommendation if subscription file exists.
+- Step 8: propose next step (Sprint 1 steps 7-12 per MEMORY.md).
+
+MEMORY.md says pending: Sprint 1 impl gate 1 uv sync + @tool wrappers — but MEMORY also says step 5 complete so that line is stale. Next up per MEMORY latest session: Sprint 1 steps 7-12 (config, prompts, graph, app.py, smoke test, README).
+
+---
+
+## Session 5 (lightweight continuation)
+**Started:** 2026-04-14T23:21+02:00
+**Previous session artifacts:**
+- Checkpoint: 2026-04-14_s4_light.md (now in done/)
+- MEMORY.md updated: yes (at s4 light wrap-up)
+
+**Context loaded:**
+- MEMORY.md (latest)
+- Checkpoint: 2026-04-14_s4_light.md
+
+---
+
+<------------Start Output / 23:21------------>
+Reporting light-go result to user.
+
+<------------Start User / 23:22------------>
+y
+
+<------------Start Thinking / 23:22------------>
+User approved proceeding with Step 7 (src/config.py). But per App Development Protocol and Pre-Generation Brief Protocol, I should not generate files before providing description and receiving approval. Four-gate model: Gate 1 definition (threads, deps, packaging) → Gate 2 concept → Gate 3 implementation diff → Gate 4 run.
+
+The "y" was approval to engage with Step 7, not approval to write. I need to:
+1. Read current src/ layout + existing tool file structure to see conventions (imports, docstring style, bilingual patterns)
+2. Check pyproject.toml / uv.lock for langchain-openai + langchain-ollama availability
+3. Check sprint plan detail for step 7 acceptance criteria
+4. Draft the Gate 1 brief: threads (what is config.py, what does load_env + get_chat_model need), deps (langchain-ollama, langchain-openai, python-dotenv), packaging (one file src/config.py + one test tests/test_config.py)
+5. Present Gate 1 to user for approval before anything else.
+
+Plan for this turn: read-only exploration + present brief. No file writes yet.
+
+Files to read:
+- pyproject.toml (deps)
+- _reference/sprint-plan.md (step 7 criteria)
+- src/tools/heating_curve.py or similar (to match conventions)
+- existing tests layout
+- any existing .env.example or config hints
+
+Findings:
+- pyproject.toml: langchain-ollama, langchain-openai, python-dotenv all present. No extra deps needed.
+- .env.example: LLM_PROVIDER=ollama / OLLAMA_MODEL=llama3.1:8b / OLLAMA_BASE_URL / OPENAI_API_KEY / OPENAI_MODEL=gpt-4o-mini. Canonical stack per MEMORY.md + research is qwen2.5:7b, not llama3.1:8b. Worth flagging.
+- dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md step 7: load_env() loads .env; get_chat_model() returns ChatOllama or ChatOpenAI based on LLM_PROVIDER. Smoke test suggested (not strict). Open question: skip OPENAI_API_KEY validation when provider is ollama. Addressed in step 7.
+- Tool file convention: module docstring + numpydoc-ish function docstrings + from langchain_core.tools import tool. Bilingual docstring cues already in heating_curve.py.
+- Test convention: pytest in tests/, one file per src module.
+
+Gate 1 brief to present next:
+- THREADS: src/config.py + tests/test_config.py; also whether to fix .env.example default OLLAMA_MODEL llama3.1:8b -> qwen2.5:7b to match canonical stack.
+- DEPS: python-dotenv, langchain-ollama, langchain-openai. All already pinned in pyproject.toml.
+- PACKAGING: single commit "Sprint 1 step 7: config factory + smoke test"; .env.example fix separate or bundled, user decides.
+
+<------------Start Output / 23:23------------>
+Presenting Gate 1 brief and decision points to user.
+
+<------------Start User / 00:05------------>
+1. leave it, 2. set for determinism - are we experimenting witht this parameter?, 3. explain
+
+<------------Start Thinking / 00:05------------>
+User answered:
+1. Leave .env.example at llama3.1:8b. Accept the mismatch — they may actually have that model pulled locally. Note: this means the MEMORY.md claim "canonical stack qwen2.5:7b" is research-doc canonical, not deployed canonical. Not my call to reconcile now.
+2. Set temperature=0 for determinism. User asks a META-question: "are we experimenting with this parameter?" This is Critical Thinking / Earn Your Assertions: don't bake a magic value if we plan to sweep it. I should answer honestly: Sprint 1 plan doesn't mention temperature sweeps. Sprint 3 is the evaluation framework. So NO, we are not experimenting with it now, but if Sprint 3 eval wants to vary it, we'd want it injectable. Trade-off: (a) hardcode temperature=0 in step 7, refactor later when Sprint 3 actually needs a knob; (b) add LLM_TEMPERATURE env var now, default 0, read in get_chat_model. Option (a) is YAGNI-aligned and the refactor cost is tiny (one line). Option (b) is cheap insurance but adds a config surface that may never be used in this form (Sprint 3 may prefer programmatic injection, not env). Recommend (a).
+3. Explain load_env() call site — option 1 (internal) vs option 2 (explicit app entry). They want me to explain the difference and why I lean option 2.
+
+Structuring response:
+- Answer (2) with recommendation: hardcode temperature=0, don't parametrize now. State why.
+- Explain (3): describe both options, testability trade-off, recommend option 2.
+
+After they answer (2) and (3), I have full Gate 1 approval and can move to Gate 2 (code outline).
+
+<------------Start Output / 00:06------------>
+Answered (2) with recommendation option (a) hardcode temperature=0 now; explained (3) with testability argument for option 2. Awaiting user decisions on both.
+
+<------------Start User / 00:10------------>
+1. what would be the difference if selecting either one? would the implementation be a lot different?
+
+<------------Start Thinking / 00:10------------>
+User is asking a clarifying meta-question: for the remaining open choices (temperature a/b and load_env option 1/2), how much does the implementation actually differ? They want concrete code-level answer, not more prose.
+
+Both choices are tiny. Let me show concrete code sketches for each pair so they can judge.
+
+Temperature (a) vs (b):
+- (a): one literal `temperature=0` in two constructors.
+- (b): one env-var read + one pyproject/env addition + pass to both constructors. ~3-4 extra lines.
+
+load_env() option 1 vs 2:
+- Option 1: `load_env()` called inside `get_chat_model()`. 1 extra line inside the factory.
+- Option 2: `load_env()` exists as its own function; not called by get_chat_model; app.py calls it once. Same file footprint, one line moves from factory to app entry.
+
+Honest answer: implementation difference is trivial (~1-4 lines). The decision is about semantics/future cost, not LOC. State this plainly and let them pick. No need to push my recommendation harder — the question itself signals they're weighing whether to defer to me.
+
+<------------Start Output / 00:10------------>
+Showed concrete code sketches for both choice pairs. Stated LOC difference is trivial, real trade-off is semantics. Offered my recommended defaults (a + option 2) if they want to skip the decision.
+
+<------------Start User / 00:13------------>
+go with your recommendation
+
+<------------Start Thinking / 00:13------------>
+Gate 1 fully approved. Settled choices:
+- Decision 1: leave .env.example at llama3.1:8b (user's call, turn before).
+- Decision 2: hardcode temperature=0 (option a).
+- Decision 3: load_env() explicit, called from app.py (option 2).
+
+Now move to Gate 2: present full code outline for src/config.py + tests/test_config.py, ask for approval, THEN write files at Gate 3.
+
+Let me draft the concrete code.
+
+src/config.py:
+```
+"""Configuration: env loading + chat-model factory.
+
+Sprint 1 step 7. Keeps LLM-provider wiring out of graph.py.
+
+Functions:
+    load_env: call once at app entry (app.py) to load .env into os.environ.
+    get_chat_model: factory returning ChatOllama or ChatOpenAI based on
+        LLM_PROVIDER. Reads os.environ directly; does not call load_env.
+"""
+
+import os
+
+from dotenv import load_dotenv
+from langchain_core.language_models import BaseChatModel
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
+
+
+def load_env() -> None:
+    """Load .env into os.environ (idempotent, does not override existing vars)."""
+    load_dotenv()
+
+
+def get_chat_model() -> BaseChatModel:
+    """Return the configured chat model based on LLM_PROVIDER.
+
+    Env vars:
+        LLM_PROVIDER: "ollama" (default) or "openai"
+        OLLAMA_MODEL, OLLAMA_BASE_URL: used when provider is "ollama"
+        OPENAI_MODEL, OPENAI_API_KEY: used when provider is "openai"
+
+    Raises:
+        ValueError: unknown provider, or openai provider with empty
+            OPENAI_API_KEY.
+    """
+    provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+    if provider == "ollama":
+        return ChatOllama(
+            model=os.getenv("OLLAMA_MODEL", "llama3.1:8b"),
+            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+            temperature=0,
+        )
+    if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY", "")
+        if not api_key:
+            raise ValueError(
+                "OPENAI_API_KEY is required when LLM_PROVIDER=openai"
+            )
+        return ChatOpenAI(
+            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            api_key=api_key,
+            temperature=0,
+        )
+    raise ValueError(
+        f"Unknown LLM_PROVIDER: {provider!r}. Expected 'ollama' or 'openai'."
+    )
+```
+
+Defaults:
+- OLLAMA_MODEL default llama3.1:8b matches .env.example (user chose to leave it).
+- OLLAMA_BASE_URL default matches .env.example.
+- OPENAI_MODEL default gpt-4o-mini matches .env.example.
+- temperature=0 hardcoded per user decision.
+
+Return type annotation `BaseChatModel` — both ChatOllama and ChatOpenAI subclass it, so caller (graph.py) gets a stable type.
+
+tests/test_config.py:
+```
+"""Smoke tests for src.config factory.
+
+Does not invoke the LLM; only verifies the factory returns the expected
+class and raises on invalid config.
+"""
+
+import pytest
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
+
+from src.config import get_chat_model
+
+
+def test_ollama_default(monkeypatch):
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    monkeypatch.setenv("OLLAMA_MODEL", "test-model")
+    monkeypatch.setenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    model = get_chat_model()
+    assert isinstance(model, ChatOllama)
+    assert model.model == "test-model"
+
+
+def test_ollama_explicit(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "ollama")
+    model = get_chat_model()
+    assert isinstance(model, ChatOllama)
+
+
+def test_openai(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-4o-mini")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-dummy")
+    model = get_chat_model()
+    assert isinstance(model, ChatOpenAI)
+    assert model.model_name == "gpt-4o-mini"
+
+
+def test_openai_missing_key(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    with pytest.raises(ValueError, match="OPENAI_API_KEY"):
+        get_chat_model()
+
+
+def test_unknown_provider(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "anthropic")
+    with pytest.raises(ValueError, match="Unknown LLM_PROVIDER"):
+        get_chat_model()
+```
+
+Notes on tests:
+- test_ollama_default verifies the default branch when LLM_PROVIDER unset.
+- test_openai asserts model_name — ChatOpenAI exposes `model_name`; ChatOllama exposes `model`. Asymmetric API. Double-check via pyproject versions: langchain-openai 0.2+, ChatOpenAI(.model_name) is correct attribute. Could simplify to just isinstance check if I'm unsure.
+- No test calls load_env(); tests use monkeypatch directly, giving hermetic behavior. This is the payoff of option 2.
+- Case-insensitive provider (`.lower()`) — not asked but cheap defensive; might violate YAGNI. Let me remove it to keep it strict. Actually, .env values are strings and users sometimes capitalize. Keep it for one-line ergonomics. Flag in Gate 2 so user can veto.
+
+Possible simplifications to flag:
+1. .lower() on provider — ergonomic but not requested. Remove?
+2. test_openai asserting model_name attribute — could be langchain-openai internal. Safer to drop and just isinstance-check. Flag to user.
+3. Default fallback values inside os.getenv (`"llama3.1:8b"` etc) duplicate .env.example. User may prefer to REQUIRE the env var be set (raise if missing) for stricter behavior. For Sprint 1 ergonomics, defaults are kinder. Flag if they want stricter.
+
+Gate 2 format: present the code, list the three small decisions, ask approve/reject.
+
+<------------Start Output / 00:14------------>
+Presented Gate 2 with full src/config.py + tests/test_config.py code. Flagged three small decision points: .lower() on provider, os.getenv defaults vs strict-required, tests skipping load_env(). Awaiting approval.
+
+<------------Start User / 00:18------------>
+creat the files and I will review
+
+<------------Start Thinking / 00:18------------>
+Gate 2 approved as-is (all three flags kept: .lower, defaults, hermetic tests). User wants full-file writes, not incremental. Gate 3 = write + test.
+
+Plan:
+1. Write src/config.py exactly as presented in Gate 2.
+2. Write tests/test_config.py exactly as presented.
+3. Run `uv run pytest tests/test_config.py -v` to confirm green.
+4. Also run full `uv run pytest -v` to confirm no regressions in the existing 43 tests.
+5. Report results and hand off for user review.
+
+No code changes from Gate 2. User will review via diff.
+
+<------------Start Output / 00:19------------>
+Wrote src/config.py as-specified. First tests/test_config.py write rejected: user asked for per-test comments explaining each test. Re-wrote tests/test_config.py adding a one-line docstring to each of the 5 tests. Full suite green: 48/48 (5 new + 43 existing). No regressions.
+
+Key results:
+- src/config.py: 2 functions (load_env, get_chat_model), 55 lines
+- tests/test_config.py: 5 tests, all with explanatory docstrings
+- pytest tests/test_config.py -v: 5 passed in 2.22s
+- pytest full: 48 passed in 1.42s (11 unit_converter + 18 standard_lookup + 14 heating_curve + 5 config)
+- Branch stays on session-4/2026-04-14, no commit yet (user review first)
+
+<------------Start User / 00:22------------>
+approved
+
+<------------Start Thinking / 00:22------------>
+User approved the code. Commit now.
+
+Pre-commit checks:
+- git status (should show src/config.py + tests/test_config.py as new, plus the usual session-state churn: .claude/last-wrap-up.txt, .claude/session-baseline.txt, .claude/session-transcript.md, checkpoint move in dsm-docs/checkpoints/done/).
+- Per global CLAUDE.md: "No co-author lines in commits" -> skip Co-Authored-By.
+- Commit message convention from recent commits: "Sprint 1 step N: <what>". Use "Sprint 1 step 7: config factory + smoke test".
+- Scope of this commit: ONLY src/config.py + tests/test_config.py. The session-state churn (transcript, baseline, last-wrap-up, checkpoint move) should NOT ride along with a code commit. Those belong to session bookkeeping, committed at wrap-up. So: stage only the two new files.
+
+Plan:
+1. git status
+2. git add src/config.py tests/test_config.py
+3. git commit -m "Sprint 1 step 7: config factory + smoke test"
+4. git status (confirm only session-state churn remains unstaged)
+5. Report + propose Step 8.
+
+<------------Start Output / 00:22------------>
+Committed 88120f4 "Sprint 1 step 7: config factory + smoke test" — 99 insertions across src/config.py, tests/test_config.py, plus the pending checkpoint rename (which was already staged from light-go step 2). Remaining unstaged files are all session-state churn (last-wrap-up.txt, session-baseline.txt, session-transcript.md, checkpoint content diff from earlier sed annotation) — these belong to wrap-up, not a code commit. Step 7 closed. Ready for Step 8 (src/prompts.py bilingual SYSTEM_PROMPT + deflection).
+
+<------------Start User / 00:25------------>
+y
+
+<------------Start Thinking / 00:25------------>
+User approved Step 8. Need to read the plan spec + Track A research §5 before drafting Gate 1 brief.
+
+Plan:
+1. Read dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md for Step 8 details
+2. Find Track A research doc (research/2026-04-07_langgraph-best-practices.md per MEMORY.md) and read §5
+3. Check user-interactions.md (_reference/) for any user-facing language examples
+4. Draft Gate 1 brief: threads, deps, packaging, and key prompt-design decisions
+
+Key decisions I anticipate for Gate 1:
+- Bilingual strategy: single prompt in both EN + DE, or language-routing instruction telling the model to respond in the user's language? Research-backed answer likely: single prompt with "Respond in the user's language" instruction, since both base models (qwen2.5, gpt-4o-mini) are multilingual.
+- Deflection scope: what counts as out-of-scope? Residential heating domain only; non-heating queries get polite deflection.
+- Tool-use guidance: does the prompt need to explicitly mention the 5 tools? Research answer: `create_react_agent` injects tool descriptions automatically; the system prompt should NOT duplicate them, just set persona + scope + language policy.
+- Length: how long should the prompt be? Short is better for small local models.
+
+<------------Start Output / 00:26------------>
+Findings:
+- Research §5 gives a canonical 5-sentence pattern: persona ("residential heating systems assistant") + scope + language-matching instruction + canned bilingual deflection.
+- Plan acceptance criterion: "Wie kalt war der Winter?" (non-heating DE) should trigger deflection.
+- Gating query "Berechne die Vorlauftemperatur bei -10°C mit Steigung 1.2" must trigger heating_curve tool in DE -- prompt must NOT over-constrain DE to deflection only.
+- Plan says no test required for prompts.py (constant only).
+- Research §5 uses 3-area framing (heating curves, German standards, unit conversions); 5 current tools fit inside those 3 areas. Keep human-readable 3-area persona; create_react_agent injects tool schemas separately.
+
+Gate 1 brief decisions:
+(a) Use research §5 pattern verbatim vs polish. Recommend: verbatim with one tool-use nudge sentence added.
+(b) Explicit tool-use nudge? Recommend: yes, one sentence -- small local models benefit.
+(c) Test file? Plan says not required. Recommend: skip.
+
+<------------Start User / 00:29------------>
+1.  Include the nudge sentence, 2. keep it, 3. residential,keep
+
+<------------Start Thinking / 00:29------------>
+User approved all three recommendations. Gate 1 passes. Draft Gate 2 concept.
+
+Structure of SYSTEM_PROMPT:
+Line 1-3: persona + 3-area scope
+Line 4: tool-use nudge
+Line 5-7: language-matching rule
+Line 8-10: deflection with canned bilingual line
+
+Draft (keeping research §5 phrasing verbatim where possible):
+
+```
+SYSTEM_PROMPT = """You are a residential heating systems assistant.
+You help users understand heating curves, German standards (DIN, VDI),
+and perform unit conversions.
+
+Use the available tools when a calculation or lookup is needed.
+
+Respond in the user's language (English or German).
+If the user writes in German, respond in German.
+If the user writes in English, respond in English.
+
+For questions unrelated to residential heating, politely decline:
+"I can only help with residential heating topics. / Ich kann nur bei
+Themen zu Heizungssystemen helfen."
+"""
+```
+
+Module layout:
+```
+"""System prompt for the residential heating agent (Sprint 1 step 8).
+
+Pattern from dsm-docs/research/2026-04-07_langgraph-best-practices.md §5:
+bilingual prompt, language-matching instruction, canned deflection.
+Tool-use nudge added to improve tool-call rates on small local models
+(qwen2.5:7b gating query, per sprint plan acceptance).
+"""
+
+SYSTEM_PROMPT = """..."""
+```
+
+That's it. ~15 lines total. No tests.
+
+Gate 2 format: show the full file content, confirm commit message, ask approve.
+
+<------------Start Output / 00:30------------>
+Presented Gate 2 with full src/prompts.py content (~18 lines, single SYSTEM_PROMPT constant + module docstring pointing at research §5). Commit message prepared: "Sprint 1 step 8: bilingual SYSTEM_PROMPT". No tests per plan. Awaiting approval.
+
+<------------Start User / 00:33------------>
+y
+
+<------------Start Thinking / 00:33------------>
+Approved. Write src/prompts.py and commit.
+
+Plan:
+1. Write src/prompts.py as-specified.
+2. Verify import works (python -c "from src.prompts import SYSTEM_PROMPT; print(len(SYSTEM_PROMPT))") to catch syntax/encoding issues before commit.
+3. git add src/prompts.py
+4. git commit -m "Sprint 1 step 8: bilingual SYSTEM_PROMPT"
+5. Run full pytest suite (should stay at 48/48; adding a constant shouldn't affect anything).
+6. Report + propose Step 9.
+
+Step 9 heads-up: src/graph.py + src/tools/registry.py with create_react_agent wiring, plus tests/test_graph.py smoke test. This is the first step that imports from all three modules (config, prompts, tools). First real wiring step.
+
+<------------Start Output / 00:34------------>
+Wrote src/prompts.py (22 lines, SYSTEM_PROMPT 540 chars / 13 lines). Import smoke-checked clean. Full pytest 48/48 green (no regressions, expected — constant-only module). Committed 2e08817 "Sprint 1 step 8: bilingual SYSTEM_PROMPT". Ready for Step 9 (graph.py + tools/registry.py + test_graph.py smoke test).
+
+<------------Start User / 00:37------------>
+y
+
+<------------Start Thinking / 00:37------------>
+User approved Step 9. Need context before Gate 1 brief:
+
+1. Read exact @tool names exported from each tool module (unit_converter, standard_lookup, heating_curve) to populate TOOLS.
+2. Check src/tools/__init__.py for current export state.
+3. Verify create_react_agent signature in installed langgraph version.
+4. Decide whether build_agent calls load_env() — option 2 from step 7 says no, only app.py. But test_graph.py smoke test is a problem: it calls build_agent() which calls get_chat_model() which reads os.environ. Without load_env(), the test might pick up real OPENAI creds from user's .env or fail. With monkeypatch.setenv("LLM_PROVIDER", "ollama") in the test, it's hermetic.
+5. Smoke test design: should it build an agent with Ollama (no network required for instantiation) or mock the model? Instantiation without calling .invoke() should be network-free for both ChatOllama and ChatOpenAI — they are lazy.
+
+Plan:
+1. Read plan step 9 in full.
+2. Read src/tools/*.py to confirm exported symbol names.
+3. Read src/tools/__init__.py.
+4. Draft Gate 1 brief with: file list, tool list composition, create_react_agent signature, test strategy, decision points.
+
+Decision points anticipated:
+- Does registry.py just re-export, or also set up metadata?
+- Should build_agent accept checkpointer=None and default to InMemorySaver, or require it (caller provides)? Plan says default to InMemorySaver. Follow.
+- Should test_graph.py set LLM_PROVIDER via monkeypatch to avoid .env leak? YES — hermetic tests principle we just established in step 7.
+- What about 9b (error-handling test)? User already agreed to gate separately.
+
+<------------Start Output / 00:38------------>
+Findings:
+- Tool symbols exported with _tool suffix: kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool (unit_converter); standard_lookup_tool (standard_lookup); heating_curve_tool (heating_curve). Plan text uses pre-suffix names but MEMORY.md confirms the actual naming. Use actual names.
+- src/tools/__init__.py is empty. registry.py imports directly from tool modules.
+- Plan §5.4: "Let create_react_agent handle tool errors natively." BL-002 edit 4 added an empirical verification test (Step 9b).
+- build_agent signature per plan: build_agent(checkpointer=None) -> uses InMemorySaver if None, else uses caller-supplied. Prompt=SYSTEM_PROMPT.
+- test_graph.py smoke: assert build_agent() is not None. Must pin LLM_PROVIDER=ollama via monkeypatch to avoid .env leak (hermeticity principle from step 7).
+- ChatOllama/ChatOpenAI instantiation is lazy (no network at __init__); create_react_agent just builds the graph, no model call during build. Smoke test network-free as long as provider is pinned.
+
+Gate 1 decisions to surface:
+(1) registry.py re-export policy: expose only TOOLS, or re-export individual tool symbols too?
+(2) get_chat_model() call site inside build_agent(): inside function body (allows test monkeypatch before call) or at module top (eager)?
+(3) Test pins LLM_PROVIDER via monkeypatch -- confirm?
+
+<------------Start User / 00:41------------>
+go with your recommendation
+
+<------------Start Thinking / 00:41------------>
+Gate 1 approved (all three recommendations: registry exposes only TOOLS, get_chat_model inside build_agent body, test pins LLM_PROVIDER via monkeypatch).
+
+Gate 2 draft:
+
+registry.py (src/tools/):
+- Module docstring: explain single-TOOLS-list purpose
+- Imports: heating_curve_tool, standard_lookup_tool, and the 3 unit_converter tools
+- TOOLS = [...] in plan order (kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool, standard_lookup_tool, heating_curve_tool)
+
+graph.py (src/):
+- Docstring referencing step 9 + hybrid backbone note (InMemorySaver per-process)
+- Import create_react_agent from langgraph.prebuilt
+- Import InMemorySaver from langgraph.checkpoint.memory
+- build_agent(checkpointer=None) -> lazy get_chat_model() inside body
+
+test_graph.py (tests/):
+- Module docstring: smoke test, no LLM invocation
+- test_build_agent_default using monkeypatch: LLM_PROVIDER=ollama + OLLAMA_BASE_URL pinned
+- assert build_agent() is not None (minimal, per plan)
+
+One small flag for Gate 2: the test assertion. Plan literally says "assert build_agent() is not None". I'll stick to that minimal check. Could add hasattr(agent, "invoke") check for more signal, but YAGNI — if create_react_agent returns None it's a langgraph bug, not a code-under-test bug.
+
+One unknown I want to verify as part of Gate 2: exact import paths for InMemorySaver and create_react_agent in the installed langgraph version. Will flag that I'm assuming langgraph.checkpoint.memory.InMemorySaver + langgraph.prebuilt.create_react_agent; will fail fast in smoke test if either is wrong.
+
+<------------Start Output / 00:42------------>
+Verified import paths via `uv run python -c`: langgraph.checkpoint.memory.InMemorySaver and langgraph.prebuilt.create_react_agent both import cleanly. Presented Gate 2 with full content for registry.py (13 lines), graph.py (28 lines), test_graph.py (10 lines). Flagged test assertion minimality question (plan-minimal `is not None` vs belt-and-suspenders hasattr(agent, "invoke")). Awaiting approval.
+
+<------------Start User / 00:45------------>
+Approve as-is
+
+<------------Start Thinking / 00:45------------>
+Approved as-is. Write 3 files, run test, commit.
+
+Plan:
+1. Write src/tools/registry.py
+2. Write src/graph.py
+3. Write tests/test_graph.py
+4. Run `uv run pytest tests/test_graph.py -v` to confirm smoke test passes
+5. Run full `uv run pytest` to confirm no regressions (48 → 49 expected)
+6. git add, commit "Sprint 1 step 9: graph wiring + smoke test"
+7. Report and propose Step 9b.
+
+UPDATE 00:46: pytest 49/49 green BUT LangGraphDeprecatedSinceV10 warning:
+"create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0."
+
+Installed langgraph 1.1.6, langchain 1.2.15. Both past V1.0. Research doc (2026-04-07) and plan predate this. langchain.agents.create_agent is importable in current env.
+
+Three options:
+(A) Ship as-is, warning only, works through V1.x. Technical debt.
+(B) Migrate to langchain.agents.create_agent now. Need signature compat check. Scope beyond approved Gate 2.
+(C) Pin langgraph/langchain below V1.0. Risky, other deps already 1.x.
+
+Halting before commit. Recommend (B): writing NEW code against deprecated API on day one. Cheapest to fix now; triggers research doc + MEMORY.md updates.
+
+<------------Start Output / 00:47------------>
+Files written, tests 49/49 green BUT LangGraphDeprecatedSinceV10 warning surfaced on create_react_agent. Installed langgraph 1.1.6, langchain 1.2.15. Halting before commit. User picks: (A) ship deprecated, (B) migrate now, (C) pin old. Recommend (B).
+
+<------------Start User / 00:50------------>
+B
+
+<------------Start Thinking / 00:50------------>
+User chose (B) migrate. Before amending code, verify signature compat:
+- langgraph.prebuilt.create_react_agent(model=, tools=, checkpointer=, prompt=)
+- langchain.agents.create_agent(?)
+
+If signatures differ (parameter renames, different defaults), need to adapt. Check via inspect.signature and docstring.
+
+Plan this turn:
+1. Introspect both signatures
+2. Verify minimal-swap feasibility
+3. If identical: present amended Gate 1/2 with just the import change
+4. If different: present deltas and ask approval
+
+Also need to flag downstream doc updates:
+- dsm-docs/research/2026-04-07_langgraph-best-practices.md §1, §5 (reference create_react_agent)
+- MEMORY.md "Sprint 1 canonical stack" line
+These can be a follow-up after step 9 commits. Don't conflate scope.
+
+<------------Start Output / 00:51------------>
+Signature compare (inspect.signature):
+- OLD: create_react_agent(model, tools, *, prompt=None, checkpointer=None, ...)
+- NEW: create_agent(model, tools=None, *, system_prompt=None, middleware=(), checkpointer=None, ...)
+Delta: `prompt` -> `system_prompt` rename. Return type CompiledStateGraph in both.
+
+Migration is a 2-line change in graph.py only:
+1. import swap: langgraph.prebuilt.create_react_agent -> langchain.agents.create_agent
+2. kwarg rename: prompt=SYSTEM_PROMPT -> system_prompt=SYSTEM_PROMPT
+No other files affected.
+
+Separate follow-up scope (NOT this commit): update research doc §1/§5 + MEMORY.md canonical-stack line.
+
+<------------Start User / 00:54------------>
+yes
+
+<------------Start Thinking / 00:54------------>
+Amendment approved. Apply two edits to src/graph.py, re-test, commit.
+
+Plan:
+1. Edit graph.py: import swap + kwarg rename (2 edits)
+2. Run pytest tests/test_graph.py -v (expect 1 passed, 0 warnings)
+3. Run full pytest (expect 49/49, 0 warnings)
+4. Commit "Sprint 1 step 9: graph wiring + smoke test (langchain.agents.create_agent)"
+5. Report + propose Step 9b gate.
+
+<------------Start Output / 00:55------------>
+Applied 2-line migration + docstring note in src/graph.py. Tests: 49/49 green, 0 warnings (deprecation resolved). Committed ecb73a1 "Sprint 1 step 9: graph wiring + smoke test (langchain.agents.create_agent)". Ready for Step 9b (test_tool_error_handling, BL-002 edit 4) and the separate follow-up to update research doc + MEMORY.md canonical-stack line.
+
+<------------Start User / 00:58------------>
+option 2
+
+<------------Start Thinking / 00:58------------>
+User picked option 2 (doc follow-up first).
+
+Plan:
+1. Find all occurrences of create_react_agent in research doc to target edits precisely
+2. Check MEMORY.md canonical-stack line
+3. Decide annotation style: don't rewrite history (research doc is a dated snapshot); ADD a note pointing at the V1.0 rename and our current implementation. MEMORY.md is a live index -> rewrite the line.
+4. Draft the exact diffs
+5. Present combined Gate 1+2 (simple enough to skip the brief/concept split)
+6. Wait for approval, apply, commit
+
+Research doc policy: dated research documents are snapshots. Do not silently overwrite the snapshot. Add a forward-pointer note. MEMORY.md is not dated; it's live state -> direct edit.
+
+Commit message: "Sprint 1 step 9 follow-up: annotate V1.0 create_agent rename"
+
+Let me find the exact locations.
+
+<------------Start Output / 00:59------------>
+Gate 1+2 combined (simple doc follow-up, no code). Target 1: annotate research doc with a "Post-publication update" block between frontmatter and §1; body stays historical. Target 2: rewrite MEMORY.md line 8 canonical-stack line. Flagged line 12 "Pending" as Session 5 wrap-up scope, NOT this commit. Commit msg: "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename". Awaiting approval.
+
+<------------Start User / 01:02------------>
+y
+
+<------------Start Thinking / 01:02------------>
+Approved. Apply both edits.
+
+Important note: MEMORY.md lives at ~/.claude/projects/.../memory/MEMORY.md, OUTSIDE the repo. Per CLAUDE.md cross-repo write safety, first write outside repo needs explicit confirmation -- user's "y" on the presented content satisfies that.
+
+MEMORY.md is NOT tracked by git (it's in ~/.claude/), so the git commit will include only the research doc change. MEMORY.md edit is metadata-level, persists via the auto-memory system.
+
+Plan:
+1. Edit research doc: insert annotation block between line 6 (end of frontmatter) and line 8 (## 1. Agent pattern...).
+2. Edit MEMORY.md line 8.
+3. git add dsm-docs/research/2026-04-07_langgraph-best-practices.md
+4. git commit "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename"
+5. Report. Note MEMORY.md is not in the commit (cross-repo).
+
+<------------Start Output / 01:03------------>
+Applied both edits. Research doc: 13-line annotation inserted between frontmatter and §1, body unchanged (historical snapshot preserved). MEMORY.md line 8: canonical-stack line updated with new API + migration-commit pointer. Committed 3fa05f1 "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename" (research doc only; MEMORY.md is in ~/.claude/, not the repo). No code, no tests touched.
+
+<------------Start User / 01:06------------>
+y
+
+<------------Start Thinking / 01:06------------>
+User approved Step 9b. Need to research:
+1. What fake chat model to use in langchain_core (FakeMessagesListChatModel vs GenericFakeChatModel)
+2. How to script a tool-call AIMessage
+3. What "graceful recovery" means operationally for create_agent (does it swallow tool errors by default?)
+4. Plan's §5.4 error-handling spec
+5. BL-002 edit 4 exact ask
+
+Plan:
+1. Read plan §5.4 and BL-002-related edit detail
+2. Check langchain_core.language_models fake chat models and their tool_calls support
+3. Verify create_agent behavior on tool exception (ToolNode catches? propagates? has handle_tool_errors kwarg?)
+4. Draft Gate 1 brief with the mock strategy, what we assert, and the minimal-scope version vs belt-and-suspenders
+
+Note: create_agent's underlying tool node may have a `handle_tool_errors` default behavior. If it DOES catch by default -> test easy. If not -> we need to pass handle_tool_errors to create_agent (or use middleware), which expands scope.
+
+<------------Start Output / 01:08------------>
+Findings:
+- Plan §5.4 + BL-002 edit 4 spec: stub tool raises, assert agent recovers gracefully. If observed behavior diverges from assumed "error -> model -> retry-or-explain", UPDATE §5.4 with actual behavior. So the test IS the empirical probe.
+- FakeMessagesListChatModel(responses=[BaseMessage, ...]) available in langchain_core, supports bind_tools. Can script: [AIMessage with tool_call, AIMessage with final text]. Perfect fit.
+- GenericFakeChatModel also available but list-based is simpler.
+
+Test design approach:
+1. Don't use build_agent() for this test -- inject a stub model directly via create_agent. build_agent's purpose is prod wiring via get_chat_model factory; for an error-handling unit test we want determinism.
+2. @tool-decorated flaky_tool(x: int) raises ValueError("boom").
+3. FakeMessagesListChatModel scripted with 2 responses: tool-call, then text.
+4. agent.invoke({"messages": [("user", "...")]}), assert no exception + final message is AIMessage with content.
+
+Unknowns (flag in Gate 1):
+- Does create_agent catch tool exceptions by default? TEST IS THE PROBE. If ValueError propagates, amend: add handle_tool_errors kwarg (or equivalent middleware) and re-run. Document observed behavior in §5.4 as the deliverable.
+
+Gate 1 decisions to surface:
+(1) test uses create_agent directly (bypassing build_agent) vs extend build_agent with model= override param -- recommend direct, YAGNI for the param.
+(2) scripted 2 responses vs fixed-point loop (agent may call model more times than scripted -> IndexError). Recommend 2 + assert; if IndexError, bump script or handle.
+(3) test file lives at tests/test_tool_error_handling.py per plan -- confirm.
+(4) scope includes a post-test doc update to §5.4 (plan instruction) -- confirm we bundle that in same commit, or do it as separate commit.
+
+<------------Start User / 01:11------------>
+go with your recommendation
+
+<------------Start Output / 01:13------------>
+All 3 recommendations approved. Drafting Gate 2: ~40-line test file with stub flaky_tool, FakeMessagesListChatModel scripting 2 responses (tool_call then text), create_agent direct. Two-commit plan: test now, §5.4 update after observed behavior.
+
+<------------Start User / 01:15------------>
+yes
+
+<------------Start Thinking / 01:15------------>
+Gate 2 approved. Write the test, run it, report outcome.
+
+Plan:
+1. Write tests/test_tool_error_handling.py
+2. Run `uv run pytest tests/test_tool_error_handling.py -v` -- capture full output (traceback if it fails)
+3. Report outcome to user (pass / ValueError propagation / IndexError).
+4. If PASS -> commit + propose §5.4 doc update.
+5. If FAIL -> show traceback, propose amendment before committing.
+6. If IndexError -> show traceback, propose script bump before committing.
+
+Don't commit until we know the outcome (user may want to adjust).
+
+<------------Start Output / 01:16------------>
+Test written and run. Unexpected fourth failure mode: FakeMessagesListChatModel.bind_tools raises NotImplementedError. All 6 fakes in langchain_core.language_models.fake_chat_models inherit the stub without overriding. create_agent internally calls bind_tools during setup so the test can't reach the error-handling probe yet.
+
+Cleanest workaround: subclass the fake in the test with a no-op bind_tools that returns self. Presenting amendment for approval before re-running.
+
+<------------Start User / 01:18------------>
+y
+
+<------------Start Thinking / 01:18------------>
+Approved. Amend test with _BindableFakeModel subclass and re-run.
+
+Plan:
+1. Edit tests/test_tool_error_handling.py to add _BindableFakeModel and swap instantiation.
+2. Re-run pytest, capture outcome.
+3. Report: PASS / ValueError propagation / IndexError.
+4. Handle each outcome accordingly before committing.
+
+<------------Start Output / 01:19------------>
+Re-ran after _BindableFakeModel amendment. Outcome category 2: ValueError propagates. `create_agent` does NOT catch tool exceptions by default (empirical finding, contradicts plan §5.4 assumption).
+
+Stack reaches ToolNode._execute_tool_sync -> BaseTool.run -> raise ValueError. BaseTool has a `handle_tool_error` field (bool/str/callable) that catches and returns as ToolMessage when set.
+
+Two test options to present:
+A) Pin current propagation behavior (test asserts ValueError raised). Doesn't match plan's "recovers gracefully" language.
+B) Enable handle_tool_error=True on flaky_tool, assert recovery works. Documents the mitigation pattern, matches plan language.
+
+Recommend B. Then §5.4 update becomes richer: remove "native recovery" claim, add per-tool opt-in mitigation + app-level try/except guidance.
+
+<------------Start User / 01:22------------>
+B
+
+<------------Start Thinking / 01:22------------>
+User picked B. Apply handle_tool_error mitigation.
+
+Approach options:
+1. `flaky_tool.handle_tool_error = True` after decoration -- simple attr set
+2. `@tool(handle_tool_error=True)` in decorator -- unclear if decorator accepts
+3. StructuredTool.from_function(..., handle_tool_error=True) -- more verbose
+
+Try option 1 first (simplest). Since BaseTool is a pydantic v2 BaseModel, attribute assignment works if the model config permits it. If pydantic blocks, fall back to reconstructing the tool.
+
+Also, update the test docstring and module docstring to reflect the empirical finding: the test now demonstrates the mitigation, not the assumed default.
+
+Plan:
+1. Edit test: add `flaky_tool.handle_tool_error = True` after the @tool block
+2. Update module docstring to reflect empirical finding
+3. Re-run pytest
+4. If PASS: report, then propose §5.4 doc update as separate follow-up commit
+5. If FAIL with different error: report and adapt
+
+<------------Start Output / 01:24------------>
+Second empirical finding: handle_tool_error=True DID NOT catch ValueError. Reading BaseTool.run source: the flag only catches ToolException; generic Exception (incl. ValueError) hits the `except (Exception, KeyboardInterrupt)` branch which re-raises unconditionally via `raise error_to_raise`.
+
+Implication for project: Sprint 1 production tools raise ValueError (standard_lookup on unknown standard, potentially heating_curve edge cases). These propagate to agent.invoke() by default. App-level try/except is the ONLY safety net unless tools are refactored to raise ToolException or wrapped.
+
+Halting before committing. Need to decide test shape:
+- Change flaky_tool to raise ToolException -> demonstrates the mitigation pathway (tool raises ToolException + handle_tool_error=True = recovery).
+- Keep ValueError -> demonstrates reality (propagation) via pytest.raises pin.
+
+Present this + proposed §5.4 update content for user choice.
+
+<------------Start User / 01:26------------>
+B1
+
+<------------Start Thinking / 01:26------------>
+User picked B1: change flaky_tool to raise ToolException, keep handle_tool_error=True. Test should then PASS demonstrating the canonical mitigation pathway.
+
+Plan:
+1. Update import: add ToolException from langchain_core.tools
+2. Change flaky_tool body: raise ToolException("boom") instead of ValueError
+3. Update docstrings to reflect the pattern (tool raising ToolException + handle_tool_error=True)
+4. Re-run pytest
+5. Expected: PASS
+6. If PASS: commit "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)" then propose separate follow-up for §5.4 update.
+7. If still FAIL: report + adapt.
+
+<------------Start Output / 01:28------------>
+Test PASSED after changing flaky_tool to raise ToolException. Full suite: 50/50 green. Committed d1941b9 "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)".
+
+Empirical deliverables for §5.4 update (pending separate commit):
+1. create_agent does NOT catch tool exceptions by default (contradicts original assumption).
+2. BaseTool.handle_tool_error only catches ToolException, not generic Exception.
+3. Canonical mitigation: tool raises ToolException + handle_tool_error=True -> recovery works.
+4. Sprint 1 production tools raise ValueError -> propagate to app.py's try/except.
+5. Deferred: whether to convert production tools to ToolException for per-tool model-visible recovery.
+
+<------------Start User / 01:31------------>
+Proceed with the §5.4 update
+
+<------------Start Thinking / 01:31------------>
+User approved. Proposed content was already outlined in previous turn; this is Gate 3 (implementation diff) directly.
+
+Plan:
+1. Read exact current §5.4 content in plan
+2. Compose replacement
+3. Apply edit
+4. Show diff-like summary, commit "Sprint 1 step 9b follow-up: update plan §5.4 with observed error-handling behavior"
+
+No code, no tests.
+
+<------------Start Output / 01:32------------>
+Updated plan §5.4 with observed error-handling behavior. Replaced the "assumed-pending-verification" block with three findings (create_agent doesn't catch, handle_tool_error only catches ToolException, canonical recovery pattern), promoted app.py try/except to primary Sprint 1 safety net, and added deferred note about converting production tools to ToolException in Sprint 3. Committed 84870a5 "Sprint 1 step 9b follow-up: update plan §5.4 with observed error-handling behavior". BL-002 edit 4 fully resolved.
+
+<------------Start User / 01:35------------>
+Proceed to Step 10 (app.py) Gate 1
+
+<------------Start Thinking / 01:35------------>
+User wants to proceed to Step 10 (app.py Streamlit UI). Need to read plan's full step 10 spec + §5.1-5.3 for any related notes, then present Gate 1.
+
+Plan step 10 from earlier grep:
+- thread_id in st.session_state (uuid4 on first load)
+- agent.invoke with config={"configurable": {"thread_id": ...}}
+- Render tool calls as collapsible sections
+- Error handling: catch exceptions, show user-friendly error
+
+Additional context from SHOULD/plan:
+- "Tool-call visibility in Streamlit (collapsible / expandable sections)"
+- App-level try/except is now PRIMARY safety net (§5.4 update, d1941b9)
+
+Key design decisions to surface in Gate 1:
+1. Agent caching strategy: st.cache_resource vs session_state vs rebuild every turn
+2. Chat history: rely on checkpointer+thread_id replay, or persist in st.session_state and rebuild display from scratch
+3. Tool-call rendering detail: name+args+result, or summary
+4. Error message language: bilingual EN/DE (match persona) or EN only (simpler)
+5. Layout: page title, header, deflection-aware intro text, model indicator
+6. load_env() call site: at module top (per step 7 option 2 decision)
+
+File size estimate: ~80-120 lines.
+
+Let me read plan sections 5.1-5.3 + anything related to Streamlit.
+
+<------------Start Output / 01:37------------>
+Read plan step 10 full spec + §5.3 (memory) + §5.4 (error). Confirmed: thread_id uuid4 in session_state, chat history in st.session_state.messages, st.chat_input, agent.invoke with thread_id config, tool-call collapsible rendering, try/except primary safety net. No test file for this step (Streamlit testing needs streamlit.testing, out of Sprint 1 scope).
+
+Presented Gate 1 with 5 decision points: tool-call detail (full/summary), model caption (show/hide), clear-chat button (include/skip), error lang (bilingual/EN), page chrome (minimal main + sidebar suggested queries). Recommended full/show/skip/bilingual/minimal+sidebar. Awaiting user call.
+
+<------------Start User / 01:40------------>
+go with your recommendation
+
+<------------Start Thinking / 01:40------------>
+All 5 recommendations approved. Drafting Gate 2.
+
+Architecture:
+- Module-level load_env() and imports
+- SUGGESTED_QUERIES constant (5 items matching plan step 11)
+- ERROR_MESSAGE bilingual constant
+- @st.cache_resource get_agent() wrapping build_agent
+- init_session(): thread_id uuid4, messages list, pending_input None
+- _extract_turn_tool_calls(result_messages, user_text): find last HumanMessage matching user_text, slice forward, collect AIMessage.tool_calls + match ToolMessage by tool_call_id. Tricky boundary logic, deserves docstring.
+- handle_user_input(user_text): append user, invoke agent (try/except), append assistant with tool_calls display or error.
+- _model_caption(): compose provider·model·temperature line from env.
+- render_history(): iterate st.session_state.messages, render chat_message blocks with expanders.
+- Main UI: set_page_config, title, caption, init_session, sidebar (suggested queries + divider + model caption), render_history, chat_input, pending_input flow, st.rerun after handling.
+
+File size ~120 lines. No tests (Streamlit testing out of scope).
+
+Latent subtlety: _extract_turn_tool_calls uses user_text content to find the turn boundary. If user repeats identical text, we iterate from end so the latest match wins -> correct. Documented in function docstring.
+
+st.cache_resource caches agent across reruns but NOT across LLM_PROVIDER env changes mid-session. Minor, document in docstring if space.
+
+<------------Start User / 01:42------------>
+Approve as-is
+
+<------------Start Thinking / 01:42------------>
+Approved. Write app.py, import smoke check, commit.
+
+Plan:
+1. Write app.py (~120 lines per Gate 2)
+2. uv run python -c "import app" -- catches SyntaxError + import-time issues (load_env + build_agent import chain). Note: `import app` will trigger load_env() + module-level code including st.set_page_config which may fail outside a Streamlit context. Better: uv run python -c "import ast; ast.parse(open('app.py').read())" for syntax-only. Or skip the syntax-only path and just test via: streamlit compiles lazily, so importing the module outside Streamlit context triggers streamlit errors.
+
+Actually simplest check: uv run python -m py_compile app.py to catch compile errors. Doesn't execute module body.
+
+3. git add app.py
+4. git commit "Sprint 1 step 10: Streamlit UI (app.py)"
+5. Report. Step 11 (manual smoke test) is next if user wants; requires local Ollama.
+
+<------------Start Output / 01:43------------>
+Wrote app.py (160 lines; Gate 2 code was ~120 source lines + blanks/docstrings at ~60 effective logic). py_compile clean, pytest full 50/50 (no regressions). Committed edea127 "Sprint 1 step 10: Streamlit UI (app.py)". Sprint 1 steps 7-10 all shipped. Remaining: step 11 manual smoke test (needs local Ollama + qwen2.5:7b or llama3.1:8b pulled), step 12 README.
+
+<------------Start User / 01:46------------>
+Wrap up
+
+<------------Start Thinking / 01:46------------>
+User invoked wrap up. Per CLAUDE.md: "When the user says 'wrap up' or the session ends, use /dsm-wrap-up". Invoke the dsm-wrap-up skill, which runs the full checklist autonomously.
+
+This session started via /dsm-light-go (continuation of S4), did substantial Sprint 1 work (steps 7-10 shipped, BL-002 edit 4 empirically resolved, plan §5.4 updated). Work continues (steps 11-12 remain). /dsm-wrap-up is the canonical full wrap. If the user wants light variant they'd have said so.
+
+Invoking Skill with skill=dsm-wrap-up.
+
+<------------Start Thinking / 01:47------------>
+Executing full /dsm-wrap-up checklist autonomously. Order:
+- Check git availability
+- Parallel: step 0 (reasoning lessons extraction), step 1 (README check), step 2 (MEMORY update)
+- Sequential: step 3 (backup), 4 (profile), 5 (handoff), 6 (feedback push), 7 (governance), 8 (version check), 8.5 (humanizer), 9 (commit+push), 10 (PR to main), 11 (mirror sync PR), 11.5 (parallel sessions), 12 (wrap-up marker).
+
+Session context:
+- Session 5 effectively (continuation of S4 via /dsm-light-go) -- but the light-go checkpoint and branch say "session 4", last-wrap-up said session 4, baseline said "mode: light". So we are still within Session 4 numbering per this project. The transcript markers say "Session 5 (lightweight continuation)" but that's just the continuation label. For MEMORY and commit messages, use "Session 4 (cont)" or similar.
+- Actually looking at checkpoint 2026-04-14_s4_light.md, last-wrap-up.txt, session-baseline.txt all at session 4. The /dsm-light-go step 5 template used "Session N" as a placeholder -- I wrote "Session 5" but that may have been wrong.
+- Let's treat this as Session 4 (lightweight continuation continues the number). Commit msg will be "Session 4 wrap-up: ...".
+
+Branch: session-4/2026-04-14. Branch date = 2026-04-14 but today's date is 2026-04-17 (date changed mid-session via system-reminder). This means we're wrapping up past the same-day window. For the PR title, date is today but session number stays 4.
+
+Commits made this session (from light-go):
+- 88120f4 Sprint 1 step 7: config factory + smoke test
+- 2e08817 Sprint 1 step 8: bilingual SYSTEM_PROMPT
+- ecb73a1 Sprint 1 step 9: graph wiring + smoke test
+- 3fa05f1 Sprint 1 step 9 follow-up: annotate LangGraph V1.0
+- d1941b9 Sprint 1 step 9b: empirical tool-error recovery test
+- 84870a5 Sprint 1 step 9b follow-up: update plan §5.4
+- edea127 Sprint 1 step 10: Streamlit UI (app.py)
+
+Key insights for MEMORY update:
+- Sprint 1 code backbone 75% shipped. Steps 11 (manual smoke test needs local Ollama) + 12 (README) remain.
+- Empirical BL-002 edit 4 finding: create_agent propagates tool errors by default; handle_tool_error only catches ToolException. Production tools raise ValueError -> app.py try/except is primary Sprint 1 safety net.
+- Migrated from deprecated langgraph.prebuilt.create_react_agent to langchain.agents.create_agent (LangGraph V1.0 move).
+
+Let me start with git check + launch parallel steps 0, 1, 2.
+

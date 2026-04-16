@@ -9,6 +9,8 @@ by source session and scope (`ecosystem` | `pattern` | `project`).
 - [STAA] S1 [ecosystem]: When CLAUDE.md or `_reference/` cites external paths, verify with `ls` before quoting them in research or plan documents.
 - [STAA] S3 [ecosystem]: Before treating a third-party framework feature as missing, read the source, not just the docs. "Undocumented" ≠ "unimplemented."
 - [STAA] S3 [pattern]: When preliminary research recommends a framework, verify the comparison baseline matches the actual alternatives in scope. Comparing to the wrong alternative is a silent failure mode that survives review.
+- [auto] S4 [ecosystem]: `BaseTool.handle_tool_error` is narrower than its name implies, it only catches `ToolException` subclasses, not generic `Exception`. Read the source before treating an opt-in recovery flag as universal. Verified empirically in `tests/test_tool_error_handling.py` (BL-002 edit 4).
+- [auto] S4 [pattern]: Frame "assumed behavior" tests as empirical probes with three pre-enumerated outcome categories (PASS / expected fail / unexpected fail). Each failure mode becomes a documented finding, not a blocker. One probe delivered two cascading findings in this session (default propagation + narrow `handle_tool_error` scope).
 
 ## Pipeline Discipline
 
@@ -32,6 +34,7 @@ by source session and scope (`ecosystem` | `pattern` | `project`).
 - [STAA] S1 [ecosystem]: When re-running or refining work already reported, append a delta block rather than re-emitting the original output block.
 - [STAA] S3 [ecosystem]: Session Transcript Protocol violations are silent. The harness does not enforce appends; only a user reminder catches the lapse. Self-check at every output: "did I append a thinking block since the last user turn?" If no, append before output.
 - [STAA] S3 [ecosystem]: `git mv` requires the source to be tracked. For files staged-but-not-committed or untracked, use plain `mv` then `git add` the new path.
+- [auto] S4 [pattern]: When a deprecation warning surfaces on the FIRST pytest run of new code, halt and decide migration before committing. Shipping with the warning means the deprecated API spreads across modules and the later migration is a multi-file refactor instead of a two-line import swap.
 
 ## Cross-Repo & Governance
 
