@@ -65,6 +65,8 @@ tests/
   test_standard_lookup.py
   test_heating_curve.py
   test_graph.py                  # smoke test: build_agent() succeeds
+  test_tool_error_handling.py    # BL-002 edit 4: raises from a stub tool,
+                                 #   asserts agent recovers gracefully
 ```
 
 ## 4. Build order (10 steps)
@@ -158,10 +160,31 @@ conversation export feature is desired.
 
 ### 5.4 Error handling
 
-Let `create_react_agent` handle tool errors natively (returns error to
-model, which may retry or respond with an explanation). Wrap the
-top-level `agent.invoke()` in Streamlit with a try/except for user-facing
-errors.
+**Observed behavior** (BL-002 edit 4, verified in commit `d1941b9`,
+`langchain 1.2.15` / `langgraph 1.1.6`):
+
+1. `langchain.agents.create_agent` does **not** catch tool exceptions by
+   default. A raised exception propagates through `ToolNode` to
+   `agent.invoke()` and up to the caller.
+2. `BaseTool.handle_tool_error` (bool / str / callable) only catches
+   `ToolException` subclasses. Generic `Exception` (including
+   `ValueError`) bypasses the flag and re-raises unconditionally.
+3. Canonical per-tool recovery pathway: the tool raises `ToolException`
+   and sets `handle_tool_error=True`; the error is returned to the
+   model as a `ToolMessage` and the agent continues.
+
+**Sprint 1 mitigation:** production tools currently raise plain
+`ValueError` (e.g. `standard_lookup` on an unknown standard/key), so
+the app-level try/except around `agent.invoke()` in `app.py` (step 10)
+is the **primary** safety net, not a backup. Any tool exception surfaces
+there as a user-facing error message.
+
+**Deferred:** converting production tools to raise `ToolException` (with
+`handle_tool_error=True`) would give per-tool model-visible recovery,
+allowing the model to retry or explain. Revisit in Sprint 3 polish if
+multi-tool conversations show benefit from in-loop recovery rather than
+turn-level failure. See `tests/test_tool_error_handling.py` for the
+reference pattern.
 
 ## 6. Exit criteria
 
@@ -170,7 +193,13 @@ errors.
 - [ ] `streamlit run app.py` starts without error
 - [ ] All 5 manual smoke test queries (section 4.11) produce expected
       tool call or deflection
-- [ ] Bilingual DE query works
+- [ ] **Gating: German tool-call works end-to-end on the default Ollama
+      model.** Query "Berechne die Vorlauftemperatur bei -10°C mit Steigung
+      1.2" must trigger the `heating_curve` tool and return a correct
+      German-language response. If this fails on `qwen2.5:7b`, document the
+      observed failure and switch `LLM_PROVIDER=openai` as the Sprint 1
+      baseline; do not treat the failure as a decision reversal (per
+      groundedness assessment, BL-002 edit 1)
 - [ ] README has "run locally" section
 - [ ] `pyproject.toml` pinned deps, no haystack-* deps yet
 

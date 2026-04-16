@@ -1,36 +1,1594 @@
-# Session 3 Transcript (resume)
-**Started:** 2026-04-07T13:51:59+02:00
+# Session 4 Transcript
+**Started:** 2026-04-14T15:10:07+02:00
 **Project:** Heating Systems Conversational AI
 
 ---
 
-<------------Start Thinking / 23:54------------>
-Research complete (Tracks A+B). User approved all five plan updates (A-E) as a batch and reminded me to append to session-transcript per the protocol (I had been missing this throughout the session).
+<------------Start Thinking / 15:10------------>
+Session 4 start checks complete:
+- Session number: N=max(archive=2, memory=3)+1 = 4
+- Branch: created session-4/2026-04-14 from main (no open session/task branches)
+- /dsm-align ran (unconditional per Step 1.8): applied post-change fixes
+  - Installed .claude/hooks/{transcript-reminder,validate-transcript-edit}.sh and .claude/settings.json (BL-319 transcript enforcement hooks, previously missing)
+  - Regenerated CLAUDE.md alignment section (template drift from v1.4.5 to v1.4.18, added per-turn enforcement, turn-boundary self-check, process narration, heredoc anti-pattern, four-gate pre-generation, actionable work items)
+  - Wrote .claude/last-align-report.md, .claude/last-align.txt, _inbox/2026-04-14_dsm-align-update.md
+- Warnings surfaced:
+  - dsm-docs/inbox/ collision (empty folder, canonical is _inbox/ at root), not auto-fixed
+  - DSM version jumped v1.4.5 -> v1.4.18, spoke actions flagged in report
+- Inbox check: 2 entries pending
+  - 2026-04-13_dsm-graph-explorer_contribution-playbook.md: substantive response to S3 playbook request (maps capability experiment -> upstream contribution pattern; recommends spike-first approach for Haystack)
+  - 2026-04-14_dsm-align-update.md: align notification, low priority
+- Baseline saved, transcript archived (Session 3), fresh transcript created
+- No consumed handoffs, no pending checkpoints
+- Pending from MEMORY.md: Sprint 1 impl gate 1 (uv sync + @tool wrappers on existing unit_converter.py), sprint-plan.md still framed LangGraph-only and needs update to hybrid
 
-Executing A-E in order:
-1. Revert pyproject.toml (D): remove haystack-ai + ollama-haystack; restore langgraph, langchain, langchain-core, langchain-ollama, langchain-openai
-2. Update decision record (A): downgrade Ollama risk language from "material" to "minor + contribution opportunity" per Track B finding (OllamaChatGenerator source confirms tools parameter exists)
-3. Archive old haystack plans to dsm-docs/plans/done/ with superseded headers
-4. Write new backbone plan (B): 2026-04-07_e2e_hybrid_backbone.md reflecting canonical LangGraph stack from Track A + hybrid architecture from Track B
-5. Write new Sprint 1 plan (C): 2026-04-07_sprint1_langgraph_plan.md with create_react_agent + ChatOllama + InMemorySaver stack, build order starting from existing unit_converter.py
-6. Keep as-is (E): unit_converter.py, scaffolding __init__.py files (framework-agnostic, no rework needed)
+Ready to report state and await user direction. Priority suggestions:
+1. Process graph-explorer playbook response (provides reusable pattern for future Haystack contribution in Sprint 2)
+2. Sprint 1 impl gate 1: uv sync + @tool wrappers
+3. Update _reference/sprint-plan.md framing to hybrid backbone (housekeeping)
 
-Key research findings driving these updates:
-- Haystack OllamaChatGenerator DOES support tools (source confirmed) — docs gap only
-- Hybrid LangGraph+Haystack is a published pattern (Packt book exists)
-- Canonical Sprint 1 stack: create_react_agent + ChatOllama(qwen2.5:7b) + InMemorySaver + @tool + bilingual system prompt
-- MarkdownHeaderTextSplitter (LangChain) is better than Haystack's splitters for the heating-guide corpus, even inside the Haystack RAG subsystem
+<------------Start User / 15:14------------>
+User deleted dsm-docs/inbox/ (collision resolved). Priority order confirmed: 1 (graph-explorer playbook) -> 3 (sprint-plan.md reframe) -> 2 (Sprint 1 gate 1: uv sync + @tool wrappers).
 
-Sunk cost is minimal: unit_converter.py is framework-agnostic, no rework needed.
+<------------Start Thinking / 15:14------------>
+Three tasks queued. Before jumping in, I need to confirm what each "document" / "do" means concretely and surface the gate-1 (collaborative definition) questions per the four-gate Pre-Generation Brief Protocol.
 
-<------------Start Output / 23:58------------>
-Executed A-E batch:
-A. Decision record updated (2 edits): Ollama risk downgraded from "material" to "minor + contribution opportunity" per source confirmation; contribution goal refined to "docs PR expected path" with caveats/issue as fallbacks
-B. Backbone plan written: dsm-docs/plans/2026-04-07_e2e_hybrid_backbone.md (10 sections: architecture, tech stack, per-sprint scope, file layout, cross-cutting concerns, risks, success criteria)
-C. Sprint 1 plan written: dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md (12-step build order, 9 gates, 5 tools total, bilingual system prompt, InMemorySaver + thread_id pattern)
-D. pyproject.toml reverted: removed haystack-ai + ollama-haystack, restored langgraph + langchain-* stack; description updated to reflect hybrid
-E. No-op (framework-agnostic files kept): src/__init__.py, src/tools/__init__.py, tests/__init__.py, src/tools/unit_converter.py, tests/test_unit_converter.py
+Task 1 (graph-explorer playbook): "document" — the user wants me to capture the reusable lessons from the playbook response somewhere in this project. Candidates:
+- Blog journal entry (narrative / lesson capture)
+- Research doc (if formalized as a method)
+- Decision-record (if it changes a choice)
+- Reasoning-lessons append (if behavioral lesson for future sessions)
+Likely the blog journal plus a short cross-reference from the decision record, since the playbook is about contribution strategy, not a framework decision. I should ask the user which target(s).
 
-Archives: both haystack plans moved to dsm-docs/plans/done/ with "Superseded" headers; plain mv used (git mv failed because files were new-to-tree).
+Task 3 (sprint-plan.md reframe): two approaches — (a) add a superseded header pointing at the hybrid backbone plan in dsm-docs/plans/, or (b) rewrite the file to match the hybrid. I lean toward (a) because _reference/ is input material (per the Actionable Work Items rule), so a pointer keeps the authority in dsm-docs/plans/ without duplicating.
 
-Next step on user approval: begin Sprint 1 implementation gate 1 (run uv sync, then add @tool wrappers to existing unit_converter.py).
+Task 2 (Sprint 1 gate 1): run uv sync + add @tool wrappers to unit_converter.py. Need to verify:
+- Sprint 1 plan is the current canonical plan
+- unit_converter.py exists and is framework-agnostic as claimed
+- pyproject.toml has the correct langchain stack
+
+I will ask the user on task 1 what artifact to create (blog vs research vs both), verify assumptions on 3, and handle 2 after 1+3 are done.
+
+<------------Start User / 15:17------------>
+"just go" -> default packaging: (A) blog journal narrative entry, (B) standalone research doc + decision-record cross-ref, (C) reasoning-lessons [ecosystem] append, (D) move inbox entry to done/.
+
+<------------Start Thinking / 15:17------------>
+Plan for Task 1:
+1. Append blog journal entry (narrative: "when the spike IS the contribution pipeline", crediting graph-explorer's FalkorDBLite precedent)
+2. Write dsm-docs/research/2026-04-14_upstream-contribution-playbook.md (method reference distilled from GE response, adapted to Haystack/OllamaChatGenerator context, with Status: Done since it is captured knowledge not active research)
+3. Add one-line pointer in 2026-04-07_orchestration-framework.md under the contribution framing (where OllamaChatGenerator docs gap is discussed)
+4. Append a single [ecosystem] lesson to .claude/reasoning-lessons.md under "Cross-Repo & Governance" section
+5. Move _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md to _inbox/done/
+
+Anchor for reasoning-lessons append: read last 3 lines, anchor on last non-empty.
+
+For decision record: need to find where OllamaChatGenerator contribution is currently framed to know where to add the cross-reference.
+
+<------------Start Thinking / 15:22------------>
+Workspace explanation requested. Gathering repo layout, active file context, and current architecture notes.
+
+<------------Start Thinking / 14:24------------>
+User requesting explanation of "stub tool" from sprint plan file section 3, test layout.
+References test_tool_error_handling.py comment: "BL-002 edit 4: raises from a stub tool, asserts agent recovers gracefully"
+Will provide paragraph explanation of what stub tool means in this error-handling test context.
+
+<------------Start Output / 15:20------------>
+Task 1 complete:
+- dsm-docs/blog/journal.md: appended 2026-04-14 entry "When the spike IS the contribution pipeline" (~35 lines, narrative + naming the pattern locally, links to the research doc)
+- dsm-docs/research/2026-04-14_upstream-contribution-playbook.md: new file, Status: Done, ~85 lines, 6-step method adapted to OllamaChatGenerator context, gap-triage heuristics, references
+- dsm-docs/decisions/2026-04-07_orchestration-framework.md: appended one-line pointer at end of "Contribution goal" section
+- .claude/reasoning-lessons.md: appended [S4] [ecosystem] lesson under "Cross-Repo & Governance"
+- _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md: moved to _inbox/done/
+
+Task 3 complete:
+- _reference/sprint-plan.md: superseded header added at top pointing at dsm-docs/plans/ (backbone + sprint-1) and the decision record. Original body retained as historical input material per the Actionable Work Items rule.
+
+Task 2 (Sprint 1 gate 1) pending user approval.
+
+<------------Start Thinking / 15:34------------>
+Concept-gate analysis for Sprint 1 gate 1:
+
+What the plan calls for at gate 1 (steps 2-3 in build order):
+- Step 2: uv sync (one-time venv + dep install)
+- Step 3: add @tool wrappers to existing unit_converter.py
+- Open decision in plan section 5.1: individual @tool per function vs combined tool with method param. Plan recommends individual.
+
+Existing unit_converter.py:
+- Module docstring lists 3 functions: kw_to_kcal_per_h, kcal_per_h_to_kw, degree_days
+- KCAL_PER_H_PER_KW constant (3600/4.184)
+- Three plain Python functions, all framework-agnostic
+- Tests in tests/test_unit_converter.py import from src.tools.unit_converter directly — they should keep passing unchanged after wrapping
+
+pyproject.toml is reverted correctly (langgraph, langchain, langchain-core, langchain-ollama, langchain-openai). No haystack deps. uv.lock missing (uv sync will create it).
+
+Blocker for Step 2 (uv sync): the uv on PATH is a Windows shim under /mnt/c/Users/adiaz/.pyenv/pyenv-win/shims/uv with CRLF line endings, so it cannot execute under WSL. We need a Linux uv. Options:
+(a) install uv in WSL: curl -LsSf https://astral.sh/uv/install.sh | sh
+(b) alias to a different installed Python (pip + venv manually)
+(c) defer Step 2 to user, do Step 3 (code-only edit) now
+
+Concept-gate proposal for Step 3 (the @tool wrapper):
+
+Pattern recommendation: thin wrapper module, NOT in-place decoration. Reasoning:
+1. Tests already import the plain functions; @tool decoration changes the call signature (LangChain wraps in StructuredTool). Decorating in place would break tests OR force changing how tests import.
+2. The plan explicitly says "keep plain Python function; add a thin @tool-decorated wrapper". So the existing unit_converter.py stays as the plain-Python source of truth. The wrapper lives somewhere registry can import.
+
+Two organizational options:
+A) Add wrappers to the BOTTOM of unit_converter.py (same module, both plain + wrapped exposed). Imports stay clean.
+B) Add a separate module (e.g., src/tools/unit_converter_tools.py) that imports the plain functions and wraps them.
+
+Recommendation: option A. Plan section 3 file layout shows unit_converter.py as the single file and the registry imports tools by name. Single module is simpler. The plan says "[done] plain Python + @tool wrapper (to add)" beside unit_converter.py, confirming co-location.
+
+Decision on tool granularity (plan 5.1): three individual tools (kw_to_kcal_per_h, kcal_per_h_to_kw, degree_days) per plan recommendation. Each gets a focused docstring (what the LLM reads as description).
+
+@tool signature pattern (from research doc 2026-04-07_langgraph-best-practices.md, but I have not re-read it — flag this):
+- @tool decorator from langchain_core.tools
+- Function signature with type hints (used to build the JSON schema)
+- Docstring becomes the tool description
+- Return value: convention in the plan is "dict returns"
+
+Per plan section 2 row "Tools | @tool decorator, snake_case, dict returns". So wrap to return dicts.
+
+Proposed signature for each:
+
+@tool
+def kw_to_kcal_per_h_tool(kw: float) -> dict:
+    """Convert thermal power from kilowatts (kW) to kilocalories per hour (kcal/h).
+    Use when the user asks to convert heating power between metric and traditional units."""
+    return {"kcal_per_h": kw_to_kcal_per_h(kw), "input": {"kw": kw}}
+
+@tool
+def kcal_per_h_to_kw_tool(kcal_per_h: float) -> dict:
+    """..."""
+    return {"kw": kcal_per_h_to_kw(kcal_per_h), "input": {"kcal_per_h": kcal_per_h}}
+
+@tool
+def degree_days_tool(base_temp: float, daily_temps: list[float]) -> dict:
+    """Compute heating degree days (HDD) for a sequence of daily mean temperatures.
+    HDD = sum(max(0, base_temp - t)). German convention base = 15°C (Heizgrenztemperatur)."""
+    return {"hdd": degree_days(base_temp, daily_temps), "input": {"base_temp": base_temp, "n_days": len(daily_temps)}}
+
+Naming question: should @tool-wrapped versions have the same name as the plain function (shadows + breaks tests) or _tool suffix (clear) or wrap into a separate name?
+
+Per plan section 9 build order: "registry.TOOLS = [kw_to_kcal_per_h, kcal_per_h_to_kw, degree_days, ...]" — the plan uses the bare names in the registry. That means either:
+- The registry imports the @tool-decorated versions and the plain functions are renamed/shadowed, OR
+- The plan was written assuming the @tool decorator is applied in place and tests would be updated.
+
+This is a concrete decision the user needs to make at concept gate. My recommendation: add _tool suffix to wrappers, update plan section 9 to use the suffixed names. Keeps tests green and the namespace explicit (anyone reading sees plain vs LLM-facing).
+
+Also: degree_days takes Iterable[float] but @tool needs JSON-schema-compatible types. list[float] is the right narrowing for the wrapper.
+
+uv sync blocker: present option (a) install Linux uv as default action, since the plan needs it. Alternatively defer entirely.
+
+<------------Start User / 15:50------------>
+Pause Sprint 1 gate 1. User wants a research BL on whether the hybrid LangGraph + Haystack modular architecture (loose coupling via single @tool boundary) has comparable precedents in existing articles/posts/repos. Plan to run the research in a parallel DSM session, so we need a BL formalized in dsm-docs/plans/.
+
+<------------Start Thinking / 15:50------------>
+This is a research-track BL, not an implementation BL. Goal: find precedents (articles, blog posts, OSS repos, conference talks) of hybrid agent + RAG architectures with a similar loose-coupling pattern (one framework as the agent layer, a different framework as the RAG subsystem behind a single tool boundary). Goes into dsm-docs/plans/ as a backlog item with a clear research question, success criteria, and pointer to where findings will land.
+
+Per Actionable Work Items rule, BLs in dsm-docs/plans/ are the authoritative work items. Format hint from plans/README.md: BACKLOG-###_short-description.md, required fields Status, Priority, Date Created, Origin, Author.
+
+Need a BL number. Let me check for existing BL files.
+
+Plan structure:
+- BL### (need to determine) 
+- Title: Architecture-Pattern Precedent Research: Hybrid Agent + RAG Loose Coupling
+- Status: Open
+- Priority: Medium (informs Sprint 2 scoping but not blocking Sprint 1)
+- Origin: Session 4 (2026-04-14) follow-up to 2026-04-07 orchestration decision
+- Research question: do other projects use a hybrid agent-framework + RAG-framework pattern with a single-tool boundary, and what do their integration boundaries look like?
+- Targeted sources: arxiv, deepset blog, langchain blog, github topics (langgraph + haystack, agent + rag), towards-data-science, anthropic/openai cookbooks, conference talks
+- Success: ≥3 substantive precedents OR a confident "novel-ish" finding with reasoning
+- Output target: dsm-docs/research/2026-04-XX_hybrid-architecture-precedents.md
+- Parallel-session use: yes, designed to run in /dsm-parallel-session-go context (research only, no main-branch writes beyond the research doc and BL completion)
+
+Should I gate on the user before writing? Yes — concept gate first. Confirm research question framing, scope, success criteria, BL priority, then write.
+
+Need to check existing BL numbers in dsm-docs/plans/ to pick the next number.
+
+<------------Start Output / 15:52------------>
+BL-001 created:
+- dsm-docs/plans/BACKLOG-001_hybrid-agent-rag-architecture-precedents.md (research-only BL, ~80 lines, strict-then-lenient lens, ~2h soft cap, parallel-session-safe)
+- dsm-docs/plans/README.md: index table updated with BL-001 row
+
+Ready to launch in parallel via /dsm-parallel-session-go. Sprint 1 gate 1 still paused on user direction (uv install + naming + wrapper-tests decisions).
+
+<------------Start User / 15:53------------>
+User renamed BL file: BACKLOG-001_... -> BL-001_hybrid-agent-rag-architecture-precedents.md. Resume Sprint 1 gate 1.
+
+<------------Start Thinking / 15:53------------>
+Update internal references:
+- dsm-docs/plans/README.md format hint says "BACKLOG-###_..." but user prefers "BL-###_..." (matches the in-conversation shorthand). README format hint should be updated to BL-### so future BLs follow the same convention.
+
+Resuming Sprint 1: still need user answers on three concept-gate decisions (uv install, naming, wrapper tests). Will re-prompt concisely.
+
+<------------Start User / 15:55------------>
+"defaults": (a) install Linux uv, (_tool) suffix, defer wrapper tests to Step 6.
+
+<------------Start Thinking / 15:55------------>
+Concept gate cleared. Moving to implementation gate. Plan:
+
+1. Install Linux uv (Step 2 prep): curl -LsSf https://astral.sh/uv/install.sh | sh — but this is a tool install on the user's machine, slight blast radius. Will run after presenting; user approves via permission window.
+2. Run uv sync (Step 2): creates .venv, installs deps, generates uv.lock.
+3. Edit src/tools/unit_converter.py (Step 3): append @tool wrappers at the bottom with _tool suffix.
+4. Verify existing tests still pass: uv run pytest tests/test_unit_converter.py
+5. (Deferred) Wrapper tool.invoke tests — Step 6.
+
+Implementation gate: present the diff for Step 3 first (code change is the substantive review), then run uv install + uv sync + pytest as the run gate.
+
+Actually the order should be:
+- uv install (run gate, isolated tool install)
+- uv sync (run gate, creates venv)
+- THEN show the code diff (because we want the code edit reviewed before any test that would import LangChain)
+- Then pytest
+
+Or: show diff first (concept-validated edit), then install + sync + test as one run-gate batch.
+
+Going with: code edit first (low risk, just appending to a file, easy to undo), then install+sync+test as a run-gate batch. The code change does not need uv to be present to be valid.
+
+For the code edit, the import  will fail at import time if langchain-core is not installed, which would break the existing tests. So actually I need uv sync BEFORE the code edit, OR I need to defer importing inside a try/except, OR accept that tests break temporarily.
+
+Cleanest order:
+1. Install uv (run)
+2. uv sync (run, creates venv with langchain-core)
+3. Edit unit_converter.py (impl)
+4. uv run pytest tests/test_unit_converter.py (run, verify existing tests still pass)
+
+Will present this batched plan.
+
+<------------Start User / 15:59------------>
+Parallel-session BL-001 blocked: scope overlaps with main-session uncommitted changes (journal.md and decision record). User needs an unblock path.
+
+<------------Start Thinking / 15:59------------>
+The parallel session refused (correctly) because:
+- dsm-docs/blog/journal.md: I modified it earlier this session (Task 1, playbook narrative entry). Uncommitted.
+- dsm-docs/decisions/2026-04-07_orchestration-framework.md: I modified it earlier (one-line cross-reference to playbook research). Uncommitted.
+
+Both are part of BL-001's declared write scope (conditional on novel-ish finding for the decision record, journal entry on completion).
+
+Three options the parallel session offered:
+1. Commit/stash main session changes first
+2. Narrow BL-001 scope this run to research doc + BL status only
+3. Run BL-001 in main session
+
+Best path is option 1: commit the main-session work that's complete (Task 1 outputs are coherent, Task 3 sprint-plan reframe is coherent, the alignment work is coherent). Then the parallel session has a clean baseline to write against. This also frees us from carrying ~6 file modifications through Sprint 1 work.
+
+We're mid-Sprint-1 gate 1 (uv installed, uv sync next). Committing now, before uv sync, gives:
+- Clean main-session HEAD with: alignment fixes, Task 1 (playbook capture), Task 3 (sprint-plan reframe), BL-001 creation
+- Parallel session unblocked
+- Sprint 1 work continues from a clean tree
+
+Option 2 (narrow scope) is also fine but defers two outputs and creates a coordination tax. Option 3 (move BL to main session) defeats the purpose of running it in parallel.
+
+I should propose option 1 with a concrete commit plan. The commit boundary is natural: everything done before "uv install" is documentation/governance work; everything from "uv install" onward is implementation.
+
+Commit message draft (one commit, since the changes are interrelated session-start work):
+"Session 4: align CLAUDE.md to v1.4.18, capture graph-explorer playbook, supersede sprint-plan, open BL-001"
+
+Or split into 2-3 commits for cleaner history:
+A. align: CLAUDE.md, hooks, settings, alignment markers (alignment work)
+B. docs: capture graph-explorer playbook (blog + research + decision xref + lesson + inbox move)
+C. plan: supersede _reference/sprint-plan.md, open BL-001
+
+Three commits gives the cleanest audit trail. I'll propose that.
+
+<------------Start Output / 16:01------------>
+Three commits landed on session-4/2026-04-14:
+- 0a15dea align: sync to DSM v1.4.18, install BL-319 transcript hooks (8 files, +348/-7)
+- e16e51d docs: capture graph-explorer contribution playbook (4 files, +288)
+- 1b066eb plan: supersede _reference/sprint-plan.md, open BL-001 (3 files, +97/-1)
+
+Remaining uncommitted (session-scoped, handled by wrap-up):
+- .claude/session-baseline.txt (M)
+- .claude/session-transcript.md (M, live)
+- .claude/transcripts/2026-04-07T13:51-ST.md (archived prior transcript)
+
+BL-001 parallel session is now unblocked. Main session back to Sprint 1 gate 1 -> uv sync next.
+
+<------------Start User / 16:35------------>
+Parallel session 4.1 closed BL-001. Two research deliverables landed (735160b, 223bc97): hybrid-architecture-precedents.md and sprint-plans-groundedness-assessment.md. User directs:
+1. Read both research docs for context
+2. Create BL-002 (apply the 6 recommended edits) with the sketched skeleton
+3. Also reinforce Sprint 1 §11 DE tool-call as gating exit criterion (overlaps with edit 1)
+4. Close BL-001 (move to done/)
+5. Then proceed with uv sync
+
+<------------Start Thinking / 16:35------------>
+The parallel session produced a groundedness assessment that found 6 gaps in the sprint plans. User wants BL-002 to scope the fix work, not to do it ad hoc. This is exactly the Actionable Work Items rule: work goes through BL, not buried in research.
+
+Plan:
+1. Pull parallel session commits (git fetch + check if they are on my local branch or need git pull / rebase — they should already be on session-4/2026-04-14 if they are on the shared session branch)
+2. Read the two research docs
+3. Create BL-002 with the sketched skeleton (user's text is already close to the final shape, just reformat)
+4. Close BL-001: move to done/ with Status: Done + Date Completed annotation, update README index
+5. Commit BL-002 creation + BL-001 closure in one commit
+6. Then move to uv sync (Sprint 1 gate 1 Step 2)
+
+First: check git log to see the parallel session commits.
+
+<------------Start Output / 16:37------------>
+BL-001 closed, BL-002 opened, committed as 31aa522:
+- dsm-docs/plans/done/BL-001_hybrid-agent-rag-architecture-precedents.md (moved, Status: Done, Date Completed 2026-04-14)
+- dsm-docs/plans/BL-002_apply-sprint-plans-groundedness-edits.md (new, 6 edits scoped, ~70 lines)
+- dsm-docs/plans/README.md (index updated: BL-002 active, BL-001 in Closed section)
+
+Git log tail:
+  31aa522 plan: close BL-001, open BL-002 (apply groundedness edits)
+  223bc97 Parallel 4.1 follow-on: sprint plans groundedness assessment
+  735160b BL-001 parallel 4.1: hybrid agent+RAG architecture precedent research
+  1b066eb plan: supersede _reference/sprint-plan.md, open BL-001
+
+Leftover uncommitted (main-session territory, wrap-up handles):
+- .claude/session-baseline.txt (M), .claude/session-transcript.md (M, live)
+- .claude/commit-lock, .claude/parallel-session-baseline.txt (parallel artifacts)
+- .claude/transcripts/2026-04-07T13:51-ST.md (archived S3 transcript)
+- dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md (M, external linter removed Author line — not a session change, will land with next related commit)
+
+Note on outstanding work: BL-002 is Open but user chose to run uv sync NEXT rather than apply BL-002 first. Order is user-preferred: complete Sprint 1 gate 1 Step 2 (uv sync), then BL-002 edits can happen before or interleaved with Sprint 1 gate 1 Step 3.
+
+Proceeding with uv sync.
+
+<------------Start Output / 16:38------------>
+uv sync complete (Sprint 1 gate 1 Step 2 done):
+- .venv created at ./.venv (Python 3.11)
+- uv.lock generated (2224 lines)
+- ~80 packages installed: langgraph, langchain 1.2.28, langchain-ollama, langchain-openai, streamlit 1.56.0, pydantic 2.13.0, pytest 9.0.3 + ...
+- Verified imports: @tool, create_react_agent, InMemorySaver all resolve
+- Baseline pytest: 11/11 passed on tests/test_unit_converter.py in 0.03s
+
+Ready for Step 3 (@tool wrappers edit).
+
+Note on the VIRTUAL_ENV=/usr warning: external shell has VIRTUAL_ENV pointing at /usr; uv ignores it and uses .venv correctly. No action needed.
+
+Next user gate: apply the Step 3 edit (append 3 @tool wrappers to src/tools/unit_converter.py, per concept-gate plan already approved).
+
+<------------Start User / 16:41------------>
+Pause Step 3. Organize dsm-docs/research/: move consumed files to done/.
+
+<------------Start Thinking / 16:41------------>
+Research lifecycle per plans/README template: research files move to done/ "after findings are integrated into the target outcome." Need to determine which files are consumed vs still-active inputs.
+
+Current files in dsm-docs/research/:
+- 2026-04-07_haystack-vs-langgraph-deepened.md
+- 2026-04-07_hybrid-langgraph-haystack-best-practices.md
+- 2026-04-07_langgraph-best-practices.md
+- 2026-04-14_hybrid-architecture-precedents.md (from parallel 4.1)
+- 2026-04-14_sprint-plans-groundedness-assessment.md (from parallel 4.1)
+- 2026-04-14_upstream-contribution-playbook.md (my earlier Task 1)
+
+Consumed = findings have been integrated into a decision, plan, or BL that is now authoritative.
+
+Analysis:
+- 2026-04-07_haystack-vs-langgraph-deepened.md -> integrated into 2026-04-07_orchestration-framework.md (decision) -> CONSUMED
+- 2026-04-07_hybrid-langgraph-haystack-best-practices.md -> integrated into 2026-04-07_e2e_hybrid_backbone.md (plan) -> CONSUMED but still referenced as active input by BL-002 groundedness assessment (edits 2, 5, 6 cite it). Still relevant for Sprint 2 pickup — ACTIVE.
+- 2026-04-07_langgraph-best-practices.md -> integrated into 2026-04-07_sprint1_langgraph_plan.md but Sprint 1 is in active implementation — ACTIVE (gate references depend on this doc). Defer move until Sprint 1 is done.
+- 2026-04-14_hybrid-architecture-precedents.md -> consumed (decision record has cross-ref; Precedent 2 is cited in groundedness assessment; BL-001 closed). -> CONSUMED. Will be cited during BL-002 execution (edit 5) but that is a terminal citation, not ongoing dependency. Move-safe after BL-002.
+- 2026-04-14_sprint-plans-groundedness-assessment.md -> direct input to BL-002 which is OPEN. ACTIVE until BL-002 closes.
+- 2026-04-14_upstream-contribution-playbook.md -> Status: Done, self-declared. Referenced by orchestration decision record. Its activation is Sprint 2 pickup. Move-safe? The Status: Done on the file declares consumption, but the "activate at Sprint 2 start" note means it is still a forward-reference, not archived knowledge. Judgment call. Two options:
+  a) Keep in active research/ until Sprint 2 picks it up -> consumed-but-not-archived
+  b) Move to done/ since Status is already Done and cross-refs point at it -> archived-as-reference
+
+DSM research README template lifecycle step 3 says "Move to done/ with Status: Done and Date Completed." The file already satisfies this precondition (Status: Done, Date Completed: 2026-04-14). It is a captured-knowledge reference document, not an in-progress investigation. Safe to move.
+
+Let me tabulate more conservatively:
+
+| File | Integrated into | Status |
+|---|---|---|
+| 2026-04-07_haystack-vs-langgraph-deepened.md | Decision record (2026-04-07_orchestration-framework.md) | CONSUMED → move |
+| 2026-04-07_hybrid-langgraph-haystack-best-practices.md | Hybrid backbone plan | CONSUMED for architecture, but actively referenced by open BL-002 edits 2/5/6 → HOLD |
+| 2026-04-07_langgraph-best-practices.md | Sprint 1 plan (actively in-flight) | HOLD until Sprint 1 complete |
+| 2026-04-14_hybrid-architecture-precedents.md | Decision record note, BL-001 closed, cited by groundedness assessment | CONSUMED but referenced by open BL-002 edit 5 → HOLD |
+| 2026-04-14_sprint-plans-groundedness-assessment.md | BL-002 (OPEN) | ACTIVE until BL-002 closes |
+| 2026-04-14_upstream-contribution-playbook.md | Status: Done, cited by decision record, awaits Sprint 2 activation | CONSUMED? or hold for Sprint 2? → judgment call |
+
+Only haystack-vs-langgraph-deepened.md is unambiguously safe to move right now. The rest have live dependencies (active BL or in-flight Sprint).
+
+Conservative proposal: move only 2026-04-07_haystack-vs-langgraph-deepened.md. Leave everything else until its dependent BL/sprint closes.
+
+Alternative: move the upstream contribution playbook too, since the file self-declares Done and its function is "activate at Sprint 2 start," which is a forward pointer, not a dependency the file must stay alive to serve. Cross-refs from decision record and journal entry will continue to work from done/.
+
+I should present this analysis and let the user decide per file.
+
+<------------Start User / 16:45------------>
+Move (1) only: 2026-04-07_haystack-vs-langgraph-deepened.md -> done/.
+
+<------------Start Thinking / 16:45------------>
+Per research README lifecycle: Status: Done + Date Completed should be on the file header before moving. Let me check the file header — add if missing. Then git mv, commit.
+
+<------------Start Output / 16:46------------>
+Research organized. Committed 7f75fe1:
+- dsm-docs/research/done/2026-04-07_haystack-vs-langgraph-deepened.md (moved; header updated to Status: Done, Date Completed 2026-04-14)
+
+Five files remain active in dsm-docs/research/, each tied to a live BL or in-flight sprint. Deferring moves for those until BL-002 closes and Sprint 1 completes.
+
+Leftover uncommitted (main-session / parallel-session territory, wrap-up handles):
+- .claude/session-baseline.txt (M), .claude/session-transcript.md (M, live)
+- .claude/commit-lock, .claude/parallel-session-baseline.txt
+- .claude/transcripts/2026-04-07T13:51-ST.md
+- dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md (external linter edit)
+- uv.lock (new, generated by uv sync — belongs with the Sprint 1 work commit coming next)
+
+Next: resume Sprint 1 gate 1 Step 3 (append @tool wrappers to src/tools/unit_converter.py).
+
+<------------Start Output / 16:56------------>
+Sprint 1 gate 1 Step 3 complete: @tool wrappers added to src/tools/unit_converter.py.
+
+Verification:
+- 11/11 existing tests still pass (plain functions unaffected)
+- @tool invocations return expected dicts:
+  - kw_to_kcal_per_h_tool(kw=24.0) -> {'kcal_per_h': 20650.1, 'input': {'kw': 24.0}}
+  - kcal_per_h_to_kw_tool(kcal_per_h=20650.0) -> {'kw': 24.0, 'input': ...}
+  - degree_days_tool(base_temp=15, daily_temps=[0,0,0,0,0,10,10]) -> {'hdd': 85.0, 'input': {'base_temp': 15.0, 'n_days': 7}}
+- Generated JSON schema for LLM discovery: title kw_to_kcal_per_h_tool, description = full docstring (multi-line, includes use-case hint), kw: number, required.
+
+IDE linter flagged the langchain_core.tools import as unresolved, but that is an IDE interpreter misconfiguration (IDE pointing at system Python, not .venv). Runtime imports resolve correctly under uv run.
+
+Sprint 1 gate 1 (Steps 1-3) done. Next: step 4-6 is standard_lookup.py + heating_curve.py + tests (still plan-scope), but also BL-002 should land before going deeper into Sprint 2-touching plan sections. Also, the main-session uv.lock + unit_converter.py changes want a commit.
+
+<------------Start User / 16:58------------>
+Order: 1 (commit Sprint 1 gate 1 work) -> 2 (apply BL-002 edits) -> 3 (standard_lookup.py).
+
+<------------Start Thinking / 16:58------------>
+Step 1: commit uv.lock + src/tools/unit_converter.py. These are the Sprint 1 gate 1 Steps 2+3 deliverables. One commit, clear message.
+
+After the commit, only session-scoped + parallel-session leftovers remain uncommitted (baseline, transcript, commit-lock, parallel-session-baseline, archived S3 transcript, hybrid-architecture-precedents linter edit).
+
+Then step 2: BL-002. Apply 6 edits across 2 plan files, in the execution order BL-002 itself suggests (hygiene first, substantive second):
+- Edit 1: Sprint 1 §6 promote DE tool-call
+- Edit 3: backbone §2 Chroma rationale
+- Edit 4: Sprint 1 §5.4 + §3 test list
+- Edit 6: backbone + Sprint 2 WON'T reranker explicit
+- Edit 2: Sprint 2 §MUST embedding-model benchmark
+- Edit 5: Sprint 2 Gate 1 monolithic-vs-specialized
+
+I need to re-read both plans to apply edits accurately. The backbone plan I have not read in full this session.
+
+Let me commit first, then dive in.
+
+<------------Start Output / 17:27------------>
+BL-002 applied and closed (commit b5079ca). Six edits applied across 3 files, net +62/-5:
+- Sprint 1 plan: DE tool-call gating criterion (edit 1); error-handling assumed-pending marker + test_tool_error_handling.py entry (edit 4)
+- Backbone plan: Chroma rationale (edit 3); embedding-model micro-benchmark at Sprint 2 Gate 1 (edit 2); monolithic-vs-specialized RAG tool Gate-1 decision (edit 5); reranker deferral made explicit (edit 6)
+- plans/README.md: active section empty, closed section lists BL-001 and BL-002
+- BL-002 moved to done/ with Status: Done, Date Completed: 2026-04-14
+
+No change to orchestration decision record (assessment verdict stands).
+
+Ready for step 3 (user's order): standard_lookup.py. Sprint 1 plan build-order step 4. This will need:
+- Static dict of DIN EN 12831 design temperatures (DE regions / postal code prefixes) and VDI 6030 reference radiator data
+- @tool function: standard_lookup(standard: str, key: str) -> dict
+- Tests: known values, missing key raises, unknown standard raises
+
+Cross-repo read: ~/dsm-residential-energy/ (companion app) may have data. Also ~/dsm-residential-heating-ds-guide/ 01_Domain_Fundamentals.md.
+
+<------------Start User / 17:30------------>
+Approved cross-repo read pass: ~/dsm-residential-heating-ds-guide/01_Domain_Fundamentals.md + ~/dsm-residential-energy/. Read-only (no writes).
+
+<------------Start Thinking / 17:30------------>
+Goal: extract authoritative reference data for DIN EN 12831 (design outside temperatures by DE region or postal-code prefix) and VDI 6030 (reference radiator data) so the standard_lookup tool has real values, not made up ones. Also see what keys/shape the companion app uses so the tool surface is consistent.
+
+Reading:
+1. ~/dsm-residential-heating-ds-guide/01_Domain_Fundamentals.md — primary source (411 lines per MEMORY.md)
+2. Look for reference data files in ~/dsm-residential-energy/ (JSON/CSV/Python modules with design temps or radiator specs)
+
+Will skim, not do a comprehensive read — looking for:
+- DIN EN 12831: design outside temperature table (by city/region/postal code), indoor design temperature per room type, formulas
+- VDI 6030: reference radiator thermal output, temperature spread assumptions
+- Any other standard the guide mentions as common
+
+<------------Start Thinking / 17:35------------>
+Read complete. Sources summary:
+- Guide 01_Domain_Fundamentals.md: narrative. Usable data: Berlin design outside -14°C, HDD Berlin 3000-3200 / Munich 3500-3800, Fernwärme return penalty 50-60°C, Spreizung target 20-30K, Verfahren B mandatory since 2023, heat pump COP ranges, boiler efficiencies.
+- Companion app config.py: extensive structured reference data with DIN/VDI citations. BUILDING_PRESETS (slope, flow temp limits by building type), DEFAULT_CONFIG (indoor design temps, setpoints), LOCATION_PRESETS (8 German cities with coordinates), PARAMETER_RANGES (comfort ranges).
+
+The companion app is the gold-standard source for this data; it already references DIN EN 12831, VDI 6030, DIN 4703, VDI 2067, DIN EN 1264, EnEV/GEG, DVGW W 551.
+
+Design choice for standard_lookup: the plan says "@tool function: standard_lookup(standard: str, key: str) -> dict". So the tool dispatches on standard first, then key. Data structure:
+
+STANDARDS = {
+    "DIN EN 12831": {
+        "scope": "Heating systems in buildings — Method for calculation of the design heat load",
+        "keys": {
+            "indoor_design_temp_day": {"value": 20.0, "unit": "°C", "notes": "Standard residential comfort temperature"},
+            "indoor_design_temp_night": {"value": 16.0, "unit": "°C", "notes": "Common 4K setback (per VDI 2067)"},
+            "comfort_range_min": {"value": 18.0, "unit": "°C"},
+            "comfort_range_max": {"value": 24.0, "unit": "°C"},
+            "design_outside_temp_berlin": {"value": -14.0, "unit": "°C"},
+            "verfahren_B_mandatory_since": {"value": 2023, "notes": "Required for new and modernized systems"},
+        }
+    },
+    "VDI 6030": {
+        "scope": "Designing free heating surfaces — Fundamentals (heating curve slopes)",
+        "keys": {
+            "slope_low_energy": {"value": 0.3, "notes": "Heat pump + floor heating, KfW 40/55, passive house"},
+            "slope_renovated": {"value": 1.0, "notes": "Renovated 1960s-1990s, KfW 70-100, condensing boilers"},
+            "slope_default_factory": {"value": 1.4, "notes": "Common factory default (Viessmann, Buderus, Vaillant)"},
+            "slope_historic": {"value": 1.6, "notes": "Pre-1940s unrenovated, high transmission losses"},
+        }
+    },
+    "DIN 4703": {
+        "scope": "Traditional radiator design flow temperatures",
+        "keys": {
+            "t_vorlauf_max_standard": {"value": 75.0, "unit": "°C"},
+            "t_vorlauf_max_historic": {"value": 80.0, "unit": "°C"},
+        }
+    },
+    "DIN EN 1264": {
+        "scope": "Floor heating system design",
+        "keys": {"t_vorlauf_design": {"value": 35.0, "unit": "°C"}}
+    },
+    "DIN 4702-8": {
+        "scope": "Condensing boiler operation",
+        "keys": {"t_rueklauf_max_for_condensing": {"value": 55.0, "unit": "°C"}}
+    },
+    "VDI 2067": {
+        "scope": "Economic efficiency of building installations (night setback)",
+        "keys": {"night_setback_standard": {"value": 4.0, "unit": "K"}}
+    },
+    "DVGW W 551": {
+        "scope": "DHW Legionella prevention",
+        "keys": {
+            "storage_min_temp": {"value": 60.0, "unit": "°C"},
+            "distribution_min_temp": {"value": 55.0, "unit": "°C"},
+        }
+    },
+    "VDI 3807": {
+        "scope": "Heizgrenztemperatur (heating limit temperature)",
+        "keys": {"heating_limit_temp_standard": {"value": 15.0, "unit": "°C"}}
+    },
+}
+
+API design:
+- standard_lookup(standard: str, key: str) -> dict
+- If standard missing: raise ValueError("Unknown standard: X. Available: [...]")
+- If key missing but standard present: return the standard's full metadata (scope + list of keys) — this makes it LLM-friendly for exploration. Alternative: raise KeyError. Plan says "missing key raises" — follow plan.
+- If both valid: return {standard: ..., key: ..., value: ..., unit: ..., notes: ..., scope: ...}
+
+Actually rereading plan §4 step 4: "Tests: known values, missing key raises, unknown standard raises." So both missing -> raise. Good.
+
+But thinking LLM-friendly: if key is absent, returning "available keys for this standard" is useful for a discoverable tool. The plan says raise, but I could raise with a helpful message listing available keys. That satisfies the plan and helps the LLM self-correct.
+
+Tool docstring should also give the LLM an easy path to "list available standards" — maybe allow standard="list" or key="list"? That's scope creep. Stick to the plan: raise with helpful message. Use ValueError for both unknown-standard and unknown-key.
+
+Plain Python function standard_lookup (framework-agnostic), then @tool wrapper standard_lookup_tool suffix convention like unit_converter.
+
+For the wrapper return, use dict per plan convention: return {"standard": ..., "key": ..., "value": ..., "unit": ..., "notes": ..., "scope": ...}.
+
+Tests:
+- test_din_12831_indoor_design_temp: lookup known -> correct value
+- test_vdi_6030_slope_historic: lookup known -> 1.6
+- test_unknown_standard_raises: ValueError
+- test_unknown_key_raises: ValueError
+- test_known_standards_have_scope: sanity check every standard has a non-empty scope
+- test_all_values_have_units_or_notes: one of them present
+
+Edge: citations. Each entry should cite which document in the heating guide AND/OR which DIN reference it was sourced from. Keep notes short.
+
+<------------Start User / 17:39------------>
+Concept gate approved: scope points 1-5 + include 8-city design-outside-temp mini-table.
+
+<------------Start Thinking / 17:39------------>
+City design-outside-temperatures are climate-zone data. DIN EN 12831 provides official values per region (based on postal code prefix). I don't have the official table loaded. Approximations based on published climate data for the 8 cities in the companion app's LOCATION_PRESETS:
+
+- Berlin (52.52 N, continental): -14°C (confirmed in the guide)
+- Munich (48.14 N, alpine-continental): -16°C (colder per guide "more continental climate")
+- Hamburg (53.55 N, maritime): -12°C (milder winters, North Sea influence)
+- Frankfurt (50.11 N, central): -12°C
+- Cologne (50.94 N, Rhine valley): -10°C (guide notes "mild winters")
+- Stuttgart (48.78 N, SW): -12°C
+- Dresden (51.05 N, east): -14°C (continental)
+- Freiburg (47.99 N, warmest): -10°C
+
+These are approximate rounded values. I'll flag each entry with a "notes" field: "approximate; consult official DIN EN 12831-1 Annex for exact zone values." The values are reasonable estimates but NOT authoritative.
+
+Add the city table under DIN EN 12831 as nested keys: design_outside_temp_berlin, _munich, etc. Keeps it under one standard.
+
+Or create a separate keys namespace? Cleanest: flat keys with city suffix. 8 extra keys under DIN EN 12831.
+
+Now writing the module. Plan:
+1. Module docstring with standards list + source citations
+2. Imports: from langchain_core.tools import tool
+3. STANDARDS dict (module-level constant)
+4. Plain Python standard_lookup function with ValueError on unknowns
+5. @tool wrapper standard_lookup_tool
+6. Tests file tests/test_standard_lookup.py
+
+Impl gate: edit src/tools/standard_lookup.py (new file) + tests/test_standard_lookup.py (new file). User will approve via permission window for each write.
+
+Build incrementally per App Development Protocol. Two files means two writes. Do them in one turn since they're coherent.
+
+<------------Start Output / 17:45------------>
+Sprint 1 plan step 4 (standard_lookup) complete:
+- src/tools/standard_lookup.py (new): 8 standards (DIN EN 12831, VDI 6030, DIN 4703, DIN EN 1264, DIN 4702-8, VDI 2067, DVGW W 551, VDI 3807) with 24 total keys including 8 city design-outside temps under DIN EN 12831. Plain-Python standard_lookup + @tool standard_lookup_tool. ValueError on unknown standard/key with available options in message.
+- tests/test_standard_lookup.py (new): 18 tests across known values (8), errors (4), structural invariants (3), tool wrapper (3). All pass.
+
+Full test suite: 29/29 pass in 0.40s (11 unit_converter + 18 standard_lookup).
+
+City design-outside temperatures flagged as approximate in "notes" field (not official DIN EN 12831-1 Annex values). Honest about the provenance.
+
+Sprint 1 plan build-order progress:
+[x] 1. Revert pyproject.toml
+[x] 2. uv sync
+[x] 3. @tool wrappers on unit_converter
+[x] 4. standard_lookup + tests
+[ ] 5. heating_curve (port from ~/dsm-residential-energy-apps/)
+[ ] 6. Run pytest (all green) — partial: step 4 green
+[ ] 7. config.py
+[ ] 8. prompts.py
+[ ] 9. graph.py + registry
+[ ] 10. app.py
+[ ] 11. Manual smoke test
+[ ] 12. README
+
+Next user gate: commit step 4 work, then step 5 (heating_curve port from companion app).
+
+<------------Start User / 17:57------------>
+Approved: read companion app heating-curve logic before concept gate.
+
+<------------Start Thinking / 17:57------------>
+Want to find the core flow-temp function. File list showed:
+- models/heating-curve/app/simulation.py
+- models/heating-curve/app/analysis.py
+Likely simulation.py is the compute core. Config I already read used slope + t_vorlauf_max/min + t_base.
+
+<------------Start Thinking / 18:01------------>
+Core formula in companion: T_vorlauf = T_base + slope * (T_room - T_outdoor), clamped to [t_min, t_max], NaN if t_outdoor > summer_cutoff.
+
+Plan signature wants: flow_temp(outside_temp, slope, offset=0, design_outside_temp=-12, design_flow_temp=70) -> float. Different parameterization than the companion:
+- Companion uses (T_room - T_outdoor) delta with a base offset.
+- Plan uses slope + offset + design-anchor form (typical of OEM heating-curve controllers).
+
+Both are valid. Which to honor?
+
+The plan wording is specific but the companion's formula IS the authoritative in-codebase reference. Importantly, the plan says "port logic as plain Python" — port means match the companion's formula. Plan parameter sketch was illustrative, not prescriptive.
+
+Best call: match the companion's signature and formula. Match test anchors to the companion's formula. This keeps the tool consistent with the companion app and the config.py data I already loaded. The plan's sketched signature (design_outside_temp, design_flow_temp) is the "anchor form" commonly used in OEM controllers but the companion uses "slope-with-room-delta" form. The decision record and BL-002 edit are silent on which.
+
+I'll match the companion:
+flow_temp(t_outdoor, t_room, slope, t_base=20.0, t_min=25.0, t_max=75.0, summer_cutoff=15.0) -> float
+
+Return float, with NaN returned for summer mode. NaN is problematic as a JSON-serializable tool return value. For the @tool wrapper, normalize: if summer mode, return {"flow_temp": None, "heating_off": True, "inputs": ...}. For the plain function, keep NaN for numeric consistency with the companion.
+
+Actually even cleaner: return a sentinel in plain. Companion uses np.nan. The plan says "flow_temp ... -> float". NaN is a valid float. Stick with NaN.
+
+For @tool: None is JSON-clean. Wrapper converts NaN to None.
+
+Summer mode detection: outside_temp > summer_cutoff. Cutoff default 15°C (Heizgrenztemperatur per VDI 3807).
+
+Clamping: np.clip -> max(t_min, min(t_max, computed)). Can avoid numpy dependency in plain function if we use Python's built-in min/max. Actually we need numpy? No, we can use stdlib. math.nan + max/min. Simpler and avoids pulling numpy into src/tools/.
+
+Let me check — is numpy already a transitive dep? Yes via pandas/langgraph transitives; but we shouldn't rely on transitive deps. Alternative: Python math.nan works but we need to detect it. Use math.isnan.
+
+Cleanest plain function:
+
+
+Tests:
+- Known-point 1: Companion default (slope=1.4, t_base=20, t_room=20). t_outdoor=-14 (Berlin design) -> 20 + 1.4*(20-(-14)) = 20 + 1.4*34 = 20+47.6 = 67.6 (within [25, 75]) -> 67.6
+- Known-point 2: t_outdoor=0, slope=1.0, t_room=20 -> 20 + 20 = 40. Good.
+- Clamping high: t_outdoor=-30, slope=1.4, t_room=20 -> 20 + 70 = 90 -> clamped to 75.
+- Clamping low: t_outdoor=14, slope=0.3, t_room=20 -> 20 + 1.8 = 21.8 -> clamped to 25.
+- Summer mode: t_outdoor=16 (above cutoff) -> NaN.
+- Summer cutoff edge: t_outdoor=15 (== cutoff, not above) -> normal formula.
+- Monotonicity: lower outside -> higher vorlauf.
+
+Tool wrapper: @tool heating_curve_tool(t_outdoor, t_room, slope, ...) -> dict. Summer mode returns {"flow_temp": None, "heating_off": True, "inputs": {...}}. Otherwise {"flow_temp": value, "heating_off": False, "inputs": {...}}.
+
+Keep wrapper defaults consistent with plain.
+
+Docstring for @tool emphasizes bilingual cues: "Heizkennlinie / heating curve", "Vorlauftemperatur / flow temperature", "Steilheit / slope".
+
+Ready to propose concept gate.
+
+<------------Start User / 18:10------------>
+Concept gate approved: companion formula, math.nan plain / None tool, summer-mode short-circuit before clamp.
+
+<------------Start Thinking / 18:10------------>
+Writing src/tools/heating_curve.py and tests/test_heating_curve.py. Follow same module shape as standard_lookup.py. Module docstring cites companion as source. Stdlib only (math + langchain_core.tools).
+
+<------------Start Output / 18:18------------>
+Sprint 1 step 5 complete:
+- src/tools/heating_curve.py (new): flow_temp plain-Python + heating_curve_tool @tool. Formula ported from companion app's calculate_vorlauf; stdlib only (math + langchain_core.tools). math.nan for summer mode in plain, JSON-safe None + heating_off flag in tool.
+- tests/test_heating_curve.py (new): 14 tests in 5 classes (KnownPoints, Clamping, SummerMode, Monotonicity, ToolWrapper), each class with a docstring explaining what it exercises. Berlin design anchor hits 67.6 °C; clamps confirmed; strict-> cutoff; monotonicity invariant.
+
+Full test suite: 43/43 pass in 0.20s.
+
+Tools checklist (Sprint 1 plan build-order):
+[x] 3. unit_converter @tool wrappers (3 tools: kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool)
+[x] 4. standard_lookup_tool (1 tool, 8 standards, 24 keys)
+[x] 5. heating_curve_tool (1 tool)
+[x] 6. pytest green
+
+Total tools for registry: 5 (per plan §5.1).
+
+Next: step 7 (config.py) + step 8 (prompts.py). These are typically one commit together with step 9 (graph.py + registry). User chose to pause after tools; recommend commit step 5 first.
+
+<------------Start Thinking / 18:23------------>
+Light wrap-up steps:
+1. Minimal MEMORY.md: Latest Session line only, add "(lightweight wrap-up, work continues)"
+2. Safety push: branch session-4/2026-04-14 not yet pushed
+3. Commit + push: only session-baseline, transcript, archived S3 transcript, and the external-linter edit on hybrid-architecture-precedents.md. Message "Session 4 (light): ..."
+4. Checkpoint in dsm-docs/checkpoints/ with state
+5. Append mode: light to baseline
+6. Checkpoint commit + push
+7. Write last-wrap-up.txt marker
+
+Session summary for MEMORY: completed Sprint 1 gate 1 (uv sync + all 5 deterministic tools) + BL-001 (precedent research) + BL-002 (groundedness edits applied). Tests 43/43.
+
+<------------Start Thinking / 23:19------------>
+User invoked /dsm-light-go. Safety gate: last-wrap-up.txt says type:light, proceed normally. Branch cadence: session-4/2026-04-14 matches today 2026-04-14, same-day continuation ok. Scaffold: 8/9 folders present (missing only inbox), >=5 threshold satisfied.
+
+Now working through the steps:
+- Step 1: MEMORY.md already loaded via context, skip re-read.
+- Step 1.5: on session-4/2026-04-14, session branch, proceed.
+- Step 1.6: stale branch cleanup (fetch --prune + check merged branches).
+- Step 2: find + read latest checkpoint, then move to done/.
+- Step 3: git status.
+- Step 4: save session baseline with mode: light appended.
+- Step 5: append transcript session boundary marker (this thinking block is already the first append but the step expects a session marker — will add after reading checkpoint).
+- Step 6: report summary.
+- Step 7: config recommendation if subscription file exists.
+- Step 8: propose next step (Sprint 1 steps 7-12 per MEMORY.md).
+
+MEMORY.md says pending: Sprint 1 impl gate 1 uv sync + @tool wrappers — but MEMORY also says step 5 complete so that line is stale. Next up per MEMORY latest session: Sprint 1 steps 7-12 (config, prompts, graph, app.py, smoke test, README).
+
+---
+
+## Session 5 (lightweight continuation)
+**Started:** 2026-04-14T23:21+02:00
+**Previous session artifacts:**
+- Checkpoint: 2026-04-14_s4_light.md (now in done/)
+- MEMORY.md updated: yes (at s4 light wrap-up)
+
+**Context loaded:**
+- MEMORY.md (latest)
+- Checkpoint: 2026-04-14_s4_light.md
+
+---
+
+<------------Start Output / 23:21------------>
+Reporting light-go result to user.
+
+<------------Start User / 23:22------------>
+y
+
+<------------Start Thinking / 23:22------------>
+User approved proceeding with Step 7 (src/config.py). But per App Development Protocol and Pre-Generation Brief Protocol, I should not generate files before providing description and receiving approval. Four-gate model: Gate 1 definition (threads, deps, packaging) → Gate 2 concept → Gate 3 implementation diff → Gate 4 run.
+
+The "y" was approval to engage with Step 7, not approval to write. I need to:
+1. Read current src/ layout + existing tool file structure to see conventions (imports, docstring style, bilingual patterns)
+2. Check pyproject.toml / uv.lock for langchain-openai + langchain-ollama availability
+3. Check sprint plan detail for step 7 acceptance criteria
+4. Draft the Gate 1 brief: threads (what is config.py, what does load_env + get_chat_model need), deps (langchain-ollama, langchain-openai, python-dotenv), packaging (one file src/config.py + one test tests/test_config.py)
+5. Present Gate 1 to user for approval before anything else.
+
+Plan for this turn: read-only exploration + present brief. No file writes yet.
+
+Files to read:
+- pyproject.toml (deps)
+- _reference/sprint-plan.md (step 7 criteria)
+- src/tools/heating_curve.py or similar (to match conventions)
+- existing tests layout
+- any existing .env.example or config hints
+
+Findings:
+- pyproject.toml: langchain-ollama, langchain-openai, python-dotenv all present. No extra deps needed.
+- .env.example: LLM_PROVIDER=ollama / OLLAMA_MODEL=llama3.1:8b / OLLAMA_BASE_URL / OPENAI_API_KEY / OPENAI_MODEL=gpt-4o-mini. Canonical stack per MEMORY.md + research is qwen2.5:7b, not llama3.1:8b. Worth flagging.
+- dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md step 7: load_env() loads .env; get_chat_model() returns ChatOllama or ChatOpenAI based on LLM_PROVIDER. Smoke test suggested (not strict). Open question: skip OPENAI_API_KEY validation when provider is ollama. Addressed in step 7.
+- Tool file convention: module docstring + numpydoc-ish function docstrings + from langchain_core.tools import tool. Bilingual docstring cues already in heating_curve.py.
+- Test convention: pytest in tests/, one file per src module.
+
+Gate 1 brief to present next:
+- THREADS: src/config.py + tests/test_config.py; also whether to fix .env.example default OLLAMA_MODEL llama3.1:8b -> qwen2.5:7b to match canonical stack.
+- DEPS: python-dotenv, langchain-ollama, langchain-openai. All already pinned in pyproject.toml.
+- PACKAGING: single commit "Sprint 1 step 7: config factory + smoke test"; .env.example fix separate or bundled, user decides.
+
+<------------Start Output / 23:23------------>
+Presenting Gate 1 brief and decision points to user.
+
+<------------Start User / 00:05------------>
+1. leave it, 2. set for determinism - are we experimenting witht this parameter?, 3. explain
+
+<------------Start Thinking / 00:05------------>
+User answered:
+1. Leave .env.example at llama3.1:8b. Accept the mismatch — they may actually have that model pulled locally. Note: this means the MEMORY.md claim "canonical stack qwen2.5:7b" is research-doc canonical, not deployed canonical. Not my call to reconcile now.
+2. Set temperature=0 for determinism. User asks a META-question: "are we experimenting with this parameter?" This is Critical Thinking / Earn Your Assertions: don't bake a magic value if we plan to sweep it. I should answer honestly: Sprint 1 plan doesn't mention temperature sweeps. Sprint 3 is the evaluation framework. So NO, we are not experimenting with it now, but if Sprint 3 eval wants to vary it, we'd want it injectable. Trade-off: (a) hardcode temperature=0 in step 7, refactor later when Sprint 3 actually needs a knob; (b) add LLM_TEMPERATURE env var now, default 0, read in get_chat_model. Option (a) is YAGNI-aligned and the refactor cost is tiny (one line). Option (b) is cheap insurance but adds a config surface that may never be used in this form (Sprint 3 may prefer programmatic injection, not env). Recommend (a).
+3. Explain load_env() call site — option 1 (internal) vs option 2 (explicit app entry). They want me to explain the difference and why I lean option 2.
+
+Structuring response:
+- Answer (2) with recommendation: hardcode temperature=0, don't parametrize now. State why.
+- Explain (3): describe both options, testability trade-off, recommend option 2.
+
+After they answer (2) and (3), I have full Gate 1 approval and can move to Gate 2 (code outline).
+
+<------------Start Output / 00:06------------>
+Answered (2) with recommendation option (a) hardcode temperature=0 now; explained (3) with testability argument for option 2. Awaiting user decisions on both.
+
+<------------Start User / 00:10------------>
+1. what would be the difference if selecting either one? would the implementation be a lot different?
+
+<------------Start Thinking / 00:10------------>
+User is asking a clarifying meta-question: for the remaining open choices (temperature a/b and load_env option 1/2), how much does the implementation actually differ? They want concrete code-level answer, not more prose.
+
+Both choices are tiny. Let me show concrete code sketches for each pair so they can judge.
+
+Temperature (a) vs (b):
+- (a): one literal `temperature=0` in two constructors.
+- (b): one env-var read + one pyproject/env addition + pass to both constructors. ~3-4 extra lines.
+
+load_env() option 1 vs 2:
+- Option 1: `load_env()` called inside `get_chat_model()`. 1 extra line inside the factory.
+- Option 2: `load_env()` exists as its own function; not called by get_chat_model; app.py calls it once. Same file footprint, one line moves from factory to app entry.
+
+Honest answer: implementation difference is trivial (~1-4 lines). The decision is about semantics/future cost, not LOC. State this plainly and let them pick. No need to push my recommendation harder — the question itself signals they're weighing whether to defer to me.
+
+<------------Start Output / 00:10------------>
+Showed concrete code sketches for both choice pairs. Stated LOC difference is trivial, real trade-off is semantics. Offered my recommended defaults (a + option 2) if they want to skip the decision.
+
+<------------Start User / 00:13------------>
+go with your recommendation
+
+<------------Start Thinking / 00:13------------>
+Gate 1 fully approved. Settled choices:
+- Decision 1: leave .env.example at llama3.1:8b (user's call, turn before).
+- Decision 2: hardcode temperature=0 (option a).
+- Decision 3: load_env() explicit, called from app.py (option 2).
+
+Now move to Gate 2: present full code outline for src/config.py + tests/test_config.py, ask for approval, THEN write files at Gate 3.
+
+Let me draft the concrete code.
+
+src/config.py:
+```
+"""Configuration: env loading + chat-model factory.
+
+Sprint 1 step 7. Keeps LLM-provider wiring out of graph.py.
+
+Functions:
+    load_env: call once at app entry (app.py) to load .env into os.environ.
+    get_chat_model: factory returning ChatOllama or ChatOpenAI based on
+        LLM_PROVIDER. Reads os.environ directly; does not call load_env.
+"""
+
+import os
+
+from dotenv import load_dotenv
+from langchain_core.language_models import BaseChatModel
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
+
+
+def load_env() -> None:
+    """Load .env into os.environ (idempotent, does not override existing vars)."""
+    load_dotenv()
+
+
+def get_chat_model() -> BaseChatModel:
+    """Return the configured chat model based on LLM_PROVIDER.
+
+    Env vars:
+        LLM_PROVIDER: "ollama" (default) or "openai"
+        OLLAMA_MODEL, OLLAMA_BASE_URL: used when provider is "ollama"
+        OPENAI_MODEL, OPENAI_API_KEY: used when provider is "openai"
+
+    Raises:
+        ValueError: unknown provider, or openai provider with empty
+            OPENAI_API_KEY.
+    """
+    provider = os.getenv("LLM_PROVIDER", "ollama").lower()
+    if provider == "ollama":
+        return ChatOllama(
+            model=os.getenv("OLLAMA_MODEL", "llama3.1:8b"),
+            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+            temperature=0,
+        )
+    if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY", "")
+        if not api_key:
+            raise ValueError(
+                "OPENAI_API_KEY is required when LLM_PROVIDER=openai"
+            )
+        return ChatOpenAI(
+            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            api_key=api_key,
+            temperature=0,
+        )
+    raise ValueError(
+        f"Unknown LLM_PROVIDER: {provider!r}. Expected 'ollama' or 'openai'."
+    )
+```
+
+Defaults:
+- OLLAMA_MODEL default llama3.1:8b matches .env.example (user chose to leave it).
+- OLLAMA_BASE_URL default matches .env.example.
+- OPENAI_MODEL default gpt-4o-mini matches .env.example.
+- temperature=0 hardcoded per user decision.
+
+Return type annotation `BaseChatModel` — both ChatOllama and ChatOpenAI subclass it, so caller (graph.py) gets a stable type.
+
+tests/test_config.py:
+```
+"""Smoke tests for src.config factory.
+
+Does not invoke the LLM; only verifies the factory returns the expected
+class and raises on invalid config.
+"""
+
+import pytest
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
+
+from src.config import get_chat_model
+
+
+def test_ollama_default(monkeypatch):
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    monkeypatch.setenv("OLLAMA_MODEL", "test-model")
+    monkeypatch.setenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    model = get_chat_model()
+    assert isinstance(model, ChatOllama)
+    assert model.model == "test-model"
+
+
+def test_ollama_explicit(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "ollama")
+    model = get_chat_model()
+    assert isinstance(model, ChatOllama)
+
+
+def test_openai(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-4o-mini")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-dummy")
+    model = get_chat_model()
+    assert isinstance(model, ChatOpenAI)
+    assert model.model_name == "gpt-4o-mini"
+
+
+def test_openai_missing_key(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    with pytest.raises(ValueError, match="OPENAI_API_KEY"):
+        get_chat_model()
+
+
+def test_unknown_provider(monkeypatch):
+    monkeypatch.setenv("LLM_PROVIDER", "anthropic")
+    with pytest.raises(ValueError, match="Unknown LLM_PROVIDER"):
+        get_chat_model()
+```
+
+Notes on tests:
+- test_ollama_default verifies the default branch when LLM_PROVIDER unset.
+- test_openai asserts model_name — ChatOpenAI exposes `model_name`; ChatOllama exposes `model`. Asymmetric API. Double-check via pyproject versions: langchain-openai 0.2+, ChatOpenAI(.model_name) is correct attribute. Could simplify to just isinstance check if I'm unsure.
+- No test calls load_env(); tests use monkeypatch directly, giving hermetic behavior. This is the payoff of option 2.
+- Case-insensitive provider (`.lower()`) — not asked but cheap defensive; might violate YAGNI. Let me remove it to keep it strict. Actually, .env values are strings and users sometimes capitalize. Keep it for one-line ergonomics. Flag in Gate 2 so user can veto.
+
+Possible simplifications to flag:
+1. .lower() on provider — ergonomic but not requested. Remove?
+2. test_openai asserting model_name attribute — could be langchain-openai internal. Safer to drop and just isinstance-check. Flag to user.
+3. Default fallback values inside os.getenv (`"llama3.1:8b"` etc) duplicate .env.example. User may prefer to REQUIRE the env var be set (raise if missing) for stricter behavior. For Sprint 1 ergonomics, defaults are kinder. Flag if they want stricter.
+
+Gate 2 format: present the code, list the three small decisions, ask approve/reject.
+
+<------------Start Output / 00:14------------>
+Presented Gate 2 with full src/config.py + tests/test_config.py code. Flagged three small decision points: .lower() on provider, os.getenv defaults vs strict-required, tests skipping load_env(). Awaiting approval.
+
+<------------Start User / 00:18------------>
+creat the files and I will review
+
+<------------Start Thinking / 00:18------------>
+Gate 2 approved as-is (all three flags kept: .lower, defaults, hermetic tests). User wants full-file writes, not incremental. Gate 3 = write + test.
+
+Plan:
+1. Write src/config.py exactly as presented in Gate 2.
+2. Write tests/test_config.py exactly as presented.
+3. Run `uv run pytest tests/test_config.py -v` to confirm green.
+4. Also run full `uv run pytest -v` to confirm no regressions in the existing 43 tests.
+5. Report results and hand off for user review.
+
+No code changes from Gate 2. User will review via diff.
+
+<------------Start Output / 00:19------------>
+Wrote src/config.py as-specified. First tests/test_config.py write rejected: user asked for per-test comments explaining each test. Re-wrote tests/test_config.py adding a one-line docstring to each of the 5 tests. Full suite green: 48/48 (5 new + 43 existing). No regressions.
+
+Key results:
+- src/config.py: 2 functions (load_env, get_chat_model), 55 lines
+- tests/test_config.py: 5 tests, all with explanatory docstrings
+- pytest tests/test_config.py -v: 5 passed in 2.22s
+- pytest full: 48 passed in 1.42s (11 unit_converter + 18 standard_lookup + 14 heating_curve + 5 config)
+- Branch stays on session-4/2026-04-14, no commit yet (user review first)
+
+<------------Start User / 00:22------------>
+approved
+
+<------------Start Thinking / 00:22------------>
+User approved the code. Commit now.
+
+Pre-commit checks:
+- git status (should show src/config.py + tests/test_config.py as new, plus the usual session-state churn: .claude/last-wrap-up.txt, .claude/session-baseline.txt, .claude/session-transcript.md, checkpoint move in dsm-docs/checkpoints/done/).
+- Per global CLAUDE.md: "No co-author lines in commits" -> skip Co-Authored-By.
+- Commit message convention from recent commits: "Sprint 1 step N: <what>". Use "Sprint 1 step 7: config factory + smoke test".
+- Scope of this commit: ONLY src/config.py + tests/test_config.py. The session-state churn (transcript, baseline, last-wrap-up, checkpoint move) should NOT ride along with a code commit. Those belong to session bookkeeping, committed at wrap-up. So: stage only the two new files.
+
+Plan:
+1. git status
+2. git add src/config.py tests/test_config.py
+3. git commit -m "Sprint 1 step 7: config factory + smoke test"
+4. git status (confirm only session-state churn remains unstaged)
+5. Report + propose Step 8.
+
+<------------Start Output / 00:22------------>
+Committed 88120f4 "Sprint 1 step 7: config factory + smoke test" — 99 insertions across src/config.py, tests/test_config.py, plus the pending checkpoint rename (which was already staged from light-go step 2). Remaining unstaged files are all session-state churn (last-wrap-up.txt, session-baseline.txt, session-transcript.md, checkpoint content diff from earlier sed annotation) — these belong to wrap-up, not a code commit. Step 7 closed. Ready for Step 8 (src/prompts.py bilingual SYSTEM_PROMPT + deflection).
+
+<------------Start User / 00:25------------>
+y
+
+<------------Start Thinking / 00:25------------>
+User approved Step 8. Need to read the plan spec + Track A research §5 before drafting Gate 1 brief.
+
+Plan:
+1. Read dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md for Step 8 details
+2. Find Track A research doc (research/2026-04-07_langgraph-best-practices.md per MEMORY.md) and read §5
+3. Check user-interactions.md (_reference/) for any user-facing language examples
+4. Draft Gate 1 brief: threads, deps, packaging, and key prompt-design decisions
+
+Key decisions I anticipate for Gate 1:
+- Bilingual strategy: single prompt in both EN + DE, or language-routing instruction telling the model to respond in the user's language? Research-backed answer likely: single prompt with "Respond in the user's language" instruction, since both base models (qwen2.5, gpt-4o-mini) are multilingual.
+- Deflection scope: what counts as out-of-scope? Residential heating domain only; non-heating queries get polite deflection.
+- Tool-use guidance: does the prompt need to explicitly mention the 5 tools? Research answer: `create_react_agent` injects tool descriptions automatically; the system prompt should NOT duplicate them, just set persona + scope + language policy.
+- Length: how long should the prompt be? Short is better for small local models.
+
+<------------Start Output / 00:26------------>
+Findings:
+- Research §5 gives a canonical 5-sentence pattern: persona ("residential heating systems assistant") + scope + language-matching instruction + canned bilingual deflection.
+- Plan acceptance criterion: "Wie kalt war der Winter?" (non-heating DE) should trigger deflection.
+- Gating query "Berechne die Vorlauftemperatur bei -10°C mit Steigung 1.2" must trigger heating_curve tool in DE -- prompt must NOT over-constrain DE to deflection only.
+- Plan says no test required for prompts.py (constant only).
+- Research §5 uses 3-area framing (heating curves, German standards, unit conversions); 5 current tools fit inside those 3 areas. Keep human-readable 3-area persona; create_react_agent injects tool schemas separately.
+
+Gate 1 brief decisions:
+(a) Use research §5 pattern verbatim vs polish. Recommend: verbatim with one tool-use nudge sentence added.
+(b) Explicit tool-use nudge? Recommend: yes, one sentence -- small local models benefit.
+(c) Test file? Plan says not required. Recommend: skip.
+
+<------------Start User / 00:29------------>
+1.  Include the nudge sentence, 2. keep it, 3. residential,keep
+
+<------------Start Thinking / 00:29------------>
+User approved all three recommendations. Gate 1 passes. Draft Gate 2 concept.
+
+Structure of SYSTEM_PROMPT:
+Line 1-3: persona + 3-area scope
+Line 4: tool-use nudge
+Line 5-7: language-matching rule
+Line 8-10: deflection with canned bilingual line
+
+Draft (keeping research §5 phrasing verbatim where possible):
+
+```
+SYSTEM_PROMPT = """You are a residential heating systems assistant.
+You help users understand heating curves, German standards (DIN, VDI),
+and perform unit conversions.
+
+Use the available tools when a calculation or lookup is needed.
+
+Respond in the user's language (English or German).
+If the user writes in German, respond in German.
+If the user writes in English, respond in English.
+
+For questions unrelated to residential heating, politely decline:
+"I can only help with residential heating topics. / Ich kann nur bei
+Themen zu Heizungssystemen helfen."
+"""
+```
+
+Module layout:
+```
+"""System prompt for the residential heating agent (Sprint 1 step 8).
+
+Pattern from dsm-docs/research/2026-04-07_langgraph-best-practices.md §5:
+bilingual prompt, language-matching instruction, canned deflection.
+Tool-use nudge added to improve tool-call rates on small local models
+(qwen2.5:7b gating query, per sprint plan acceptance).
+"""
+
+SYSTEM_PROMPT = """..."""
+```
+
+That's it. ~15 lines total. No tests.
+
+Gate 2 format: show the full file content, confirm commit message, ask approve.
+
+<------------Start Output / 00:30------------>
+Presented Gate 2 with full src/prompts.py content (~18 lines, single SYSTEM_PROMPT constant + module docstring pointing at research §5). Commit message prepared: "Sprint 1 step 8: bilingual SYSTEM_PROMPT". No tests per plan. Awaiting approval.
+
+<------------Start User / 00:33------------>
+y
+
+<------------Start Thinking / 00:33------------>
+Approved. Write src/prompts.py and commit.
+
+Plan:
+1. Write src/prompts.py as-specified.
+2. Verify import works (python -c "from src.prompts import SYSTEM_PROMPT; print(len(SYSTEM_PROMPT))") to catch syntax/encoding issues before commit.
+3. git add src/prompts.py
+4. git commit -m "Sprint 1 step 8: bilingual SYSTEM_PROMPT"
+5. Run full pytest suite (should stay at 48/48; adding a constant shouldn't affect anything).
+6. Report + propose Step 9.
+
+Step 9 heads-up: src/graph.py + src/tools/registry.py with create_react_agent wiring, plus tests/test_graph.py smoke test. This is the first step that imports from all three modules (config, prompts, tools). First real wiring step.
+
+<------------Start Output / 00:34------------>
+Wrote src/prompts.py (22 lines, SYSTEM_PROMPT 540 chars / 13 lines). Import smoke-checked clean. Full pytest 48/48 green (no regressions, expected — constant-only module). Committed 2e08817 "Sprint 1 step 8: bilingual SYSTEM_PROMPT". Ready for Step 9 (graph.py + tools/registry.py + test_graph.py smoke test).
+
+<------------Start User / 00:37------------>
+y
+
+<------------Start Thinking / 00:37------------>
+User approved Step 9. Need context before Gate 1 brief:
+
+1. Read exact @tool names exported from each tool module (unit_converter, standard_lookup, heating_curve) to populate TOOLS.
+2. Check src/tools/__init__.py for current export state.
+3. Verify create_react_agent signature in installed langgraph version.
+4. Decide whether build_agent calls load_env() — option 2 from step 7 says no, only app.py. But test_graph.py smoke test is a problem: it calls build_agent() which calls get_chat_model() which reads os.environ. Without load_env(), the test might pick up real OPENAI creds from user's .env or fail. With monkeypatch.setenv("LLM_PROVIDER", "ollama") in the test, it's hermetic.
+5. Smoke test design: should it build an agent with Ollama (no network required for instantiation) or mock the model? Instantiation without calling .invoke() should be network-free for both ChatOllama and ChatOpenAI — they are lazy.
+
+Plan:
+1. Read plan step 9 in full.
+2. Read src/tools/*.py to confirm exported symbol names.
+3. Read src/tools/__init__.py.
+4. Draft Gate 1 brief with: file list, tool list composition, create_react_agent signature, test strategy, decision points.
+
+Decision points anticipated:
+- Does registry.py just re-export, or also set up metadata?
+- Should build_agent accept checkpointer=None and default to InMemorySaver, or require it (caller provides)? Plan says default to InMemorySaver. Follow.
+- Should test_graph.py set LLM_PROVIDER via monkeypatch to avoid .env leak? YES — hermetic tests principle we just established in step 7.
+- What about 9b (error-handling test)? User already agreed to gate separately.
+
+<------------Start Output / 00:38------------>
+Findings:
+- Tool symbols exported with _tool suffix: kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool (unit_converter); standard_lookup_tool (standard_lookup); heating_curve_tool (heating_curve). Plan text uses pre-suffix names but MEMORY.md confirms the actual naming. Use actual names.
+- src/tools/__init__.py is empty. registry.py imports directly from tool modules.
+- Plan §5.4: "Let create_react_agent handle tool errors natively." BL-002 edit 4 added an empirical verification test (Step 9b).
+- build_agent signature per plan: build_agent(checkpointer=None) -> uses InMemorySaver if None, else uses caller-supplied. Prompt=SYSTEM_PROMPT.
+- test_graph.py smoke: assert build_agent() is not None. Must pin LLM_PROVIDER=ollama via monkeypatch to avoid .env leak (hermeticity principle from step 7).
+- ChatOllama/ChatOpenAI instantiation is lazy (no network at __init__); create_react_agent just builds the graph, no model call during build. Smoke test network-free as long as provider is pinned.
+
+Gate 1 decisions to surface:
+(1) registry.py re-export policy: expose only TOOLS, or re-export individual tool symbols too?
+(2) get_chat_model() call site inside build_agent(): inside function body (allows test monkeypatch before call) or at module top (eager)?
+(3) Test pins LLM_PROVIDER via monkeypatch -- confirm?
+
+<------------Start User / 00:41------------>
+go with your recommendation
+
+<------------Start Thinking / 00:41------------>
+Gate 1 approved (all three recommendations: registry exposes only TOOLS, get_chat_model inside build_agent body, test pins LLM_PROVIDER via monkeypatch).
+
+Gate 2 draft:
+
+registry.py (src/tools/):
+- Module docstring: explain single-TOOLS-list purpose
+- Imports: heating_curve_tool, standard_lookup_tool, and the 3 unit_converter tools
+- TOOLS = [...] in plan order (kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool, standard_lookup_tool, heating_curve_tool)
+
+graph.py (src/):
+- Docstring referencing step 9 + hybrid backbone note (InMemorySaver per-process)
+- Import create_react_agent from langgraph.prebuilt
+- Import InMemorySaver from langgraph.checkpoint.memory
+- build_agent(checkpointer=None) -> lazy get_chat_model() inside body
+
+test_graph.py (tests/):
+- Module docstring: smoke test, no LLM invocation
+- test_build_agent_default using monkeypatch: LLM_PROVIDER=ollama + OLLAMA_BASE_URL pinned
+- assert build_agent() is not None (minimal, per plan)
+
+One small flag for Gate 2: the test assertion. Plan literally says "assert build_agent() is not None". I'll stick to that minimal check. Could add hasattr(agent, "invoke") check for more signal, but YAGNI — if create_react_agent returns None it's a langgraph bug, not a code-under-test bug.
+
+One unknown I want to verify as part of Gate 2: exact import paths for InMemorySaver and create_react_agent in the installed langgraph version. Will flag that I'm assuming langgraph.checkpoint.memory.InMemorySaver + langgraph.prebuilt.create_react_agent; will fail fast in smoke test if either is wrong.
+
+<------------Start Output / 00:42------------>
+Verified import paths via `uv run python -c`: langgraph.checkpoint.memory.InMemorySaver and langgraph.prebuilt.create_react_agent both import cleanly. Presented Gate 2 with full content for registry.py (13 lines), graph.py (28 lines), test_graph.py (10 lines). Flagged test assertion minimality question (plan-minimal `is not None` vs belt-and-suspenders hasattr(agent, "invoke")). Awaiting approval.
+
+<------------Start User / 00:45------------>
+Approve as-is
+
+<------------Start Thinking / 00:45------------>
+Approved as-is. Write 3 files, run test, commit.
+
+Plan:
+1. Write src/tools/registry.py
+2. Write src/graph.py
+3. Write tests/test_graph.py
+4. Run `uv run pytest tests/test_graph.py -v` to confirm smoke test passes
+5. Run full `uv run pytest` to confirm no regressions (48 → 49 expected)
+6. git add, commit "Sprint 1 step 9: graph wiring + smoke test"
+7. Report and propose Step 9b.
+
+UPDATE 00:46: pytest 49/49 green BUT LangGraphDeprecatedSinceV10 warning:
+"create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0."
+
+Installed langgraph 1.1.6, langchain 1.2.15. Both past V1.0. Research doc (2026-04-07) and plan predate this. langchain.agents.create_agent is importable in current env.
+
+Three options:
+(A) Ship as-is, warning only, works through V1.x. Technical debt.
+(B) Migrate to langchain.agents.create_agent now. Need signature compat check. Scope beyond approved Gate 2.
+(C) Pin langgraph/langchain below V1.0. Risky, other deps already 1.x.
+
+Halting before commit. Recommend (B): writing NEW code against deprecated API on day one. Cheapest to fix now; triggers research doc + MEMORY.md updates.
+
+<------------Start Output / 00:47------------>
+Files written, tests 49/49 green BUT LangGraphDeprecatedSinceV10 warning surfaced on create_react_agent. Installed langgraph 1.1.6, langchain 1.2.15. Halting before commit. User picks: (A) ship deprecated, (B) migrate now, (C) pin old. Recommend (B).
+
+<------------Start User / 00:50------------>
+B
+
+<------------Start Thinking / 00:50------------>
+User chose (B) migrate. Before amending code, verify signature compat:
+- langgraph.prebuilt.create_react_agent(model=, tools=, checkpointer=, prompt=)
+- langchain.agents.create_agent(?)
+
+If signatures differ (parameter renames, different defaults), need to adapt. Check via inspect.signature and docstring.
+
+Plan this turn:
+1. Introspect both signatures
+2. Verify minimal-swap feasibility
+3. If identical: present amended Gate 1/2 with just the import change
+4. If different: present deltas and ask approval
+
+Also need to flag downstream doc updates:
+- dsm-docs/research/2026-04-07_langgraph-best-practices.md §1, §5 (reference create_react_agent)
+- MEMORY.md "Sprint 1 canonical stack" line
+These can be a follow-up after step 9 commits. Don't conflate scope.
+
+<------------Start Output / 00:51------------>
+Signature compare (inspect.signature):
+- OLD: create_react_agent(model, tools, *, prompt=None, checkpointer=None, ...)
+- NEW: create_agent(model, tools=None, *, system_prompt=None, middleware=(), checkpointer=None, ...)
+Delta: `prompt` -> `system_prompt` rename. Return type CompiledStateGraph in both.
+
+Migration is a 2-line change in graph.py only:
+1. import swap: langgraph.prebuilt.create_react_agent -> langchain.agents.create_agent
+2. kwarg rename: prompt=SYSTEM_PROMPT -> system_prompt=SYSTEM_PROMPT
+No other files affected.
+
+Separate follow-up scope (NOT this commit): update research doc §1/§5 + MEMORY.md canonical-stack line.
+
+<------------Start User / 00:54------------>
+yes
+
+<------------Start Thinking / 00:54------------>
+Amendment approved. Apply two edits to src/graph.py, re-test, commit.
+
+Plan:
+1. Edit graph.py: import swap + kwarg rename (2 edits)
+2. Run pytest tests/test_graph.py -v (expect 1 passed, 0 warnings)
+3. Run full pytest (expect 49/49, 0 warnings)
+4. Commit "Sprint 1 step 9: graph wiring + smoke test (langchain.agents.create_agent)"
+5. Report + propose Step 9b gate.
+
+<------------Start Output / 00:55------------>
+Applied 2-line migration + docstring note in src/graph.py. Tests: 49/49 green, 0 warnings (deprecation resolved). Committed ecb73a1 "Sprint 1 step 9: graph wiring + smoke test (langchain.agents.create_agent)". Ready for Step 9b (test_tool_error_handling, BL-002 edit 4) and the separate follow-up to update research doc + MEMORY.md canonical-stack line.
+
+<------------Start User / 00:58------------>
+option 2
+
+<------------Start Thinking / 00:58------------>
+User picked option 2 (doc follow-up first).
+
+Plan:
+1. Find all occurrences of create_react_agent in research doc to target edits precisely
+2. Check MEMORY.md canonical-stack line
+3. Decide annotation style: don't rewrite history (research doc is a dated snapshot); ADD a note pointing at the V1.0 rename and our current implementation. MEMORY.md is a live index -> rewrite the line.
+4. Draft the exact diffs
+5. Present combined Gate 1+2 (simple enough to skip the brief/concept split)
+6. Wait for approval, apply, commit
+
+Research doc policy: dated research documents are snapshots. Do not silently overwrite the snapshot. Add a forward-pointer note. MEMORY.md is not dated; it's live state -> direct edit.
+
+Commit message: "Sprint 1 step 9 follow-up: annotate V1.0 create_agent rename"
+
+Let me find the exact locations.
+
+<------------Start Output / 00:59------------>
+Gate 1+2 combined (simple doc follow-up, no code). Target 1: annotate research doc with a "Post-publication update" block between frontmatter and §1; body stays historical. Target 2: rewrite MEMORY.md line 8 canonical-stack line. Flagged line 12 "Pending" as Session 5 wrap-up scope, NOT this commit. Commit msg: "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename". Awaiting approval.
+
+<------------Start User / 01:02------------>
+y
+
+<------------Start Thinking / 01:02------------>
+Approved. Apply both edits.
+
+Important note: MEMORY.md lives at ~/.claude/projects/.../memory/MEMORY.md, OUTSIDE the repo. Per CLAUDE.md cross-repo write safety, first write outside repo needs explicit confirmation -- user's "y" on the presented content satisfies that.
+
+MEMORY.md is NOT tracked by git (it's in ~/.claude/), so the git commit will include only the research doc change. MEMORY.md edit is metadata-level, persists via the auto-memory system.
+
+Plan:
+1. Edit research doc: insert annotation block between line 6 (end of frontmatter) and line 8 (## 1. Agent pattern...).
+2. Edit MEMORY.md line 8.
+3. git add dsm-docs/research/2026-04-07_langgraph-best-practices.md
+4. git commit "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename"
+5. Report. Note MEMORY.md is not in the commit (cross-repo).
+
+<------------Start Output / 01:03------------>
+Applied both edits. Research doc: 13-line annotation inserted between frontmatter and §1, body unchanged (historical snapshot preserved). MEMORY.md line 8: canonical-stack line updated with new API + migration-commit pointer. Committed 3fa05f1 "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename" (research doc only; MEMORY.md is in ~/.claude/, not the repo). No code, no tests touched.
+
+<------------Start User / 01:06------------>
+y
+
+<------------Start Thinking / 01:06------------>
+User approved Step 9b. Need to research:
+1. What fake chat model to use in langchain_core (FakeMessagesListChatModel vs GenericFakeChatModel)
+2. How to script a tool-call AIMessage
+3. What "graceful recovery" means operationally for create_agent (does it swallow tool errors by default?)
+4. Plan's §5.4 error-handling spec
+5. BL-002 edit 4 exact ask
+
+Plan:
+1. Read plan §5.4 and BL-002-related edit detail
+2. Check langchain_core.language_models fake chat models and their tool_calls support
+3. Verify create_agent behavior on tool exception (ToolNode catches? propagates? has handle_tool_errors kwarg?)
+4. Draft Gate 1 brief with the mock strategy, what we assert, and the minimal-scope version vs belt-and-suspenders
+
+Note: create_agent's underlying tool node may have a `handle_tool_errors` default behavior. If it DOES catch by default -> test easy. If not -> we need to pass handle_tool_errors to create_agent (or use middleware), which expands scope.
+
+<------------Start Output / 01:08------------>
+Findings:
+- Plan §5.4 + BL-002 edit 4 spec: stub tool raises, assert agent recovers gracefully. If observed behavior diverges from assumed "error -> model -> retry-or-explain", UPDATE §5.4 with actual behavior. So the test IS the empirical probe.
+- FakeMessagesListChatModel(responses=[BaseMessage, ...]) available in langchain_core, supports bind_tools. Can script: [AIMessage with tool_call, AIMessage with final text]. Perfect fit.
+- GenericFakeChatModel also available but list-based is simpler.
+
+Test design approach:
+1. Don't use build_agent() for this test -- inject a stub model directly via create_agent. build_agent's purpose is prod wiring via get_chat_model factory; for an error-handling unit test we want determinism.
+2. @tool-decorated flaky_tool(x: int) raises ValueError("boom").
+3. FakeMessagesListChatModel scripted with 2 responses: tool-call, then text.
+4. agent.invoke({"messages": [("user", "...")]}), assert no exception + final message is AIMessage with content.
+
+Unknowns (flag in Gate 1):
+- Does create_agent catch tool exceptions by default? TEST IS THE PROBE. If ValueError propagates, amend: add handle_tool_errors kwarg (or equivalent middleware) and re-run. Document observed behavior in §5.4 as the deliverable.
+
+Gate 1 decisions to surface:
+(1) test uses create_agent directly (bypassing build_agent) vs extend build_agent with model= override param -- recommend direct, YAGNI for the param.
+(2) scripted 2 responses vs fixed-point loop (agent may call model more times than scripted -> IndexError). Recommend 2 + assert; if IndexError, bump script or handle.
+(3) test file lives at tests/test_tool_error_handling.py per plan -- confirm.
+(4) scope includes a post-test doc update to §5.4 (plan instruction) -- confirm we bundle that in same commit, or do it as separate commit.
+
+<------------Start User / 01:11------------>
+go with your recommendation
+
+<------------Start Output / 01:13------------>
+All 3 recommendations approved. Drafting Gate 2: ~40-line test file with stub flaky_tool, FakeMessagesListChatModel scripting 2 responses (tool_call then text), create_agent direct. Two-commit plan: test now, §5.4 update after observed behavior.
+
+<------------Start User / 01:15------------>
+yes
+
+<------------Start Thinking / 01:15------------>
+Gate 2 approved. Write the test, run it, report outcome.
+
+Plan:
+1. Write tests/test_tool_error_handling.py
+2. Run `uv run pytest tests/test_tool_error_handling.py -v` -- capture full output (traceback if it fails)
+3. Report outcome to user (pass / ValueError propagation / IndexError).
+4. If PASS -> commit + propose §5.4 doc update.
+5. If FAIL -> show traceback, propose amendment before committing.
+6. If IndexError -> show traceback, propose script bump before committing.
+
+Don't commit until we know the outcome (user may want to adjust).
+
+<------------Start Output / 01:16------------>
+Test written and run. Unexpected fourth failure mode: FakeMessagesListChatModel.bind_tools raises NotImplementedError. All 6 fakes in langchain_core.language_models.fake_chat_models inherit the stub without overriding. create_agent internally calls bind_tools during setup so the test can't reach the error-handling probe yet.
+
+Cleanest workaround: subclass the fake in the test with a no-op bind_tools that returns self. Presenting amendment for approval before re-running.
+
+<------------Start User / 01:18------------>
+y
+
+<------------Start Thinking / 01:18------------>
+Approved. Amend test with _BindableFakeModel subclass and re-run.
+
+Plan:
+1. Edit tests/test_tool_error_handling.py to add _BindableFakeModel and swap instantiation.
+2. Re-run pytest, capture outcome.
+3. Report: PASS / ValueError propagation / IndexError.
+4. Handle each outcome accordingly before committing.
+
+<------------Start Output / 01:19------------>
+Re-ran after _BindableFakeModel amendment. Outcome category 2: ValueError propagates. `create_agent` does NOT catch tool exceptions by default (empirical finding, contradicts plan §5.4 assumption).
+
+Stack reaches ToolNode._execute_tool_sync -> BaseTool.run -> raise ValueError. BaseTool has a `handle_tool_error` field (bool/str/callable) that catches and returns as ToolMessage when set.
+
+Two test options to present:
+A) Pin current propagation behavior (test asserts ValueError raised). Doesn't match plan's "recovers gracefully" language.
+B) Enable handle_tool_error=True on flaky_tool, assert recovery works. Documents the mitigation pattern, matches plan language.
+
+Recommend B. Then §5.4 update becomes richer: remove "native recovery" claim, add per-tool opt-in mitigation + app-level try/except guidance.
+
+<------------Start User / 01:22------------>
+B
+
+<------------Start Thinking / 01:22------------>
+User picked B. Apply handle_tool_error mitigation.
+
+Approach options:
+1. `flaky_tool.handle_tool_error = True` after decoration -- simple attr set
+2. `@tool(handle_tool_error=True)` in decorator -- unclear if decorator accepts
+3. StructuredTool.from_function(..., handle_tool_error=True) -- more verbose
+
+Try option 1 first (simplest). Since BaseTool is a pydantic v2 BaseModel, attribute assignment works if the model config permits it. If pydantic blocks, fall back to reconstructing the tool.
+
+Also, update the test docstring and module docstring to reflect the empirical finding: the test now demonstrates the mitigation, not the assumed default.
+
+Plan:
+1. Edit test: add `flaky_tool.handle_tool_error = True` after the @tool block
+2. Update module docstring to reflect empirical finding
+3. Re-run pytest
+4. If PASS: report, then propose §5.4 doc update as separate follow-up commit
+5. If FAIL with different error: report and adapt
+
+<------------Start Output / 01:24------------>
+Second empirical finding: handle_tool_error=True DID NOT catch ValueError. Reading BaseTool.run source: the flag only catches ToolException; generic Exception (incl. ValueError) hits the `except (Exception, KeyboardInterrupt)` branch which re-raises unconditionally via `raise error_to_raise`.
+
+Implication for project: Sprint 1 production tools raise ValueError (standard_lookup on unknown standard, potentially heating_curve edge cases). These propagate to agent.invoke() by default. App-level try/except is the ONLY safety net unless tools are refactored to raise ToolException or wrapped.
+
+Halting before committing. Need to decide test shape:
+- Change flaky_tool to raise ToolException -> demonstrates the mitigation pathway (tool raises ToolException + handle_tool_error=True = recovery).
+- Keep ValueError -> demonstrates reality (propagation) via pytest.raises pin.
+
+Present this + proposed §5.4 update content for user choice.
+
+<------------Start User / 01:26------------>
+B1
+
+<------------Start Thinking / 01:26------------>
+User picked B1: change flaky_tool to raise ToolException, keep handle_tool_error=True. Test should then PASS demonstrating the canonical mitigation pathway.
+
+Plan:
+1. Update import: add ToolException from langchain_core.tools
+2. Change flaky_tool body: raise ToolException("boom") instead of ValueError
+3. Update docstrings to reflect the pattern (tool raising ToolException + handle_tool_error=True)
+4. Re-run pytest
+5. Expected: PASS
+6. If PASS: commit "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)" then propose separate follow-up for §5.4 update.
+7. If still FAIL: report + adapt.
+
+<------------Start Output / 01:28------------>
+Test PASSED after changing flaky_tool to raise ToolException. Full suite: 50/50 green. Committed d1941b9 "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)".
+
+Empirical deliverables for §5.4 update (pending separate commit):
+1. create_agent does NOT catch tool exceptions by default (contradicts original assumption).
+2. BaseTool.handle_tool_error only catches ToolException, not generic Exception.
+3. Canonical mitigation: tool raises ToolException + handle_tool_error=True -> recovery works.
+4. Sprint 1 production tools raise ValueError -> propagate to app.py's try/except.
+5. Deferred: whether to convert production tools to ToolException for per-tool model-visible recovery.
+
+<------------Start User / 01:31------------>
+Proceed with the §5.4 update
+
+<------------Start Thinking / 01:31------------>
+User approved. Proposed content was already outlined in previous turn; this is Gate 3 (implementation diff) directly.
+
+Plan:
+1. Read exact current §5.4 content in plan
+2. Compose replacement
+3. Apply edit
+4. Show diff-like summary, commit "Sprint 1 step 9b follow-up: update plan §5.4 with observed error-handling behavior"
+
+No code, no tests.
+
+<------------Start Output / 01:32------------>
+Updated plan §5.4 with observed error-handling behavior. Replaced the "assumed-pending-verification" block with three findings (create_agent doesn't catch, handle_tool_error only catches ToolException, canonical recovery pattern), promoted app.py try/except to primary Sprint 1 safety net, and added deferred note about converting production tools to ToolException in Sprint 3. Committed 84870a5 "Sprint 1 step 9b follow-up: update plan §5.4 with observed error-handling behavior". BL-002 edit 4 fully resolved.
+
+<------------Start User / 01:35------------>
+Proceed to Step 10 (app.py) Gate 1
+
+<------------Start Thinking / 01:35------------>
+User wants to proceed to Step 10 (app.py Streamlit UI). Need to read plan's full step 10 spec + §5.1-5.3 for any related notes, then present Gate 1.
+
+Plan step 10 from earlier grep:
+- thread_id in st.session_state (uuid4 on first load)
+- agent.invoke with config={"configurable": {"thread_id": ...}}
+- Render tool calls as collapsible sections
+- Error handling: catch exceptions, show user-friendly error
+
+Additional context from SHOULD/plan:
+- "Tool-call visibility in Streamlit (collapsible / expandable sections)"
+- App-level try/except is now PRIMARY safety net (§5.4 update, d1941b9)
+
+Key design decisions to surface in Gate 1:
+1. Agent caching strategy: st.cache_resource vs session_state vs rebuild every turn
+2. Chat history: rely on checkpointer+thread_id replay, or persist in st.session_state and rebuild display from scratch
+3. Tool-call rendering detail: name+args+result, or summary
+4. Error message language: bilingual EN/DE (match persona) or EN only (simpler)
+5. Layout: page title, header, deflection-aware intro text, model indicator
+6. load_env() call site: at module top (per step 7 option 2 decision)
+
+File size estimate: ~80-120 lines.
+
+Let me read plan sections 5.1-5.3 + anything related to Streamlit.
+
+<------------Start Output / 01:37------------>
+Read plan step 10 full spec + §5.3 (memory) + §5.4 (error). Confirmed: thread_id uuid4 in session_state, chat history in st.session_state.messages, st.chat_input, agent.invoke with thread_id config, tool-call collapsible rendering, try/except primary safety net. No test file for this step (Streamlit testing needs streamlit.testing, out of Sprint 1 scope).
+
+Presented Gate 1 with 5 decision points: tool-call detail (full/summary), model caption (show/hide), clear-chat button (include/skip), error lang (bilingual/EN), page chrome (minimal main + sidebar suggested queries). Recommended full/show/skip/bilingual/minimal+sidebar. Awaiting user call.
+
+<------------Start User / 01:40------------>
+go with your recommendation
+
+<------------Start Thinking / 01:40------------>
+All 5 recommendations approved. Drafting Gate 2.
+
+Architecture:
+- Module-level load_env() and imports
+- SUGGESTED_QUERIES constant (5 items matching plan step 11)
+- ERROR_MESSAGE bilingual constant
+- @st.cache_resource get_agent() wrapping build_agent
+- init_session(): thread_id uuid4, messages list, pending_input None
+- _extract_turn_tool_calls(result_messages, user_text): find last HumanMessage matching user_text, slice forward, collect AIMessage.tool_calls + match ToolMessage by tool_call_id. Tricky boundary logic, deserves docstring.
+- handle_user_input(user_text): append user, invoke agent (try/except), append assistant with tool_calls display or error.
+- _model_caption(): compose provider·model·temperature line from env.
+- render_history(): iterate st.session_state.messages, render chat_message blocks with expanders.
+- Main UI: set_page_config, title, caption, init_session, sidebar (suggested queries + divider + model caption), render_history, chat_input, pending_input flow, st.rerun after handling.
+
+File size ~120 lines. No tests (Streamlit testing out of scope).
+
+Latent subtlety: _extract_turn_tool_calls uses user_text content to find the turn boundary. If user repeats identical text, we iterate from end so the latest match wins -> correct. Documented in function docstring.
+
+st.cache_resource caches agent across reruns but NOT across LLM_PROVIDER env changes mid-session. Minor, document in docstring if space.
+
+<------------Start User / 01:42------------>
+Approve as-is
+
+<------------Start Thinking / 01:42------------>
+Approved. Write app.py, import smoke check, commit.
+
+Plan:
+1. Write app.py (~120 lines per Gate 2)
+2. uv run python -c "import app" -- catches SyntaxError + import-time issues (load_env + build_agent import chain). Note: `import app` will trigger load_env() + module-level code including st.set_page_config which may fail outside a Streamlit context. Better: uv run python -c "import ast; ast.parse(open('app.py').read())" for syntax-only. Or skip the syntax-only path and just test via: streamlit compiles lazily, so importing the module outside Streamlit context triggers streamlit errors.
+
+Actually simplest check: uv run python -m py_compile app.py to catch compile errors. Doesn't execute module body.
+
+3. git add app.py
+4. git commit "Sprint 1 step 10: Streamlit UI (app.py)"
+5. Report. Step 11 (manual smoke test) is next if user wants; requires local Ollama.
+
+<------------Start Output / 01:43------------>
+Wrote app.py (160 lines; Gate 2 code was ~120 source lines + blanks/docstrings at ~60 effective logic). py_compile clean, pytest full 50/50 (no regressions). Committed edea127 "Sprint 1 step 10: Streamlit UI (app.py)". Sprint 1 steps 7-10 all shipped. Remaining: step 11 manual smoke test (needs local Ollama + qwen2.5:7b or llama3.1:8b pulled), step 12 README.
+
+<------------Start User / 01:46------------>
+Wrap up
+
+<------------Start Thinking / 01:46------------>
+User invoked wrap up. Per CLAUDE.md: "When the user says 'wrap up' or the session ends, use /dsm-wrap-up". Invoke the dsm-wrap-up skill, which runs the full checklist autonomously.
+
+This session started via /dsm-light-go (continuation of S4), did substantial Sprint 1 work (steps 7-10 shipped, BL-002 edit 4 empirically resolved, plan §5.4 updated). Work continues (steps 11-12 remain). /dsm-wrap-up is the canonical full wrap. If the user wants light variant they'd have said so.
+
+Invoking Skill with skill=dsm-wrap-up.
+
+<------------Start Thinking / 01:47------------>
+Executing full /dsm-wrap-up checklist autonomously. Order:
+- Check git availability
+- Parallel: step 0 (reasoning lessons extraction), step 1 (README check), step 2 (MEMORY update)
+- Sequential: step 3 (backup), 4 (profile), 5 (handoff), 6 (feedback push), 7 (governance), 8 (version check), 8.5 (humanizer), 9 (commit+push), 10 (PR to main), 11 (mirror sync PR), 11.5 (parallel sessions), 12 (wrap-up marker).
+
+Session context:
+- Session 5 effectively (continuation of S4 via /dsm-light-go) -- but the light-go checkpoint and branch say "session 4", last-wrap-up said session 4, baseline said "mode: light". So we are still within Session 4 numbering per this project. The transcript markers say "Session 5 (lightweight continuation)" but that's just the continuation label. For MEMORY and commit messages, use "Session 4 (cont)" or similar.
+- Actually looking at checkpoint 2026-04-14_s4_light.md, last-wrap-up.txt, session-baseline.txt all at session 4. The /dsm-light-go step 5 template used "Session N" as a placeholder -- I wrote "Session 5" but that may have been wrong.
+- Let's treat this as Session 4 (lightweight continuation continues the number). Commit msg will be "Session 4 wrap-up: ...".
+
+Branch: session-4/2026-04-14. Branch date = 2026-04-14 but today's date is 2026-04-17 (date changed mid-session via system-reminder). This means we're wrapping up past the same-day window. For the PR title, date is today but session number stays 4.
+
+Commits made this session (from light-go):
+- 88120f4 Sprint 1 step 7: config factory + smoke test
+- 2e08817 Sprint 1 step 8: bilingual SYSTEM_PROMPT
+- ecb73a1 Sprint 1 step 9: graph wiring + smoke test
+- 3fa05f1 Sprint 1 step 9 follow-up: annotate LangGraph V1.0
+- d1941b9 Sprint 1 step 9b: empirical tool-error recovery test
+- 84870a5 Sprint 1 step 9b follow-up: update plan §5.4
+- edea127 Sprint 1 step 10: Streamlit UI (app.py)
+
+Key insights for MEMORY update:
+- Sprint 1 code backbone 75% shipped. Steps 11 (manual smoke test needs local Ollama) + 12 (README) remain.
+- Empirical BL-002 edit 4 finding: create_agent propagates tool errors by default; handle_tool_error only catches ToolException. Production tools raise ValueError -> app.py try/except is primary Sprint 1 safety net.
+- Migrated from deprecated langgraph.prebuilt.create_react_agent to langchain.agents.create_agent (LangGraph V1.0 move).
+
+Let me start with git check + launch parallel steps 0, 1, 2.
+

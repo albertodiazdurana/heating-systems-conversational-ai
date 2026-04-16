@@ -1,9 +1,0 @@
-# Session baseline - 2026-04-07T13:51:50+02:00
-# Session branch
-session-3/2026-04-07
-# HEAD commit
-a2e4ee5fdd483028d225db6bcbd86261994832e5
-# Working tree
- M .claude/session-baseline.txt
- M .claude/session-transcript.md
-?? .claude/transcripts/2026-04-07T00:00-ST.md

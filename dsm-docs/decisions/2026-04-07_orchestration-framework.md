@@ -229,6 +229,14 @@ pipeline does not import LangGraph.
 - In either case, reopen this decision with a new record citing the
   empirical findings
 
+**Precedent-research note (added 2026-04-14, BL-001):** Pattern is
+established in published tutorials (Funderburk 2025 Packt book; Panta
+2026 Medium enterprise guide) with a consistent boundary contract
+(`RAG-framework.query_engine` → LangChain `@tool` → LangGraph `ToolNode`).
+No academic paper or official vendor blog canonizes it. Decision stands;
+no full addendum needed. See
+`dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md`.
+
 ## Contribution goal (companion to this decision)
 
 Given the source-code confirmation that `OllamaChatGenerator` already
@@ -248,6 +256,8 @@ This artifact is itself a take-ai-bite-aligned output (human-AI
 collaboration producing upstream value). Coordinate with `graph-explorer`
 or other take-ai-bite tooling if a documentation contribution workflow
 exists by Sprint 2.
+
+**Playbook reference:** `dsm-docs/research/2026-04-14_upstream-contribution-playbook.md` adapts the graph-explorer FalkorDBLite pattern to this contribution opportunity. Activate at Sprint 2 start.
 
 ## References
 

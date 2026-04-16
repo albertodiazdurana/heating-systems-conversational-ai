@@ -1,5 +1,19 @@
 # Utility Conversational AI — Sprint Plan
 
+> **Superseded as authoritative plan (2026-04-14).** This document is retained
+> as historical input material. The current authoritative orchestration is
+> hybrid LangGraph (agent) + Haystack (RAG subsystem behind a LangChain `@tool`
+> boundary), not pure LangGraph as framed below. The original sprint
+> MUST/SHOULD/WON'T scope in this file is still useful reference.
+>
+> **Current plans of record:**
+> - Backbone: `dsm-docs/plans/2026-04-07_e2e_hybrid_backbone.md`
+> - Sprint 1: `dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md`
+> - Decision: `dsm-docs/decisions/2026-04-07_orchestration-framework.md`
+>
+> Per the Actionable Work Items rule, only items in `dsm-docs/plans/` are
+> actionable. This file is input material, not a work queue.
+
 **Project:** Heating Systems Conversational Assistant
 **Goal:** LangGraph-based conversational AI for residential heating domain, RAG over existing 6K-line documentation
 **Origin:** Portfolio project filling conversational AI gap, oriented to AI Engineer roles in energy/utility sector

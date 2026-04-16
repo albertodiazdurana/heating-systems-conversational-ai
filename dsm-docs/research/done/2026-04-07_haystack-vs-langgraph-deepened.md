@@ -1,7 +1,8 @@
 # Deepened Research: Haystack vs LangGraph for Heating Conversational AI
 
 **Date:** 2026-04-07
-**Status:** Complete (medium-depth validation)
+**Status:** Done
+**Date Completed:** 2026-04-14 (consumed by orchestration decision; moved to done/)
 **Inputs:** `haystack-vs-langchain-preliminary-research.md`
 **Outputs:** Informs `dsm-docs/decisions/2026-04-07_orchestration-framework.md`
 **Project framing:** Experimental, may scale to `take-ai-bite` framework

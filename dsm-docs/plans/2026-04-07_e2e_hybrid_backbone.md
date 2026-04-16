@@ -81,7 +81,7 @@ unit_converter  standard_lookup  heating_curve      rag_search
 | Conversation memory | `InMemorySaver()` + `thread_id` per Streamlit session | Sprint 1 |
 | UI | Streamlit | Sprint 1 |
 | RAG framework | Haystack 2.x (inside `rag_search` tool boundary) | Sprint 2 |
-| Vector store | ChromaDB via `chroma-haystack` | Sprint 2 |
+| Vector store | ChromaDB via `chroma-haystack` (zero-ops local persistence for portfolio scope; one-component swap to Qdrant/Weaviate if scale demands) | Sprint 2 |
 | Embeddings | `intfloat/multilingual-e5-base` via SentenceTransformers | Sprint 2 |
 | Markdown chunking | LangChain `MarkdownHeaderTextSplitter` → convert to Haystack Documents | Sprint 2 |
 | Eval | MLflow + hand-crafted test set | Sprint 3 |
@@ -138,6 +138,19 @@ document Haystack's Ollama tool-calling upstream.
   `scratch/haystack_ollama_tools_spike.py` — minimal test of
   `OllamaChatGenerator(tools=[add_tool])`. Outcome documented in
   `dsm-docs/research/2026-MM-DD_haystack-ollama-tools-spike-result.md`
+- **Embedding-model micro-benchmark (Gate 1, BL-002 edit 2):** before
+  locking the ingestion pipeline on `intfloat/multilingual-e5-base`,
+  index 5-10 representative EN/DE heating queries (terms like
+  *Heizkennlinie*, *Vorlauftemperatur*, *hydraulischer Abgleich*,
+  plus equivalent English phrasings) against 2-3 candidate multilingual
+  models: `intfloat/multilingual-e5-base`, `BAAI/bge-m3`,
+  `sentence-transformers/paraphrase-multilingual-mpnet-base-v2`. Measure
+  top-5 retrieval quality (hit@5 on the hand-picked expected source).
+  Outcome documented in
+  `dsm-docs/research/2026-MM-DD_embedding-model-benchmark.md`; the
+  tech-stack contract (backbone §2) is updated if the winning model is
+  not e5-base. One-afternoon of work; removes the biggest unquantified
+  technical risk flagged by the 2026-04-14 groundedness assessment.
 - **Ingestion pipeline** `src/rag/ingest.py` + `scripts/ingest.py`:
   - LangChain `MarkdownHeaderTextSplitter` (header-aware)
   - Convert to Haystack `Document` (one-line conversion)
@@ -151,6 +164,25 @@ document Haystack's Ollama tool-calling upstream.
   - LangChain `@tool` wrapping the Haystack retrieval pipeline
   - Returns `{"answer": str, "sources": [{"doc": str, "section": str}]}`
   - Lazy pipeline construction via `@lru_cache`
+  - **Gate 1 decision (BL-002 edit 5): monolithic vs specialized RAG
+    tools.** Panta 2026 precedent (`search_product_kb`, `search_support_kb`)
+    argues for multiple topic-specialized `@tool` functions, each with a
+    targeted docstring, so the LLM can route accurately. The same argument
+    drove the Sprint 1 §5.1 choice of individual unit-converter tools.
+    Rejecting it here while accepting it there is inconsistent. Decide at
+    Sprint 2 Gate 1 between:
+    - **(a) Monolithic:** one `rag_search(query: str)` — fewer tools to
+      register; one docstring to tune; harder for the LLM to distinguish
+      between standards lookup, system concepts, and MLOps questions.
+    - **(b) Specialized:** e.g., `standards_lookup_rag` (DIN/VDI
+      sections), `systems_reference_rag` (terminology, components),
+      `mlops_reference_rag` (data-science + MLOps sections). Each with a
+      docstring matched to the underlying corpus section. Coherent with
+      Sprint 1 §5.1.
+    - **(c) Hybrid:** one `rag_search` plus metadata filters exposed as
+      parameters (requires corpus metadata to be rich enough; the current
+      heading-aware chunking may or may not support this).
+    The decision is deferred to Sprint 2 Gate 1 (not pre-decided here).
 - **Citation rendering**: system prompt instructs model to include
   `[source: {doc} § {section}]` markers; Streamlit UI parses and shows
   a sources panel (optional polish)
@@ -166,7 +198,14 @@ document Haystack's Ollama tool-calling upstream.
 - Bilingual retrieval validation (DE query → EN section)
 
 ### WON'T
-- Re-ranking, query rewriting (deferred to Sprint 3 stretch)
+- **Reranking — deliberate scope choice (BL-002 edit 6), not an omission.**
+  Two-stage retrieval (retrieve ~20, rerank to ~5) is the production-standard
+  pattern per Panta 2026 precedent and Haystack ships
+  `TransformersSimilarityRanker` / cross-encoder rerankers as drop-in pipeline
+  components. Single-stage retrieval is sufficient for the portfolio scope;
+  reranking is tracked as a Sprint 3 stretch (one-component pipeline addition)
+  to revisit if retrieval quality metrics show clear precision gaps.
+- Query rewriting (deferred to Sprint 3 stretch)
 - Hybrid sparse+dense retrieval
 
 ### Exit criteria
