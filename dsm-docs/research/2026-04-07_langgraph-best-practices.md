@@ -5,6 +5,19 @@
 **Purpose:** Inform Sprint 1 detail plan for heating conversational AI
 **Related:** `2026-04-07_haystack-vs-langgraph-deepened.md`, `2026-04-07_orchestration-framework.md`
 
+## Post-publication update (2026-04-15)
+
+As of LangGraph V1.0 (observed 2026-04-15 with `langgraph 1.1.6` +
+`langchain 1.2.15`), the `create_react_agent` prebuilt was moved to
+`langchain.agents.create_agent`, with the `prompt` keyword renamed to
+`system_prompt`. The signature is otherwise compatible for Sprint 1 usage
+(model, tools, checkpointer, return type `CompiledStateGraph`).
+
+This project uses the new API as of commit `ecb73a1` (`src/graph.py`).
+All references to `create_react_agent` and `langgraph.prebuilt` below are
+historical and reflect the pre-V1.0 API canonical when this research was
+captured.
+
 ## 1. Agent pattern: create_react_agent vs custom StateGraph
 
 ### Finding
