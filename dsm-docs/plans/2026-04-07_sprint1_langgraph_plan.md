@@ -160,18 +160,31 @@ conversation export feature is desired.
 
 ### 5.4 Error handling
 
-Let `create_react_agent` handle tool errors natively (returns error to
-model, which may retry or respond with an explanation). Wrap the
-top-level `agent.invoke()` in Streamlit with a try/except for user-facing
-errors.
+**Observed behavior** (BL-002 edit 4, verified in commit `d1941b9`,
+`langchain 1.2.15` / `langgraph 1.1.6`):
 
-**Assumed-pending-verification (BL-002 edit 4):** the canonical
-`create_react_agent` error-propagation path is documented as "error →
-model → retry-or-explain" but has not been empirically validated in
-this repo. Step 6 must include `test_tool_error_handling` (see §3 test
-list) that raises from a test tool and asserts graceful recovery. If
-observed behavior diverges, update this section with actual behavior
-rather than propagating the assumption.
+1. `langchain.agents.create_agent` does **not** catch tool exceptions by
+   default. A raised exception propagates through `ToolNode` to
+   `agent.invoke()` and up to the caller.
+2. `BaseTool.handle_tool_error` (bool / str / callable) only catches
+   `ToolException` subclasses. Generic `Exception` (including
+   `ValueError`) bypasses the flag and re-raises unconditionally.
+3. Canonical per-tool recovery pathway: the tool raises `ToolException`
+   and sets `handle_tool_error=True`; the error is returned to the
+   model as a `ToolMessage` and the agent continues.
+
+**Sprint 1 mitigation:** production tools currently raise plain
+`ValueError` (e.g. `standard_lookup` on an unknown standard/key), so
+the app-level try/except around `agent.invoke()` in `app.py` (step 10)
+is the **primary** safety net, not a backup. Any tool exception surfaces
+there as a user-facing error message.
+
+**Deferred:** converting production tools to raise `ToolException` (with
+`handle_tool_error=True`) would give per-tool model-visible recovery,
+allowing the model to retry or explain. Revisit in Sprint 3 polish if
+multi-tool conversations show benefit from in-loop recovery rather than
+turn-level failure. See `tests/test_tool_error_handling.py` for the
+reference pattern.
 
 ## 6. Exit criteria
 
