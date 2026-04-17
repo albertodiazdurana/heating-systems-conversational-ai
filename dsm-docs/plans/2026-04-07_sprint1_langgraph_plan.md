@@ -1,11 +1,72 @@
 # Sprint 1 Plan — LangGraph Conversation Engine
 
-**Date:** 2026-04-07 (revised 2026-04-08)
-**Status:** Draft (concept gate, awaiting approval)
+**Date:** 2026-04-07 (revised 2026-04-08; Template 8 retro-fit 2026-04-17)
+**Status:** In execution (Session 5)
+**Duration:** ~5 sessions (S3 concept → S4 cont implementation → S5 close)
+**Goal:** End-to-end conversational agent with 5 deterministic tools on
+LangGraph + Ollama, bilingual EN/DE, no RAG yet.
+**Prerequisites:** Sprint 0 (research grounding) complete. Decision artifact
+on orchestration framework filed (`2026-04-07_orchestration-framework.md`).
+Research artifacts on LangGraph best practices and local-model selection
+filed (`2026-04-07_langgraph-best-practices.md`,
+`2026-04-17_local-model-selection_research.md`).
 **Supersedes:** `done/2026-04-07_sprint1_haystack_plan.md`
 **Backbone:** `2026-04-07_e2e_hybrid_backbone.md`
 **Decision:** `2026-04-07_orchestration-framework.md`
-**Research:** `2026-04-07_langgraph-best-practices.md`
+**Research:** `2026-04-07_langgraph-best-practices.md`,
+`2026-04-17_local-model-selection_research.md`
+
+## 0. Template compliance note (added 2026-04-17, Session 5)
+
+This plan was authored in 2026-04-07 before any DSM tool audited
+plan-document structure against DSM_2.0.C Template 8. The original
+9-section structure (§1 Scope through §9 Gates summary) was missing
+several Template-8-mandated sections: Branch Strategy, Phase Boundary
+Checklist, Sprint Boundary Checklist, How to Resume, Research Assessment
+gate, and Experiment Gate.
+
+Session 5 retro-fitted the missing sections (§1.5, §3.5, §6.5, §10) so
+the Sprint 1 closure has a written checklist to drive it. The pre-existing
+content in §1-§9 was not restructured; the additions sit alongside.
+
+Future sprint plans (Sprint 2, Sprint 3) should use Template 8 from
+DSM_2.0.C as the skeleton from creation rather than retro-fitting. See
+[`dsm-docs/feedback-to-dsm/done/2026-04-17_s5_backlogs.md`](../feedback-to-dsm/done/2026-04-17_s5_backlogs.md)
+for the three-layer root-cause analysis and the three backlog proposals
+filed with DSM Central (BL-A: extend `/dsm-align` with plan-doc audit,
+BL-B: `/dsm-plan-align` skill, BL-C: `/dsm-go` Step 3.6 hard gate).
+
+## 0.5 Research Assessment (retro)
+
+Per Template 8, before deliverables are detailed: "Can I describe the scope
+in enough detail for a concrete task breakdown? Are there unresolved
+unknowns that would make task estimates speculative?"
+
+Sprint 1 grounding artifacts at planning time:
+- `dsm-docs/research/2026-04-07_langgraph-best-practices.md` (canonical
+  stack, agent factory, system prompt strategy, model survey)
+- `dsm-docs/decisions/2026-04-07_orchestration-framework.md` (LangGraph
+  + Haystack hybrid pattern)
+
+Unknown at planning time, addressed mid-sprint:
+- API rename `langgraph.prebuilt.create_react_agent` → `langchain.agents.create_agent`
+  (caught Session 4 cont, plan §5 updated)
+- Tool-error propagation behavior of `create_agent` (BL-002 edit 4,
+  Session 4 cont, plan §5.4 updated empirically)
+- Local model selection (originally cited tutorial defaults; re-grounded
+  in Session 5 via `2026-04-17_local-model-selection_research.md`)
+
+## 0.6 Experiment Gate (retro)
+
+Sprint 1 introduces no new user-facing capability that requires an EXP-XXX
+definition. Sprint 1 is a **scaffolding sprint**: it stands up the
+LangGraph + tools + Streamlit + Ollama harness so that Sprint 2 (RAG) and
+Sprint 3 (eval) can attach to it. Per Template 8, this qualifies as a
+"performance-only sprint (no new capability), experiment skip justified
+in sprint notes."
+
+Sprint 2 (RAG) WILL introduce an EXP definition for the retrieval-quality
+test set; that gate fires when Sprint 2 is drafted.
 
 ## 1. Scope
 
@@ -31,6 +92,25 @@ LangGraph + Ollama, no RAG. Sprint 2 introduces Haystack for RAG only.
 ### WON'T
 - RAG, Haystack dependency, MLflow, conversation reset detection,
   streaming tokens
+
+## 1.5 Branch Strategy
+
+Per DSM_0.2 Three-Level Branching Strategy + DSM_2.0.C Template 8 Branch
+Strategy guidance, multi-sprint projects should use Level-3 sprint branches
+(`sprint-1/short-description`) off the session branch.
+
+**Deviation in Sprint 1 (documented, not retroactively fixed):**
+Sprint 1 work landed directly on session branches (`session-3/...`,
+`session-4/...`, `session-5/...`) with PRs merging session branches to
+main. No `sprint-1/...` Level-3 branch was created. This is a
+methodology deviation observed in Session 5; adopting Level-3 sprint
+branches is recommended for Sprint 2 onward.
+
+Reason for the deviation: Sprint 1 spans multiple sessions, and the
+`/dsm-go` session-branch creation was treated as the unit of branching.
+The Level-3 sprint-branch pattern was not invoked. Recovery: Sprint 2
+opens with `git checkout -b sprint-2/rag-pipeline` off the session
+branch on the first Sprint 2 implementation session.
 
 ## 2. Canonical stack (from research)
 
@@ -68,6 +148,27 @@ tests/
   test_tool_error_handling.py    # BL-002 edit 4: raises from a stub tool,
                                  #   asserts agent recovers gracefully
 ```
+
+## 3.5 Phase Boundary Checklist (intra-sprint, per Template 8)
+
+Sprint 1 phases retroactively identified from §4 Build order:
+
+- **Phase 1 — Tools:** steps 1-5 (project setup + 5 deterministic tools +
+  unit tests). Closed Session 4 lt with 43/43 tests green.
+- **Phase 2 — Engine:** steps 6-9 (config factory + system prompt +
+  build_agent + tool registry). Closed Session 4 cont with 50/50 tests
+  green; included BL-002 edit 4 empirical resolution of tool-error
+  propagation behavior.
+- **Phase 3 — UI:** step 10 (Streamlit app). Closed Session 4 cont.
+- **Phase 4 — Smoke + close:** steps 11-12 (manual smoke test + README).
+  In progress Session 5 (model selection re-grounded; Ollama installed;
+  pull + smoke pending).
+
+For each phase boundary (intra-sprint), the agent should:
+- [ ] Update `dsm-docs/feedback-to-dsm/` with phase observations and methodology scores
+- [ ] Create a checkpoint in `dsm-docs/checkpoints/` if a significant milestone was reached
+- [ ] Log decisions made during the phase in `dsm-docs/decisions/`
+- [ ] Update blog journal materials (`dsm-docs/blog/journal.md`) if insights are worth sharing
 
 ## 4. Build order (10 steps)
 
@@ -207,6 +308,34 @@ reference pattern.
 - [ ] README has "run locally" section
 - [ ] `pyproject.toml` pinned deps, no haystack-* deps yet
 
+## 6.5 Sprint Boundary Checklist (per Template 8, customized for Sprint 1)
+
+To be completed when all §6 exit-criteria boxes are checked. This is the
+sprint-close checklist that drives the closure work end-to-end.
+
+- [ ] Checkpoint document created (`dsm-docs/checkpoints/2026-04-XX_sprint1_close.md`)
+      with: final §6 box state, what shipped vs what was deferred, evidence
+      pointers (smoke-test results + commit hashes), decisions made during
+      the sprint, lessons learned.
+- [ ] Feedback files updated: per-session `YYYY-MM-DD_sN_backlogs.md` and/or
+      `YYYY-MM-DD_sN_methodology.md` in `dsm-docs/feedback-to-dsm/` capturing
+      sprint-level observations not already in per-phase entries.
+- [ ] Decision log updated (`dsm-docs/decisions/`) with any sprint-level
+      decisions not already filed (e.g., the model-selection cascade may
+      warrant its own decision artifact).
+- [ ] Tests passing (DSM 4.0): all unit + integration tests green on the
+      final commit.
+- [ ] Blog journal entry written (`dsm-docs/blog/journal.md`) summarizing
+      Sprint 1 narrative arc, surprises, and what changed methodology-wise.
+- [ ] Repository README updated (status line, model identifier, run-locally
+      section, tool list, architecture paragraph, roadmap checkbox) — covered
+      by step 12 in the Build order.
+- [ ] Pending feedback pushed to DSM Central via `/dsm-align` Step 6 or
+      direct push.
+- [ ] Next steps summary (3-5 sentences): goal of Sprint 2, key
+      deliverables, plan reference.
+- [ ] All §6 exit-criteria boxes checked.
+
 ## 7. Deferred to later sprints (explicit)
 
 - RAG, ChromaDB, Haystack (Sprint 2)
@@ -239,3 +368,30 @@ reference pattern.
 | Impl 7 | Step 10 (app.py) | pending |
 | Run | Step 11 (manual smoke test) | pending |
 | Exit | Step 12 (README) | pending |
+
+## 10. How to Resume (per Template 8)
+
+If you are picking up this sprint mid-flight (new session, context cold):
+
+1. **Read this sprint plan top-down**, focus on §0 (Template compliance
+   note), §6 (Exit criteria), §6.5 (Sprint Boundary Checklist), §3.5
+   (Phase Boundary Checklist) to know where the sprint stands and what
+   remains.
+2. **Read the most recent checkpoint** in `dsm-docs/checkpoints/`
+   (sorted descending). If the checkpoint is from a prior session, it
+   was already moved to `done/` by `/dsm-go` Step 3.5; check there too.
+3. **Read the most recent handoff** in `dsm-docs/handoffs/` (excluding
+   `done/`). If a Sprint-1-specific handoff exists (e.g.,
+   `2026-04-17_s5_step11_smoke_test_evidence.md`), it has structured
+   continuation context.
+4. **Check `git log main..HEAD` on the active session branch** for
+   recent commits. The commit messages narrate what just landed.
+5. **Re-read MEMORY.md** for the latest-session pointer to the most
+   recent state.
+
+For Sprint 1 specifically as of 2026-04-17:
+- Implementation steps 1-10 done (Sessions 4 lt + 4 cont)
+- Step 11 in progress (Session 5: model selection re-grounded; Ollama
+  installed in WSL; pull + smoke test pending)
+- Step 12 pending (Session 5 or 6)
+- Sprint Boundary Checklist (§6.5) NOT yet started
