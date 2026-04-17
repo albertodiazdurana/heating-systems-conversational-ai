@@ -1,1594 +1,1180 @@
-# Session 4 Transcript
-**Started:** 2026-04-14T15:10:07+02:00
+# Session 5 Transcript
+**Started:** 2026-04-17T10:27:58+02:00
 **Project:** Heating Systems Conversational AI
 
 ---
 
-<------------Start Thinking / 15:10------------>
-Session 4 start checks complete:
-- Session number: N=max(archive=2, memory=3)+1 = 4
-- Branch: created session-4/2026-04-14 from main (no open session/task branches)
-- /dsm-align ran (unconditional per Step 1.8): applied post-change fixes
-  - Installed .claude/hooks/{transcript-reminder,validate-transcript-edit}.sh and .claude/settings.json (BL-319 transcript enforcement hooks, previously missing)
-  - Regenerated CLAUDE.md alignment section (template drift from v1.4.5 to v1.4.18, added per-turn enforcement, turn-boundary self-check, process narration, heredoc anti-pattern, four-gate pre-generation, actionable work items)
-  - Wrote .claude/last-align-report.md, .claude/last-align.txt, _inbox/2026-04-14_dsm-align-update.md
-- Warnings surfaced:
-  - dsm-docs/inbox/ collision (empty folder, canonical is _inbox/ at root), not auto-fixed
-  - DSM version jumped v1.4.5 -> v1.4.18, spoke actions flagged in report
-- Inbox check: 2 entries pending
-  - 2026-04-13_dsm-graph-explorer_contribution-playbook.md: substantive response to S3 playbook request (maps capability experiment -> upstream contribution pattern; recommends spike-first approach for Haystack)
-  - 2026-04-14_dsm-align-update.md: align notification, low priority
-- Baseline saved, transcript archived (Session 3), fresh transcript created
-- No consumed handoffs, no pending checkpoints
-- Pending from MEMORY.md: Sprint 1 impl gate 1 (uv sync + @tool wrappers on existing unit_converter.py), sprint-plan.md still framed LangGraph-only and needs update to hybrid
+<------------Start Thinking / 12:30------------>
+Session-start protocol completed. Transitioning from Session 4 cont (archived as 2026-04-14T15:10-ST.md) to Session 5. State summary:
+- Session number 5 (max(archive=3, MEMORY=4) + 1)
+- Branch: session-5/2026-04-17 created from main (PR #5 merged previously)
+- Git: clean working tree before /dsm-align changes; baseline saved with 9 modified/new files (all from /dsm-align run)
+- Inbox: 1 pending entry (2026-04-14_dsm-align-update.md from prior session, still in root); 1 new entry just written by /dsm-align (2026-04-17). Both need human-decision review during the session, not auto-processing.
+- Handoffs: none consumed, none pending
+- Checkpoints: none
+- /dsm-align ran post-change: BL-370 hook installed, BL-371 transcript-reminder updated, settings.json merged with PreToolUse:Bash entry, 2 warnings surfaced (stale ~/dsm-residential-energy path, DSM v1.4.18→v1.5.2 spoke-action handled inline)
+- STAA reminder: previous wrap-up flagged "STAA recommended: yes" for Session 4 cont. User should run /dsm-staa in a separate conversation when ready
+- Wrap-up type: full (no /dsm-light-go switch needed)
+- Subscription: Max plan, Opus profiles available; no fast mode
 
-Ready to report state and await user direction. Priority suggestions:
-1. Process graph-explorer playbook response (provides reusable pattern for future Haystack contribution in Sprint 2)
-2. Sprint 1 impl gate 1: uv sync + @tool wrappers
-3. Update _reference/sprint-plan.md framing to hybrid backbone (housekeeping)
+Ready to report and ask user. Suggested work items from MEMORY.md:
+1. Sprint 1 step 11: manual smoke test via streamlit run app.py (needs local Ollama + llama3.1:8b/qwen2.5:7b pulled)
+2. Sprint 1 step 12: README "run locally" section + tool list + architecture paragraph
+3. Stale path warning resolution (~/dsm-residential-energy missing)
+4. Inbox processing: review 2026-04-14 + 2026-04-17 dsm-align notifications
+5. Optional: /dsm-staa in separate conversation
 
-<------------Start User / 15:14------------>
-User deleted dsm-docs/inbox/ (collision resolved). Priority order confirmed: 1 (graph-explorer playbook) -> 3 (sprint-plan.md reframe) -> 2 (Sprint 1 gate 1: uv sync + @tool wrappers).
+<------------Start User / 12:33------------>
+"Let's finish sprint 1"
 
-<------------Start Thinking / 15:14------------>
-Three tasks queued. Before jumping in, I need to confirm what each "document" / "do" means concretely and surface the gate-1 (collaborative definition) questions per the four-gate Pre-Generation Brief Protocol.
+<------------Start Thinking / 12:34------------>
+User wants to close out Sprint 1. From MEMORY.md the remaining items are:
+- Step 11: manual smoke test via `streamlit run app.py` (needs local Ollama + llama3.1:8b/qwen2.5:7b pulled). Gating DE query: "Berechne die Vorlauftemperatur bei -10°C mit Steigung 1.2" → must trigger heating_curve tool.
+- Step 12: README "run locally" section + tool list + architecture paragraph.
 
-Task 1 (graph-explorer playbook): "document" — the user wants me to capture the reusable lessons from the playbook response somewhere in this project. Candidates:
-- Blog journal entry (narrative / lesson capture)
-- Research doc (if formalized as a method)
-- Decision-record (if it changes a choice)
-- Reasoning-lessons append (if behavioral lesson for future sessions)
-Likely the blog journal plus a short cross-reference from the decision record, since the playbook is about contribution strategy, not a framework decision. I should ask the user which target(s).
+Before assuming this is the right reading I should verify against the canonical sprint plan. CLAUDE.md says actionable work items live in `dsm-docs/plans/`, not `_reference/sprint-plan.md` (which is INPUT to the planning pipeline). So the binding source is the BL doc(s) in dsm-docs/plans/. Let me find Sprint 1's BL and read its current state, especially any acceptance-criteria check for steps 11 and 12.
 
-Task 3 (sprint-plan.md reframe): two approaches — (a) add a superseded header pointing at the hybrid backbone plan in dsm-docs/plans/, or (b) rewrite the file to match the hybrid. I lean toward (a) because _reference/ is input material (per the Actionable Work Items rule), so a pointer keeps the authority in dsm-docs/plans/ without duplicating.
+Also need to check: does the user mean "execute step 11 + 12 right now" or "plan the closure"? Given the four-gate pre-generation brief protocol, I should NOT start writing or running anything before Gate 1 (collaborative definition). Step 11 is a manual smoke test that requires Ollama running locally — I cannot execute it for the user, only walk them through it. Step 12 is README authoring, which requires a brief and approval before any Write.
 
-Task 2 (Sprint 1 gate 1): run uv sync + add @tool wrappers to unit_converter.py. Need to verify:
-- Sprint 1 plan is the current canonical plan
-- unit_converter.py exists and is framework-agnostic as claimed
-- pyproject.toml has the correct langchain stack
+Plan: (1) locate the Sprint 1 BL doc, (2) read its acceptance criteria + steps 11/12 status, (3) check whether Ollama is installed and a model pulled (gating fact for step 11), (4) check whether README.md exists and what it currently contains (gating fact for step 12), (5) present a four-gate brief covering step 11 (smoke-test runbook) + step 12 (README sections), (6) get approval before any Write/Bash-execute.
 
-I will ask the user on task 1 what artifact to create (blog vs research vs both), verify assumptions on 3, and handle 2 after 1+3 are done.
+<------------Start User / 12:40------------>
+"I think I have the model here: C:\Users\adiaz\.ollama\models"
 
-<------------Start User / 15:17------------>
-"just go" -> default packaging: (A) blog journal narrative entry, (B) standalone research doc + decision-record cross-ref, (C) reasoning-lessons [ecosystem] append, (D) move inbox entry to done/.
+<------------Start Thinking / 12:41------------>
+Important signal: the user is on Windows and has Ollama models at a Windows path. We are running inside WSL2 (per env: Linux 6.6.87.2-microsoft-standard-WSL2). The Windows Ollama install is at C:\Users\adiaz\.ollama\models. Questions I need to answer empirically before promising anything:
 
-<------------Start Thinking / 15:17------------>
-Plan for Task 1:
-1. Append blog journal entry (narrative: "when the spike IS the contribution pipeline", crediting graph-explorer's FalkorDBLite precedent)
-2. Write dsm-docs/research/2026-04-14_upstream-contribution-playbook.md (method reference distilled from GE response, adapted to Haystack/OllamaChatGenerator context, with Status: Done since it is captured knowledge not active research)
-3. Add one-line pointer in 2026-04-07_orchestration-framework.md under the contribution framing (where OllamaChatGenerator docs gap is discussed)
-4. Append a single [ecosystem] lesson to .claude/reasoning-lessons.md under "Cross-Repo & Governance" section
-5. Move _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md to _inbox/done/
+1. Is there a Windows-native Ollama server running that I can reach from WSL via the Windows host IP? Ollama serves HTTP on port 11434 by default.
+2. What models are actually in that models directory?
+3. Can I access the Windows filesystem from WSL? /mnt/c/Users/adiaz/.ollama/models is the typical WSL mount. If /mnt/c exists, I can read the Windows side and list the model files directly. This confirms what's pulled.
+4. If Ollama is running on Windows, WSL can reach it either via the Windows host IP (cat /etc/resolv.conf → nameserver) or, on recent WSL2 with mirrored networking, via localhost:11434. ChatOllama supports a base_url parameter.
 
-Anchor for reasoning-lessons append: read last 3 lines, anchor on last non-empty.
+The right move is empirical probe, not guessing. Let me (a) verify the mount, (b) list models, (c) try reaching the Ollama server, (d) only then decide what to tell the user about step 11. This keeps me inside the "Verification & Assertions" lesson: don't treat "the docs say X" or "the user thinks X" as truth without probing.
 
-For decision record: need to find where OllamaChatGenerator contribution is currently framed to know where to add the cross-reference.
+Caveat: these are all read-only probes, no writes. No Gate violation to run them.
 
-<------------Start Thinking / 15:22------------>
-Workspace explanation requested. Gathering repo layout, active file context, and current architecture notes.
+<------------Start User / 12:45------------>
+"would it make sense to have ollama in wsl natively before we draft a cross-platform strategy?"
+
+<------------Start Thinking / 12:46------------>
+The user is asking a scoping question, not giving an instruction. Two interpretations:
+
+(a) "Native WSL Ollama first, then write cross-platform docs later" — simplify the dev loop: one OS, one install path, one `localhost`, skip the Windows-host-to-WSL networking rabbit hole.
+(b) "Should we bother with cross-platform at all in Sprint 1?" — implicit: maybe README just documents "works on Linux/WSL; Windows native is an exercise for the reader."
+
+I think the user is really asking (a) with an undertone of (b): drop the Windows-Ollama-with-WSL-reachability complexity by putting Ollama inside WSL.
+
+Trade-offs to surface honestly, not just agree:
+
+Pros of WSL-native Ollama:
+- Single-OS path. `curl -fsSL https://ollama.com/install.sh | sh`, `ollama serve`, `ollama pull llama3.1:8b`, done.
+- `localhost:11434` just works from the app (WSL → WSL).
+- README "run locally" section maps to one set of commands (Linux/WSL/macOS all same).
+- No firewall / mirrored-networking gotchas to document or debug.
+- Sprint 1 exit-criteria gate (German tool call on qwen2.5:7b or llama3.1:8b) runs in-session with me observing.
+
+Cons / costs:
+- ~4.9 GB download for llama3.1:8b (already on Windows, but Ollama stores blobs per-install, so WSL install gets its own copy). Disk cost: ~5 GB duplicated.
+- CPU-only inference on WSL (unless WSL GPU passthrough is set up) — slower than a Windows-native Ollama that uses the GPU directly via DirectML/CUDA. For a single-user portfolio smoke test, latency is tolerable but noticeably slower.
+- Windows Ollama install sits unused. Not a real cost, just redundant.
+
+Can we reuse the Windows blobs? In principle the .ollama models directory has a consistent layout (blobs + manifests), and a symlink from ~/.ollama → /mnt/c/Users/adiaz/.ollama could work, but in practice:
+- Ollama on Linux may not like SHA256 blob files whose atime/metadata came from NTFS via 9p/drvfs.
+- Model blobs are large; 9p performance on /mnt/c is poor for first-load.
+- Risk: subtle errors during model load that look like "model corrupt" but are really filesystem semantics. High diagnosis cost.
+
+My recommendation: install Ollama natively in WSL. Fresh ~/.ollama. Pull llama3.1:8b (or qwen2.5:7b per plan). Accept the 5 GB duplicate. Skip the symlink-reuse attempt.
+
+Framing for README: scope README's "run locally" to Linux/WSL as the canonical path, one-line pointer for macOS ("same as Linux"), one-line pointer for Windows ("install Ollama for Windows, use mirrored WSL networking, or run this project inside WSL"). Don't try to write an exhaustive cross-platform matrix in Sprint 1 — defer that to Sprint 3 polish.
+
+This aligns with CLAUDE.md "Don't add features, refactor, or introduce abstractions beyond what the task requires." The task is finish Sprint 1, not portfolio-grade Windows/macOS/Linux documentation.
+
+One more check: is 5 GB a problem? Not asking rhetorically — I don't know the user's disk. Worth a quick `df -h /` before committing to the install, but I shouldn't run it unprompted; it's a minor check and the user may have a preference. Actually I can include it as a one-line fact in the answer, no need for a probe.
+
+<------------Start User / 12:50------------>
+"1. y, 2. wait until ollama is up, 3. Let's research which model that fits my machine is best for this repo. both ollama and gwen option trail from convenience or references but not from a dedicated research. Let's focus on understanding why we chose a model."
+
+<------------Start Thinking / 12:51------------>
+Critical re-scoping. The user is explicitly calling out something I should have caught: "llama3.1:8b" and "qwen2.5:7b" entered the plan via the langgraph best-practices research doc, NOT via a deliberate model-fit study for THIS project. The user wants a Phase 0.5 research artifact (per DSM_0.2 Module D) that justifies model choice on grounds that matter for this repo, not on convenience or external references.
+
+This is the "Earn Your Assertions" + "Critical Thinking" lessons applied to model selection. Right call.
+
+What does "best fits my machine for this repo" mean? Decompose into criteria, surface them so the user agrees on the criteria before I run the research:
+
+Hardware / system criteria (machine fit):
+- Available RAM in WSL (model + KV cache + Streamlit + Python heap; 8B Q4_K_M ~5GB + ~1-2GB working set)
+- CPU vs GPU. WSL2 GPU passthrough usually needs explicit setup (CUDA, ROCm). If CPU-only, need to know cores and memory bandwidth (latency-bound).
+- Disk for blobs (already cleared — 838 GB)
+- Tolerable latency for an interactive Streamlit chat: ~10s response = unpleasant but usable, ~30s = bad
+
+Repo / task criteria (the harder ones):
+- **Tool-calling reliability.** This is THE deal-breaker for Sprint 1. The agent uses `langchain.agents.create_agent` + `@tool` definitions. The model must reliably emit OpenAI-style function-call JSON for the 5 tools. Many small models can chat but fail at structured tool selection. This is the primary screening filter.
+- **Multilingual EN/DE.** The system prompt is bilingual; the gating exit criterion is a German query that must trigger the right tool AND respond in German. Models with weak German degrade Sprint 1 hard.
+- **Domain vocabulary tolerance.** "Heizkennlinie", "Vorlauftemperatur", "Spreizung", "hydraulischer Abgleich" — the model doesn't need to know the physics, but it has to handle the words without segfaulting on tokenization or hallucinating wildly. Most modern multilingual base models are fine here, but 1B models often aren't.
+- **Context window.** Tool-calling agents accumulate ToolMessage history. 8K is tight for multi-turn; 32K+ is comfortable.
+- **License / restrictions for portfolio.** Llama 3.1 has the Acceptable Use Policy + 700M MAU clause; Qwen 2.5 is Apache 2.0; Gemma has its own license. For a portfolio repo this is mostly noise but worth flagging.
+
+Models in scope (already pulled on Windows host = zero pull cost if we mount, otherwise pull):
+- llama3.1:8b (4.9 GB Q4_0, 8B params, 128K context, multilingual incl German is decent, tool-calling supported via Llama 3.1 chat template) — already in plan
+- llama3:latest (4.7 GB, Llama 3.0 8B, 8K context, no native tool-calling — Llama 3.0 predates the tool-call training; this is OUT)
+- gemma3:1b (~815 MB, 1B params) — almost certainly too small for reliable 5-tool selection. Worth confirming, not assuming.
+- qwen2.5:7b (~4.7 GB, Apache 2.0, native tool-calling, strong multilingual, 128K context) — plan fallback
+- qwen3:4b or qwen3:8b — newer Qwen3 family if available; Qwen3 has improved tool-calling and thinking modes
+- mistral / mistral-nemo — French/German strong, tool-calling supported in instruct variants
+
+Plus an honest mention: if local inference is too slow or tool-calling unreliable, the OpenAI fallback in src/config.py is documented (plan §6 explicitly accepts switching LLM_PROVIDER=openai for Sprint 1 exit).
+
+The right artifact here is a Phase 0.5 research doc in dsm-docs/research/. Following the Sprint 1 pattern: 2026-04-17_local-model-selection_research.md. The brief should:
+1. Define screening criteria (machine + repo) explicitly with the user
+2. Define a screening/elimination order (cheap filters first: hardware → tool-calling → multilingual → domain → polish)
+3. Decide which models to actually probe (not all 6, focus on shortlist)
+4. Decide what counts as evidence — synthetic test, real Streamlit smoke, or third-party benchmark with citation?
+
+Before doing the research I need:
+- Hardware facts I don't have: RAM in WSL, GPU passthrough yes/no, CPU cores. Can probe with `free -h`, `nvidia-smi`, `nproc`.
+- The user's tolerance for latency (subjective).
+- Whether we constrain to "already pulled on Windows" or open the door to fresh pulls.
+- Whether OpenAI is allowed as a Sprint 1 baseline if local fails (per plan, yes; want to confirm).
+
+Let me probe hardware as cheap reads, then present a research brief for Gate 1 approval. NO research file written yet — we agree on criteria first.
+
+<------------Start User / 12:56------------>
+"1. agree, 2. re-probe, 3. strictly literature-only research first"
+
+<------------Start Thinking / 12:57------------>
+Three answers, all clean:
+1. Criteria + elimination order agreed → can proceed with the 6-dim filter.
+2. Re-probe GPU → run nvidia-smi -L (lists names) and nvidia-smi --query-gpu=name,memory.total --format=csv (clean VRAM number).
+3. Strictly literature-only research first → no Ollama install, no probes against models, no smoke tests. Pure web/source research, then synthesize into a research doc, then user reviews, THEN we install + probe.
+
+Note on (3): this is a deliberate methodological choice. Literature-only research yields a recommendation grounded in vendor claims + published benchmarks + community evidence. It cannot tell us how a model behaves on THIS hardware with THIS prompt for THIS tool registry — but that is what the empirical Sprint 1 smoke test (step 11) is for. Separating "select candidates from public evidence" from "verify candidate on actual setup" is good methodology, not over-engineering. The user wants the WHY for the model choice, not just a number that worked.
+
+Plan for this turn:
+1. Re-probe GPU (read-only, cheap, no Gate violation).
+2. Confirm VRAM, write it back to the user.
+3. Lay out the four-gate plan for the research doc itself:
+   - Gate 1 (definition): structure of the doc, sections, candidate list, evidence types, deliverable shape.
+   - Gate 2 (concept): explain what each section will contain in plain language before drafting.
+   - Gate 3 (implementation): I draft, you review the diff before commit.
+   - Gate 4 N/A (research doc, no run step).
+
+Per CLAUDE.md "Do not generate files before providing description and receiving approval" — so this turn is Gate 1 of the research doc itself: I describe what I'll write, you approve. No file written yet.
+
+Substantively, what should the research doc contain? The structure should mirror the existing 2026-04-07_langgraph-best-practices.md research doc to stay consistent with the spoke's research conventions. Standard sections per DSM_0.2 Module D Phase 0.5: Purpose, Target Outcome, Status header, then content, then findings/recommendation, then traceability to plan.
+
+Candidate list to research (literature-only):
+- qwen2.5:7b — Apache 2.0, 128K ctx, native tool calling
+- qwen2.5:14b — same family, larger
+- llama3.1:8b — Llama community license, 128K ctx, tool calling reference model
+- mistral-nemo:12b (Mistral Nemo) — Apache 2.0, multilingual focus including German, 128K ctx
+- qwen3:4b and qwen3:8b — newest Qwen with thinking mode + tool calling
+- phi-4:14b — MIT, strong reasoning, more recent than the prior survey
+
+Sources to cite:
+- Vendor model cards (HuggingFace) for each: parameters, context, license, training mix
+- Published benchmarks: Berkeley Function Calling Leaderboard (BFCL) for tool-calling, MGSM (multilingual math), MMLU multilingual variants, FLORES-200 for German MT
+- Ollama model registry for the exact tag, quant, and disk size
+- Llama 3.1 Blog (Meta), Qwen 2.5 / Qwen 3 technical reports, Mistral Nemo announcement, Phi-4 technical report
+- Independent benchmarks where available: HuggingFace Open LLM Leaderboard v2, lm-eval-harness reports
+
+Methodology rigor: for each criterion, score each candidate as Pass / Pass-with-caveat / Fail, with citation. End with a ranked recommendation, alternative if the recommendation fails the actual smoke test, and explicit "deferred to empirical step (Sprint 1 step 11)" boundary.
+
+Risk: literature-only research can produce a recommendation that loses to a model not yet on the radar. Mitigation: include a "models considered but excluded early" section with the reason for exclusion, so the trace is auditable.
+
+<------------Start User / 13:02------------>
+"1. include qwen2.5:7b and llama3.1:8b, 2. use subagents"
+
+<------------Start Thinking / 13:03------------>
+Final candidate set for the research:
+- qwen2.5:3b — fits in 4 GB VRAM, native tool calling
+- llama3.2:3b — fits, native tool calling (added in 3.2 release)
+- qwen3:4b — borderline VRAM, newest Qwen
+- gemma3:4b — fits, Gemma 3 has native tool calling
+- phi-3.5-mini:3.8b — fits, MIT license, weaker multilingual
+- qwen2.5:7b — STRETCH (won't fully fit GPU; documents why we don't pick it despite popular recommendation)
+- llama3.1:8b — STRETCH (same)
+
+7 models total. Spawning subagents to research in parallel. Each subagent gets a focused task with the citation requirement spelled out. Per CLAUDE.md "Confirm understanding before proceeding," I should brief on the subagent partition before launching, then run.
+
+How to partition? Three reasonable axes:
+(a) one agent per model — 7 agents, lots of overlap on benchmark sites (BFCL, MGSM-DE) being fetched 7 times.
+(b) one agent per criterion — 6 agents (tool-calling, multilingual, ctx, VRAM, domain, license), each consults all 7 models. Lower overlap on data sources, more consolidation work for me.
+(c) hybrid: one agent gathers vendor model cards + Ollama tag info for all 7 models (single domain: HuggingFace + ollama.com). One agent gathers tool-calling benchmarks (BFCL primarily) covering all 7. One agent gathers multilingual benchmarks (MGSM-DE primarily) covering all 7.
+
+(c) is the cleanest. 3 subagents, each domain-bounded, no duplication.
+
+Subagent partition:
+1. **Vendor facts agent** — for each of the 7 models, get from HuggingFace model card + Ollama library: parameter count, native context, training-data multilingual claims, license name, official tool-calling claim, Ollama tag/quant/disk size for the smallest sensible quant. Output a table.
+2. **Tool-calling benchmarks agent** — find each model's score on Berkeley Function Calling Leaderboard (BFCL) v3 (or v4 if released). Note quant used in the eval. If a model is not on BFCL, find its closest substitute (vendor's own tool-call eval). Output per-model score with citation.
+3. **Multilingual / German agent** — for each of the 7 models, find published German evaluation numbers: MGSM-DE if available, MMLU multilingual DE subset, or any German-specific benchmark cited in the model's tech report. Output per-model German score with citation.
+
+Then I synthesize in main loop, write the doc.
+
+Per subscription file: subagents default to Sonnet, which is on a separate pool from Opus weekly limits. Good fit for "lots of web reads, structured extraction." Use Explore subagent type — it's optimized for searching/fetching.
+
+Wait — Explore is for codebases, not web. Re-read agent descriptions:
+- Explore: "Fast agent specialized for exploring codebases" — wrong tool.
+- general-purpose: "researching complex questions, searching for code, and executing multi-step tasks" — has WebFetch, WebSearch via *. This is the right one.
+
+Use general-purpose × 3, run in parallel. Specify "report in under 400 words each" to keep returns lean.
+
+Estimated time: 3-5 minutes per agent if each does 7-15 fetches. Run in foreground because I need synthesis to produce the brief.
+
+One more thing: the user said "use subagents" but didn't say "draft right after." Per the four-gate protocol, subagents go fetch evidence (Gate 1 still — gathering inputs, not writing the artifact). After they return I present a Gate 2 walkthrough (here's what each section of the doc will conclude based on the evidence) before I draft. So launching subagents now is consistent with Gate 1.
+
+Will tell the user what I'm doing first (one short paragraph), then launch the 3 agents in parallel in this turn.
+
+<------------Start Thinking / 12:00------------>
+Subagent task: gather vendor-cited facts for 7 LLM candidates for local Ollama deployment on T1000 4GB. Strict literature-only.
+Models: qwen2.5:3b, llama3.2:3b, qwen3:4b, gemma3:4b, phi-3.5-mini, qwen2.5:7b, llama3.1:8b.
+Per-model facts: params, context, license, multilingual/German claim, tool-calling claim w/ quote, Ollama tag/quant/disk/release.
+Approach: parallel WebFetch to HF model cards and Ollama library pages. Then synthesize table. No speculation, "Not found in primary sources" where gaps exist.
+
+<------------Start Thinking / 12:01------------>
+Sub-agent task: German-language benchmark research for 7 local LLMs (qwen2.5:3b, llama3.2:3b, qwen3:4b, gemma3:4b, phi-3.5-mini, qwen2.5:7b, llama3.1:8b). Need MGSM-DE, MMLU-DE/Global-MMLU-DE, FLORES EN-DE BLEU, Belebele DE, vendor multilingual training-data claims. Dispatching parallel WebSearch + WebFetch against HF model cards, tech reports (arXiv), Occiglot. No claim without URL, "Not found in primary published benchmarks" for gaps. Output: markdown table + 200-word ranking + special question on 3-4B idiomatic German for heating vocab. Under 700 words total.
+
+<------------Start Output / 12:11------------>
+Completed literature-only survey of 7 LLM candidates. All primary-source facts gathered from HF model cards + Ollama library pages + vendor blogs. Key findings:
+- Qwen2.5-3B is qwen-research license (non-commercial) — CRITICAL, differs from Qwen2.5-7B which is Apache 2.0.
+- Qwen model cards do not quote tool-calling; support is via Qwen-Agent framework doc.
+- Llama 3.2 3B tool-calling claim is from Meta blog (vision-edge-mobile), HF card only hints "agentic."
+- Phi-3.5-mini and Qwen2.5-3B have no vendor tool-calling claim in primary source.
+- Gemma 3 explicitly claims function-calling on Google blog.
+
+<------------Start Output / 12:12------------>
+Sub-agent research complete. Key findings:
+- Phi-3.5-mini has explicit per-language German numbers on HF model card: MGSM-DE 69.6, MMLU-DE 62.4, MLQA-DE 61.8, UDPOS-DE 46.5.
+- Llama 3.1 8B Instruct HF model card: MMLU-DE 60.59 (5-shot). MGSM only aggregated (68.9).
+- Llama 3.2 3B Instruct HF model card: MMLU-DE 53.3. MGSM only aggregated (58.2 for bf16).
+- Llama: officially lists German as supported; strong warning against non-supported language use.
+- Qwen2.5 technical report + 3B/7B model cards: no per-language German numbers. Claims 29+ languages including German.
+- Qwen3 technical report: aggregate MGSM (67.74 for 4B) / MMMLU (71.42 for 4B) only. 119 languages claimed.
+- Gemma 3 technical report + HF blog + Google model card: 140+ languages claimed, 2x multilingual data vs Gemma 2. NO per-language German numbers anywhere in the report. Gemma3-4B-IT claimed competitive with Gemma2-27B-IT.
+- Occiglot: only tokenizer efficiency study accessible; leaderboard Space was down (HF capacity error).
+- No primary source found on idiomatic German for heating vocab specifically; community consensus is Qwen 2.5 = strongest non-English coverage at local scale, but no benchmark for "Heizkennlinie/Vorlauftemperatur" terminology.
+Returning findings as markdown table + ranking narrative + special-question answer to parent agent.
+
+<------------Start Thinking / 13:30------------>
+All three subagents returned. Synthesizing before drafting research doc (still Gate 1 → moving to Gate 2: walk through what the doc will conclude).
+
+Cross-cutting findings:
+1. Vendor tool-calling claims: Qwen3-4B, Gemma3-4b, Llama3.1-8B, Llama3.2-3B explicit. Qwen2.5 (3B+7B) only framework-supported via Qwen-Agent (NOT model card). Phi-3.5-mini has NO vendor claim.
+2. License surprise: Qwen2.5-3B is qwen-research = NON-COMMERCIAL. Yellow flag for portfolio. Qwen2.5-7B + Qwen3-4B = Apache 2.0. Phi-3.5-mini = MIT (best). Gemma = Gemma terms. Llama 3.x = community.
+3. BFCL hard numbers: Qwen2.5-3B 38.7 v3 (BF16); Qwen2.5-7B 44.7 v3 + 71.8 single-turn AST; Llama-3.1-8B 76.1 (Meta own report). Llama-3.2-3B REMOVED from BFCL Nov 2024 for prompt-style template — RED FLAG for create_agent. Qwen3-4B / Gemma3-4b / Phi-3.5-mini submitted but specific numbers not retrievable from leaderboard (JS-rendered).
+4. Quant gap: BFCL = BF16; Ollama default = Q4_K_M. No public small-model BFCL at Q4_K_M. Tool-calling/structured-output known to degrade more than perplexity. Read all BFCL numbers as upper bounds.
+5. Community evidence: Qwen2.5+Ollama+langchain has CHAT TEMPLATE breakages (vllm#9454, ollama#8588, ollama#14745). Phi-3.5-mini has empty tool_calls (HF#7) — narrates instead of executing. Llama-3.1-8B Q4_K_M template registration issue (continuedev#9639). Gemma3 too new for community signal.
+6. German: Phi-3.5-mini ONLY model with explicit per-lang DE numbers (62.4 MMLU-DE, 69.6 MGSM-DE). Llama-3.1-8B 60.59 MMLU-DE (Meta own). Llama-3.2-3B 53.3 MMLU-DE. Qwen / Gemma3 = aggregate multilingual only, NO per-lang DE.
+7. VRAM (T1000 4 GiB, ~3.2 GiB free, Q4_K_M):
+   - Fits: qwen2.5:3b (1.9), llama3.2:3b (2.0), phi3.5:3.8b (2.2), qwen3:4b (2.5)
+   - Borderline: gemma3:4b (3.3) — minimal KV headroom
+   - Out (partial CPU): qwen2.5:7b (4.7), llama3.1:8b (4.9)
+
+Provisional cross-product per criterion:
+- qwen3:4b: vendor tool ✓, no DE ⚠, fits ✓, Apache ✓ → STRONG
+- gemma3:4b: vendor tool ✓, no DE ⚠, borderline VRAM, Gemma terms ✓ → MEDIUM
+- llama3.2:3b: BFCL removed ⚠⚠, DE 53.3 ✓, fits ✓, community ✓ → DOWNGRADE on tool-call risk
+- phi-3.5-mini:3.8b: no vendor claim + community failures ⚠⚠, best DE ✓, fits ✓, MIT ✓ → ELIMINATE on tool-call evidence
+- qwen2.5:3b: framework tool ✓, no DE ⚠, fits ✓, RESEARCH-ONLY ⚠⚠ → ELIMINATE on license
+- qwen2.5:7b STRETCH: framework tool + 44.7 BFCL ✓, no DE ⚠, partial-offload latency, Apache ✓ → STRETCH benchmark
+- llama3.1:8b STRETCH: vendor tool + 76.1 BFCL ✓, 60.59 DE ✓, partial-offload latency, community license ✓ → STRETCH benchmark
+
+Provisional ranking for the doc:
+- PRIMARY recommendation: **qwen3:4b** — fits VRAM, vendor tool-calling, Apache, newest. German risk acknowledged, deferred to step 11.
+- FALLBACK: **gemma3:4b** — alternate if qwen3 chat-template issues hit; different vendor diversifies risk.
+- STRETCH BENCHMARK: **llama3.1:8b** — runs slow but provides "ground truth" quality reference for step 11 to compare 4B against.
+- ESCAPE HATCH: LLM_PROVIDER=openai per plan §6.
+- ELIMINATED: phi-3.5-mini (tool-call), qwen2.5:3b (license), llama3.2:3b (BFCL removal = template risk).
+- DOCUMENTED-AS-CONSIDERED: qwen2.5:7b (close to llama3.1:8b but no DE numbers; recommend llama3.1 instead for the stretch slot).
+
+Now Gate 2 brief for user — present per-section conclusion before drafting.
+
+<------------Start User / 13:35------------>
+"1. I want a different ranking based on the evidence, 2. Phi-3.5 treatment: eliminate cleanly, 3. long format, be comprehensive"
+
+<------------Start Thinking / 13:36------------>
+The user wants me to RE-RANK based on the evidence, not push them to my proposal. They flagged it as a critical-thinking moment: "what would the evidence alone, weighted by criterion strength, point to?"
+
+Let me re-read what evidence exists vs what I assumed:
+
+VERIFIED EVIDENCE per model (NOT vendor claims, only published numbers):
+- llama3.1:8b: BFCL 76.1 (Meta), MMLU-DE 60.59 (Meta), 128K ctx, vendor tool-call claim, German officially supported (8 languages incl DE), Llama community license, partial CPU offload at 4.9 GB
+- llama3.2:3b: REMOVED from BFCL (template issue, Meta listed agent capability), MMLU-DE 53.3 (Meta), 128K ctx, German officially supported, Llama community license, fits VRAM
+- qwen2.5:7b: BFCL 44.7 + 71.8 single-turn AST (BFCL paper), no DE benchmark, 128K ctx, framework-supported tool-calling, German listed in 29 langs, Apache 2.0, partial CPU offload at 4.7 GB
+- qwen2.5:3b: BFCL 38.7 (BFCL paper), no DE benchmark, 32K ctx, framework-supported tool-calling, German listed, qwen-research (NON-COMMERCIAL), fits VRAM
+- qwen3:4b: BFCL submitted (no specific number retrieved), aggregate MMMLU 71.42 / MGSM 67.74 (Qwen3 report), 128K ctx (with YaRN), vendor tool-call claim explicit, "100+ languages" implicit, Apache 2.0, fits VRAM
+- gemma3:4b: BFCL submitted (no specific number retrieved), aggregate multilingual only, 128K ctx, vendor tool-call claim explicit, "140+ languages" implicit, Gemma terms, borderline VRAM
+- phi-3.5-mini:3.8b: ELIMINATED per user
+
+Now: which 3-4B candidate has the STRONGEST EVIDENCE on the two HARD filters (tool-calling + German)?
+
+Tool-calling evidence strength (best to weakest in the 3-4B class):
+1. llama3.2:3b — Meta vendor claim explicit, BUT BFCL removed for prompt-style template = NEGATIVE evidence on structured tool calls. Net: medium-with-strong-caveat.
+2. qwen3:4b — Qwen vendor claim explicit ("expertise in agent capabilities"), no BFCL number retrieved, no community failures yet (newer model). Net: medium-with-no-confirming-data.
+3. gemma3:4b — Google vendor claim explicit, no BFCL number retrieved, very new (March 2025), no community signal. Net: medium-with-no-confirming-data.
+
+German evidence strength (best to weakest in the 3-4B class):
+1. llama3.2:3b — MMLU-DE 53.3 PUBLISHED. German in official 8-language list. Net: WEAK number BUT measured.
+2. qwen3:4b — aggregate MMMLU 71.42 (multilingual avg, 4B). NOT per-language. German not named in supported list. Net: NO DE NUMBER.
+3. gemma3:4b — only aggregate multilingual claims. German not named. Net: NO DE NUMBER.
+
+Now stretch tier:
+- llama3.1:8b — best on BOTH axes that can be measured: BFCL 76.1 + MMLU-DE 60.59. Penalty: VRAM partial offload.
+- qwen2.5:7b — BFCL 44.7 (≈half of llama3.1:8b), no DE number. Penalty: VRAM partial offload AND no DE evidence.
+
+Honest re-evaluation:
+The ONLY model in the entire shortlist with TWO published numbers on both hard filters is llama3.1:8b. Every other small candidate has at most one published number, and llama3.2:3b has a NEGATIVE signal (BFCL removal).
+
+If we weight evidence by what we KNOW vs what we ASSUME:
+- llama3.1:8b: 2 measured numbers, both passing. Costs latency.
+- llama3.2:3b: 1 measured (MMLU-DE 53.3), 1 negative (BFCL removal). Best-evidenced 3B but signals are mixed.
+- qwen3:4b: 0 specific measurements (aggregate only), strong vendor claim. Pure faith move.
+- gemma3:4b: 0 specific measurements (aggregate only), strong vendor claim. Pure faith move.
+- qwen2.5:7b: 1 measured (BFCL 44.7), 0 DE. Worse than llama3.1 on every measurable axis.
+
+CRITICAL INSIGHT: my prior ranking weighted "vendor claims I can read in a model card" the same as "published benchmark numbers." That's wrong. A vendor saying "supports tool calling" is far weaker than a third-party benchmark scoring the model on tool-calling. By that standard:
+
+Evidence-based ranking:
+- BEST EVIDENCE OVERALL: llama3.1:8b (only model with BOTH a tool-call benchmark AND a German benchmark, both passing). Penalty: latency.
+- BEST 3-4B BY EVIDENCE: llama3.2:3b — the ONLY 3-4B with a published German benchmark. The BFCL removal is a concern but it's about TEMPLATE not weights — fixable. And the model is from the same Llama family that scored 76.1 BFCL at 8B.
+- BEST 3-4B WITHOUT NEGATIVE SIGNAL: qwen3:4b — vendor claim explicit, no negatives. But ZERO measured numbers on either axis.
+- WORST EVIDENCE / WORST FIT: qwen2.5:7b — no DE, worse BFCL than llama3.1, same VRAM penalty. Should drop from stretch slot.
+
+So the evidence-driven ranking is:
+1. PRIMARY: llama3.1:8b — most measured evidence, accept the latency cost. Plan §6 already anticipates the OpenAI fallback if latency is unacceptable.
+2. FAST FALLBACK (if 8B latency intolerable): llama3.2:3b — the only 3B with measured German + same family lineage. Mitigate the BFCL template risk by following Meta's chat-template documentation precisely.
+3. SECOND FAST FALLBACK: qwen3:4b — newer, vendor claim, zero negatives, but ZERO measured evidence. Try if Llama 3.2 template breaks too.
+4. ESCAPE HATCH: OpenAI per plan §6.
+5. ELIMINATED: qwen2.5:7b (worse on every axis than llama3.1:8b at same VRAM cost), gemma3:4b (zero measured evidence + no community signal yet, too speculative for primary slot — keep as documented-but-unranked alternative), qwen2.5:3b (license), phi-3.5-mini (per user).
+
+This inverts my prior recommendation. Why I had it wrong: I overweighted "fits VRAM cleanly" as a hard filter when the user's plan §6 explicitly accepts both partial-offload latency AND OpenAI fallback. Once the plan accepts OpenAI fallback, the latency cost of llama3.1:8b is bounded (if too slow, we switch). So latency is a soft constraint, not a hard one. Evidence quality should win.
+
+Let me present this honestly to the user.
+
+<------------Start User / 13:42------------>
+"1. Primary llama3.1:8b, 2. recommend-only, 3. why not ranked?"
+
+<------------Start Thinking / 13:43------------>
+Good challenge. The user is asking: if I'm putting gemma3:4b in §5 as "documented-but-unranked", I owe a defense. "Not ranked" is a cop-out — it ducks the comparison. Either gemma3:4b earns a spot in the cascade or it gets eliminated.
+
+Let me think honestly. What does gemma3:4b have?
+- Vendor tool-call claim explicit (Google blog, March 2025)
+- 128K context (matches llama3.1)
+- 140+ languages claimed (vague)
+- Borderline VRAM (3.3 GB on a 3.2 GiB-free GPU — actually it does NOT fit cleanly)
+- Apache-ish license (Gemma terms, mostly OK for portfolio but not as clean as Apache 2.0)
+- ZERO measured numbers on either hard filter
+- Newer than qwen3:4b (March 2025 vs April 2025)
+
+What does qwen3:4b have that gemma3:4b doesn't?
+- Apache 2.0 license (cleaner)
+- 2.5 GB disk vs 3.3 GB (better VRAM headroom on a 4 GB GPU)
+- Same evidence count (zero measured)
+
+So if both have zero measured evidence, the tiebreakers are:
+- VRAM headroom: qwen3:4b wins (2.5 vs 3.3 GB on a 4 GB GPU with ~3.2 free)
+- License: qwen3:4b wins (Apache vs Gemma terms)
+
+Therefore in the no-evidence-fallback slot, qwen3:4b strictly dominates gemma3:4b. There's no scenario where gemma3:4b would be tried that qwen3:4b wouldn't be tried first.
+
+Honest verdict: gemma3:4b should be ELIMINATED, not "documented-but-unranked." Putting it in §5 as a non-ranked entry was me being polite to a model that I don't actually have a defensible reason to recommend at any tier.
+
+Counter-thought: is there a scenario where gemma3 would be preferred? E.g., if Google's tokenizer is significantly better for German than Qwen's? The Occiglot tokenizer study (mentioned by subagent 3) found Gemma's 256k-vocab tokenizer best-in-class on European languages. That's actual evidence for Gemma3 on the German axis. So gemma3:4b has ONE piece of supporting evidence the others don't: tokenizer efficiency for European languages.
+
+But tokenizer efficiency != model quality on German. It just means German text is encoded efficiently, which improves throughput and context-window economy. It doesn't tell us the model OUTPUTS good German.
+
+So gemma3:4b has:
+- Stronger tokenizer evidence for European languages (Occiglot)
+- Weaker VRAM fit (3.3 vs 2.5 GB)
+- Weaker license (Gemma vs Apache)
+- Zero measured evidence on either hard filter
+
+Versus qwen3:4b:
+- No tokenizer-specific evidence
+- Better VRAM fit
+- Cleaner license
+- Zero measured evidence on either hard filter
+
+In a tiebreak between two zero-evidence models, the tokenizer point is interesting but not enough to outrank a model that's smaller and Apache-licensed. So qwen3:4b stays as the no-evidence-fallback, and gemma3:4b gets ELIMINATED with a one-line explanation: "Strictly dominated by qwen3:4b on VRAM headroom and license, with the same zero measured evidence on both hard filters. The Occiglot tokenizer study shows Gemma's tokenizer is efficient for European languages, but tokenizer efficiency does not predict generation quality. Eliminated."
+
+Now to give the user the answer. Concise: "you're right, it shouldn't be unranked. Here's why eliminate vs rank, and the answer is eliminate."
+
+<------------Start User / 13:47------------>
+"ready"
+
+<------------Start Thinking / 13:48------------>
+Drafting `dsm-docs/research/2026-04-17_local-model-selection_research.md` per the agreed Gate 2 spec. Comprehensive (~500-700 lines), 11 sections (Header + §1-§10), every claim cited with URL or session-probe reference.
+
+Pattern reference: `dsm-docs/research/2026-04-07_langgraph-best-practices.md` — DSM_0.2 Module D Phase 0.5 research format with Purpose/Target Outcome/Status header.
+
+I should write this in one Write call (file does not yet exist). Single source of truth document. No incremental drafting.
+
+Decisions made and locked from the conversation:
+- 7 candidates considered, 4 eliminated (phi-3.5-mini, qwen2.5:3b, qwen2.5:7b, gemma3:4b), 3 ranked (llama3.1:8b primary, llama3.2:3b fast fallback, qwen3:4b no-evidence fallback) + OpenAI escape hatch
+- Hardware facts: T1000 4GB VRAM, ~3.2 GB free, i7-10875H 16-thread, 31 GiB RAM, GPU passthrough working (CUDA 12.8)
+- Hard filters: tool-calling (vendor claim + benchmark) and German (per-language number, not aggregate)
+- Soft filters: VRAM fit, license, context, domain
+- Evidence-strength scale: vendor claim < third-party benchmark < independent reproduction (this is the methodological hinge)
+- Recommend a plan §6 update but DO NOT touch the plan in this turn
+
+Citations to weave in (from the 3 subagent reports):
+- HF model cards: Qwen2.5-3B/7B, Llama-3.2-3B, Llama-3.1-8B, Qwen3-4B, Gemma3-4b, Phi-3.5-mini
+- Ollama library: each tag
+- BFCL paper (OpenReview), CHANGELOG
+- Meta Llama 3.1 eval_details.md
+- Qwen3 tech report (arXiv 2505.09388)
+- Gemma 3 tech report (arXiv 2503.19786)
+- Phi-3.5-mini HF discussion #7 (empty tool_calls)
+- ollama issues #8588, #14745 (Qwen template)
+- vllm issue #9454 (langchain Qwen2.5)
+- continuedev issue #9639 (Llama 3.1 template)
+- Red Hat half-million-eval study (quant impact)
+- llama.cpp quantize README (Q4_K_M perplexity delta)
+- Occiglot tokenizer study
+- Qwen-Agent GitHub
+- Google Gemma 3 blog
+- Meta Llama 3.2 blog
+- Alibaba Qwen2.5 Apsara announcement
+
+Length budget: aim ~600 lines. Use structured tables in §3, §4. Prose in §5-§9.
+
+<------------Start User / 13:58------------>
+"approve as-is"
+
+<------------Start Thinking / 13:59------------>
+Approved. Doc landed at 607 lines. Now: commit on session branch with a focused message that traces back to the conversation arc.
+
+Per global CLAUDE.md: no co-author lines.
+Per project CLAUDE.md: explain why before each action; build incrementally; only stage what should be committed.
+
+What to stage in this commit?
+- dsm-docs/research/2026-04-17_local-model-selection_research.md (the new research doc)
+
+What NOT to stage in this commit:
+- .claude/* changes from /dsm-align (hooks, settings.json, last-align files, transcript) — these are a different concern: alignment hygiene. Should be a separate commit.
+- _inbox/2026-04-17_dsm-align-update.md — same concern as above (alignment notification).
+
+So this commit = research doc only. Then a separate /dsm-align commit can land before next user step. Two clean commits beats one mixed one.
+
+Commit message: should reflect WHY (evidence-based model selection), not WHAT (added research doc). Format follows recent commits in the log:
+- "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)"
+- "Sprint 1 step 10: Streamlit UI (app.py)"
+- "Session 4 wrap-up: Sprint 1 steps 7-10 shipped, BL-002 edit 4 empirically resolved"
+
+Pattern: prefix with sprint/session marker, then concise summary.
+
+Proposed: "Sprint 1 step 11 prep: evidence-based local model selection research"
+
+Subject line stays under 70 chars. Body explains the methodology hinge (vendor-claim vs benchmark) + the cascade outcome (llama3.1:8b primary, llama3.2:3b fallback, qwen3:4b no-evidence fallback, OpenAI escape hatch) + the supersession of the prior tutorial-defaults research.
+
+Action: `git add` the specific file (avoid -A), then `git commit -m` via heredoc per protocol.
+
+<------------Start User / 14:03------------>
+"your recommendation"
+
+<------------Start Thinking / 14:04------------>
+User asks for my recommendation on next-step ordering. I floated A → C → B → step 11 in next session at the previous turn. Should I confirm or revise?
+
+Reconsider with the conversation context:
+- A (plan §6 update): tight scope. Edits §6 of one BL doc to swap default model, widen fallback ladder, add reference to research. Should follow research immediately so the plan stays the source of truth for actionable work items (per CLAUDE.md "Only items in dsm-docs/plans/ are actionable work items"). Skipping A means step 11, when it runs, would still reference `qwen2.5:7b` as default — confusing.
+- C (commit /dsm-align changes): housekeeping. Doesn't block anything, but leaving them uncommitted means /dsm-wrap-up sees mixed concerns at end of session. Better to clean up before continuing.
+- B (install Ollama + pull): big disk + bandwidth. ~5 GB + a few minutes pull. Not strictly needed for this session if step 11 is deferred.
+- Step 11: needs Ollama; substantial; involves five queries + evidence capture. Probably won't fit cleanly into remaining session time without rushing.
+
+Time check: session has been running since ~12:00. ~2 hours in. Quality of decisions degrading not yet (the model-selection re-ranking under user push-back was clean). But step 11 is a different mode (interactive with paste-back of model output), and starting it close to a wrap-up is risky — half-done step 11 is worse than not started.
+
+Honest recommendation:
+- Do A immediately (tightens plan with the research). Small, focused, maintains the plan-is-source-of-truth invariant.
+- Do C (commits /dsm-align housekeeping) so the working tree is clean.
+- DEFER B + step 11 to next session. Reasoning: (1) step 11 is empirical and requires real-time iteration on model output that benefits from a fresh session window; (2) the 5 GB pull + first-load cold start adds 10-30 min of waiting that's better spent on the next session's actual work; (3) wrap-up + a checkpoint documenting "Sprint 1 step 11 ready, primary model selected, install + smoke test next session" gives the next session a clean state.
+- Wrap up after A + C.
+
+This is more conservative than my prior "A → C → B → step 11 next session" sketch — but actually consistent with it (it just makes "next session" explicit for B + step 11 too). The change vs prior turn: don't start B in this session at all.
+
+Why not B in this session: Ollama pull is bandwidth-bound and "might take 10 minutes might take 30" depending on connection. After it completes, first model load is another ~30s-60s. That's 10-30 min of waiting time that doesn't move forward unless I'm also doing something productive in parallel — but parallel work conflicts with the user's apparent style (they want considered, gated steps, not "I'll juggle in the background").
+
+So: A + C + wrap-up. Step 11 next session as the headline opener.
+
+One concern: am I being too cautious? The user said "let's finish sprint 1" at the start. If I keep deferring step 11, sprint 1 doesn't finish. But the research shifted scope — we now need a new model (llama3.1:8b) that ISN'T pre-pulled on Windows OR in WSL. The Sprint 1 closure path now legitimately spans two sessions: (1) prep + research + plan update (this session), (2) install + smoke + readme + close (next session). That's the honest accounting.
+
+<------------Start User / 14:08------------>
+"proceed with A → C → wrap-up"
+
+<------------Start Thinking / 14:09------------>
+A = plan §6 update. Concrete edits to dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md §6 per the research §9 spec:
+- §9.1: replace default model line — current §6 implicitly references qwen2.5:7b in the gating exit criterion. Change to llama3.1:8b.
+- §9.2: widen fallback ladder from "switch to LLM_PROVIDER=openai" to the cascade.
+- §9.3: add reference line pointing to the new research doc.
+
+Need to brief Gate 1 (what's changing, why) before editing. The user said "proceed with A → C → wrap-up" which I read as approval to do A, C, wrap-up sequentially WITHOUT re-gating each. So Gate 1 brief should be the show-and-edit pattern: present the proposed diff inline, edit, then move to C.
+
+Re-read §6 of the plan to find exact text to edit. Then propose the change. The user has already approved the research, so the plan edit is mechanical translation of §9 of the research into §6 of the plan. No new judgment calls.
+
+C = commit /dsm-align changes. Files to stage:
+- .claude/hooks/transcript-reminder.sh (modified, BL-371 update)
+- .claude/hooks/validate-rename-staging.sh (new, BL-370 install)
+- .claude/last-align-report.md (modified)
+- .claude/last-align.txt (modified)
+- .claude/settings.json (modified, hooks merge)
+- _inbox/2026-04-17_dsm-align-update.md (new, alignment notification)
+
+NOT staged in C:
+- .claude/reasoning-lessons.md (modified — but that's technically owned by /dsm-wrap-up STAA-recovered-entry mechanism; let me check what's in it before deciding)
+- .claude/session-transcript.md (live, will commit at wrap-up)
+- .claude/session-baseline.txt (gitignored? check; if gitignored skip; if tracked include in C as session marker)
+- .claude/transcripts/2026-04-14T15:10-ST.md (new archived transcript — should be tracked, include in C)
+
+Let me check what's actually staged-vs-untracked and whether transcripts/* and baseline are gitignored before staging.
+
+Wrap-up: will use /dsm-wrap-up skill at the end. That skill has its own protocol (commit pending, push, MEMORY update, reasoning lessons, feedback push, etc.). I shouldn't pre-empt its work.
+
+<------------Start User / 14:17------------>
+"we still have context left. Could we do anything else now?"
+
+<------------Start Thinking / 14:18------------>
+User wants to use remaining session capacity. Honest assessment of what's productive vs what's filler.
+
+Options ranked by genuine value:
+
+1. **Resolve the stale ~/dsm-residential-energy path** flagged by /dsm-align warnings. Two CLAUDE.md references and one ecosystem-registry entry point at a missing directory. This is real cleanup, small scope, removes a real warning that will keep firing every /dsm-align run until fixed. Need user input though: where did the directory go? Was it renamed, deleted, or moved? Until I know, I can only propose options (remove references, replace path, restore backup). This becomes a quick conversation more than a task.
+
+2. **Process the pending inbox notifications** — both 2026-04-14 and 2026-04-17 dsm-align update entries are notifications, not action items. They should be moved to _inbox/done/. Per CLAUDE.md "After processing an inbox entry, move it to _inbox/done/". Trivial, clean. Worth doing.
+
+3. **Start B (install Ollama in WSL)** — I deferred this 20 minutes ago saying "bandwidth-bound, parallel work conflicts with gated style." That reasoning still holds. But: if user is willing to start the pull and we wrap during it, the next session opens with the model ready. This is a real time-saver for next session. Risk: pull fails or stalls and I won't see it inside this session.
+
+4. **Step 11 prep work** — I could pre-write the smoke-test evidence template (markdown file with the 5 plan §4.11 queries as headers, expected behavior columns, blank evidence rows) so next session opens with a structured form to fill in. Concrete, useful, doesn't depend on Ollama being up.
+
+5. **Update MEMORY.md early** — pre-empt /dsm-wrap-up. But that conflicts with my own advice ("shouldn't pre-empt wrap-up's work"). Skip.
+
+6. **STAA on Session 4 cont** — user was supposed to run this in a separate conversation. I shouldn't start it here.
+
+7. **Address the BL backlog** — there are no other ripe BLs in dsm-docs/plans/ besides Sprint 1 work and the Sprint 1 plan itself. Nothing else actionable.
+
+8. **Write feedback to DSM Central** about the methodology hinge from this session (evidence-strength scale) — actually genuinely useful and would feed feedback-to-dsm/ for the wrap-up to push. But it's also wrap-up adjacent; could be spawned now or by /dsm-wrap-up.
+
+Best picks for genuine value:
+- (2) inbox cleanup: 2 minutes, no decisions needed.
+- (1) stale path resolution: needs user input but worth surfacing the options.
+- (4) step 11 evidence template: 10-15 minutes, sets up next session well.
+- (8) methodology feedback: 5-10 minutes, real lesson worth preserving.
+
+Worst picks:
+- (3) Ollama pull: contradicts my own deferral reasoning.
+- (5) MEMORY.md early: pre-empts wrap-up.
+- (6) STAA: wrong tool.
+
+Recommend: do (2) inbox cleanup as the no-brainer first, then ask user to pick from (1), (4), (8). Don't decide for them.
+
+<------------Start User / 14:23------------>
+"1. process inbox, 2. \\wsl.localhost\Ubuntu\home\berto\_projects\dsm-residential-heating-ds-guide and \\wsl.localhost\Ubuntu\home\berto\_projects\dsm-residential-energy-apps, 3. ok, 4. ok"
 
 <------------Start Thinking / 14:24------------>
-User requesting explanation of "stub tool" from sprint plan file section 3, test layout.
-References test_tool_error_handling.py comment: "BL-002 edit 4: raises from a stub tool, asserts agent recovers gracefully"
-Will provide paragraph explanation of what stub tool means in this error-handling test context.
+Four items:
+1. process inbox → move both notifications to _inbox/done/
+2. paths: heating-ds-guide and energy-apps. Both are in /home/berto/_projects/, not /home/berto/. Critical fact: I had wrong base paths in CLAUDE.md and ecosystem registry. Also second one is "energy-apps" (plural with -apps suffix), not "energy". Need to verify both paths exist with their actual location, then update:
+   - CLAUDE.md line 132: ~/dsm-residential-heating-ds-guide → /home/berto/_projects/dsm-residential-heating-ds-guide
+   - CLAUDE.md line 133: ~/dsm-residential-energy → /home/berto/_projects/dsm-residential-energy-apps
+   - .claude/dsm-ecosystem.md heating-guide row: same change
+   - .claude/dsm-ecosystem.md heating-app row: same change + name from "heating-app" to "heating-apps" if user wants to match the directory name (or keep registry name as logical alias)
+3. step 11 evidence template → write
+4. methodology feedback to DSM Central → write per-session feedback file
+
+Order of operations to make this efficient (parallel where independent):
+- First: probe new paths exist (both)
+- Then in parallel where possible: move inbox files, update CLAUDE.md, update ecosystem registry, write evidence template, write methodology feedback
+- Finally: commit each as logical unit (probably one "session housekeeping followup" commit for the path updates + inbox moves, separate commits for step 11 template and methodology feedback)
+
+Actually: should I batch the path updates into a single commit (related changes) or keep them separate? They're all "fix stale path warning from /dsm-align". One commit. The step 11 template is a separate concern (Sprint 1 prep). The feedback is a separate concern (governance artifact).
+
+So 3 commits expected:
+- Commit D: stale path resolution (CLAUDE.md + ecosystem registry edits + maybe ecosystem name change)
+- Commit E: step 11 evidence template
+- Commit F: methodology feedback
+
+Plus inbox moves go in commit D since they're also from-/dsm-align cleanup.
+
+Let me probe paths first.
+
+<------------Start User / 14:35------------>
+"Is it possible to finish the sprint in this session?"
+
+<------------Start Thinking / 14:36------------>
+Honest cost assessment for closing Sprint 1 in this session.
 
-<------------Start Output / 15:20------------>
-Task 1 complete:
-- dsm-docs/blog/journal.md: appended 2026-04-14 entry "When the spike IS the contribution pipeline" (~35 lines, narrative + naming the pattern locally, links to the research doc)
-- dsm-docs/research/2026-04-14_upstream-contribution-playbook.md: new file, Status: Done, ~85 lines, 6-step method adapted to OllamaChatGenerator context, gap-triage heuristics, references
-- dsm-docs/decisions/2026-04-07_orchestration-framework.md: appended one-line pointer at end of "Contribution goal" section
-- .claude/reasoning-lessons.md: appended [S4] [ecosystem] lesson under "Cross-Repo & Governance"
-- _inbox/2026-04-13_dsm-graph-explorer_contribution-playbook.md: moved to _inbox/done/
+What's left to close per plan §6 + the new fallback ladder:
+- Install Ollama in WSL: ~2 min (one curl + one systemctl/serve)
+- Pull llama3.1:8b: 4.9 GB. Bandwidth-bound. On a typical home connection (50-100 Mbps), 7-15 min. On slower, 20-30 min. On ethernet/fiber, 2-5 min. Unknown.
+- First-load cold start: 30-60 sec
+- streamlit run app.py + verify it boots: 1-2 min
+- Q1 EN unit conversion: 1 min (paste-back)
+- Q2 EN standard lookup: 1 min
+- Q3 EN heating curve: 1 min
+- Q4 DE deflection: 1 min
+- Q5 DE gating heating curve: 2-5 min (this is the hard one; if it fails, troubleshoot template, possibly retry with another model)
+- Capture perf metrics: 2 min
+- Step 12 README rewrite: 15-25 min (real prose work, drafted carefully)
+- Final commits + check §6 boxes: 5 min
+- /dsm-wrap-up: 10-15 min (multiple sub-steps)
+
+Best case: 50-80 min remaining if everything works first try.
+Worst case: 2-3 hours if Q5 fails and we need to test fallbacks.
+
+Context budget consideration: this session has been running ~2.5 hours and is conceptually heavy (research, model selection, methodology pushback). Already had one transcript hook miss (the stale anchor). Adding 1-3 hours more pushes into degradation territory where mistakes get more likely.
 
-Task 3 complete:
-- _reference/sprint-plan.md: superseded header added at top pointing at dsm-docs/plans/ (backbone + sprint-1) and the decision record. Original body retained as historical input material per the Actionable Work Items rule.
+The honest framing: the user has paid the upfront cost of this session (research + plan update + housekeeping + prep template + feedback). The marginal cost of "finish in this session" is the risky part — Q5 is the unknown, and if it fails I'm troubleshooting under fatigue.
 
-Task 2 (Sprint 1 gate 1) pending user approval.
+What WOULD make finishing in-session feasible:
+- Bandwidth check first: if `ollama pull` rate is fast (>20 MB/s), confidence goes way up
+- Accept cutting README scope: instead of full step 12 README, do minimum-viable update (status line, model name fix, run-locally section). Defer comprehensive rewrite.
+- Pre-commit to stopping if Q5 fails first attempt: try llama3.1, if it fails on tool template, immediately switch to llama3.2:3b instead of debugging — i.e., don't spend session time on template engineering.
 
-<------------Start Thinking / 15:34------------>
-Concept-gate analysis for Sprint 1 gate 1:
+What would make finishing IRRESPONSIBLE:
+- Pushing through Q5 failure with hours of debugging + skipping §6 evidence capture
+- Rushing the README to "done enough"
+- Skipping /dsm-wrap-up at the end
+- Committing untested code claims (e.g., "step 11 passed" without evidence)
 
-What the plan calls for at gate 1 (steps 2-3 in build order):
-- Step 2: uv sync (one-time venv + dep install)
-- Step 3: add @tool wrappers to existing unit_converter.py
-- Open decision in plan section 5.1: individual @tool per function vs combined tool with method param. Plan recommends individual.
+So: it's POSSIBLE but conditional. Conditions:
+1. Ollama pull bandwidth confirmed fast enough (we can check by starting the pull and watching first 30 sec)
+2. README scope cut to minimum-viable for Sprint 1 close (full polish in Sprint 3)
+3. Hard stop on Q5 troubleshooting: if first attempt fails, switch model, don't debug
+4. /dsm-wrap-up reserved 15 min at end, no compromise
 
-Existing unit_converter.py:
-- Module docstring lists 3 functions: kw_to_kcal_per_h, kcal_per_h_to_kw, degree_days
-- KCAL_PER_H_PER_KW constant (3600/4.184)
-- Three plain Python functions, all framework-agnostic
-- Tests in tests/test_unit_converter.py import from src.tools.unit_converter directly — they should keep passing unchanged after wrapping
+If user accepts these constraints, sprint can probably close. If not, my prior recommendation (defer to Session 6) stands.
 
-pyproject.toml is reverted correctly (langgraph, langchain, langchain-core, langchain-ollama, langchain-openai). No haystack deps. uv.lock missing (uv sync will create it).
+I should give the user the honest framing, not "yes" or "no." This is a trade-off they should make explicit.
 
-Blocker for Step 2 (uv sync): the uv on PATH is a Windows shim under /mnt/c/Users/adiaz/.pyenv/pyenv-win/shims/uv with CRLF line endings, so it cannot execute under WSL. We need a Linux uv. Options:
-(a) install uv in WSL: curl -LsSf https://astral.sh/uv/install.sh | sh
-(b) alias to a different installed Python (pip + venv manually)
-(c) defer Step 2 to user, do Step 3 (code-only edit) now
+<------------Start User / 14:42------------>
+"let's address what you call the Feasible"
 
-Concept-gate proposal for Step 3 (the @tool wrapper):
+<------------Start Thinking / 14:43------------>
+User accepts the three preconditions: bandwidth check first, MVP README scope, hard-stop on Q5 troubleshooting. Going for in-session Sprint 1 close.
 
-Pattern recommendation: thin wrapper module, NOT in-place decoration. Reasoning:
-1. Tests already import the plain functions; @tool decoration changes the call signature (LangChain wraps in StructuredTool). Decorating in place would break tests OR force changing how tests import.
-2. The plan explicitly says "keep plain Python function; add a thin @tool-decorated wrapper". So the existing unit_converter.py stays as the plain-Python source of truth. The wrapper lives somewhere registry can import.
+Sequence:
+1. Install Ollama in WSL (curl install script). Need user permission probably; the install touches system. I should walk them through the command first, then run it.
+2. Start the pull, watch first 30 seconds of throughput. Decision point: continue or defer.
+3. Verify Ollama reachable from WSL: `curl localhost:11434/api/tags`
+4. Probe Streamlit boot before any model invocation: `streamlit run app.py` in background, test that it loads
+5. Run the 5 smoke queries via the actual Streamlit UI (user pastes outputs back) OR via a Python script that invokes the agent directly (faster, more controlled, no UI involvement). Honest trade-off: the §6 box says "streamlit run app.py starts without error" + "all 5 manual smoke test queries... produce expected tool call or deflection." Streamlit needs to start (one box), but query verification can happen via direct invocation since the §6 box doesn't require UI-mediated testing. Direct invocation is more reliable for capture and faster.
+6. Capture evidence in the smoke-test template I just created
+7. Hard-stop check after Q5
+8. Step 12 README minimum-viable rewrite
+9. Final commits + check §6 boxes
+10. /dsm-wrap-up
 
-Two organizational options:
-A) Add wrappers to the BOTTOM of unit_converter.py (same module, both plain + wrapped exposed). Imports stay clean.
-B) Add a separate module (e.g., src/tools/unit_converter_tools.py) that imports the plain functions and wraps them.
+Per CLAUDE.md "App Development Protocol": "Explain why before each action; create files via Write/Edit tools; user approves via permission window; wait for user confirmation before proceeding to next step." So I cannot just run `curl ... | sh` silently. Must explain why, then run, then verify outcome before next step.
 
-Recommendation: option A. Plan section 3 file layout shows unit_converter.py as the single file and the registry imports tools by name. Single module is simpler. The plan says "[done] plain Python + @tool wrapper (to add)" beside unit_converter.py, confirming co-location.
+Per "Cross-Repo Write Safety" — installing Ollama writes to /usr/local/bin and ~/.ollama (outside this repo). Per CLAUDE.md "First write to any path outside this repository in a session requires explicit user confirmation." This is the first such write in this session. So I need explicit confirmation.
 
-Decision on tool granularity (plan 5.1): three individual tools (kw_to_kcal_per_h, kcal_per_h_to_kw, degree_days) per plan recommendation. Each gets a focused docstring (what the LLM reads as description).
+Per the Bash tool guidance: long-running commands should use `run_in_background`. The pull is long-running (5-30 min). Should run it in background.
 
-@tool signature pattern (from research doc 2026-04-07_langgraph-best-practices.md, but I have not re-read it — flag this):
-- @tool decorator from langchain_core.tools
-- Function signature with type hints (used to build the JSON schema)
-- Docstring becomes the tool description
-- Return value: convention in the plan is "dict returns"
+But before any of that, I should pause and confirm the user knows what I'm about to do. The "approve as-is" / "ok" pattern this session has been clear and gate-respecting — let me preserve that.
 
-Per plan section 2 row "Tools | @tool decorator, snake_case, dict returns". So wrap to return dicts.
+Plan to present:
+- Step 1a (install): exact command + what it touches
+- Step 1b (start pull): exact command, run in background, monitor with curl
+- Step 1c (boot Streamlit): verify it loads (boots successfully without invoking model)
+- Step 2 (smoke queries): direct Python invocation using src.graph.build_agent — capture evidence
+- Step 3 (perf metrics): same loop
+- Step 4 (README MVP scope): what I'll change, what I won't
+- Step 5 (final commits + §6 box check + wrap-up)
 
-Proposed signature for each:
+Confirm sequence and step 1 specifically before running.
 
-@tool
-def kw_to_kcal_per_h_tool(kw: float) -> dict:
-    """Convert thermal power from kilowatts (kW) to kilocalories per hour (kcal/h).
-    Use when the user asks to convert heating power between metric and traditional units."""
-    return {"kcal_per_h": kw_to_kcal_per_h(kw), "input": {"kw": kw}}
+<------------Start User / 14:47------------>
+"berto@LAPTOP-S6S01E8F:~$ curl -fsSL https://ollama.com/install.sh | sh ... 17.5%"
 
-@tool
-def kcal_per_h_to_kw_tool(kcal_per_h: float) -> dict:
-    """..."""
-    return {"kw": kcal_per_h_to_kw(kcal_per_h), "input": {"kcal_per_h": kcal_per_h}}
+<------------Start Thinking / 14:48------------>
+User has independently kicked off the Ollama install on their own terminal (different shell from my Bash tool — that's the `LAPTOP-S6S01E8F:~$` prompt). The install is running and downloading ollama-linux-amd64.tar.zst, currently at 17.5%. They didn't wait for my "y/n" gate; they just executed.
 
-@tool
-def degree_days_tool(base_temp: float, daily_temps: list[float]) -> dict:
-    """Compute heating degree days (HDD) for a sequence of daily mean temperatures.
-    HDD = sum(max(0, base_temp - t)). German convention base = 15°C (Heizgrenztemperatur)."""
-    return {"hdd": degree_days(base_temp, daily_temps), "input": {"base_temp": base_temp, "n_days": len(daily_temps)}}
+Reading this as: "yes I confirm, in fact already started it." Good — saves a turn. The install runs in the user's foreground shell, not in my tool process. I should:
+1. Wait for the install to complete (the user will tell me when it's done)
+2. Then have them run `ollama pull llama3.1:8b` themselves (since it's their shell, and pull is also bandwidth-bound multi-minute)
+3. Verify reachability after pull from MY shell via curl
 
-Naming question: should @tool-wrapped versions have the same name as the plain function (shadows + breaks tests) or _tool suffix (clear) or wrap into a separate name?
+Actually: I can also probe `ollama` from my own Bash tool once installed, since it lives in /usr/local/bin which my shell can see. The install installs system-wide. So once the user reports install done, I can test from my side.
 
-Per plan section 9 build order: "registry.TOOLS = [kw_to_kcal_per_h, kcal_per_h_to_kw, degree_days, ...]" — the plan uses the bare names in the registry. That means either:
-- The registry imports the @tool-decorated versions and the plain functions are renamed/shadowed, OR
-- The plan was written assuming the @tool decorator is applied in place and tests would be updated.
+For the pull: same logic. The user can kick it off in their shell, I can monitor via `ollama ps` or `curl /api/tags` from my side. Or I could start the pull from my side via Bash tool with run_in_background. Faster, but might confuse if they also start it. Better to ask them: "go ahead and run the pull on your end, paste me the first few seconds of throughput so we can decide on the precondition."
 
-This is a concrete decision the user needs to make at concept gate. My recommendation: add _tool suffix to wrappers, update plan section 9 to use the suffixed names. Keeps tests green and the namespace explicit (anyone reading sees plain vs LLM-facing).
+Actually, simplest: the install will finish quickly. Then I should have user run the pull in their terminal (so they can see progress), and I'll separately probe `curl http://localhost:11434/api/tags` from my Bash tool to confirm reachability once they say it's done. The bandwidth check is THEM watching the pull; they tell me MB/s.
 
-Also: degree_days takes Iterable[float] but @tool needs JSON-schema-compatible types. list[float] is the right narrowing for the wrapper.
+Wait — I should double-check that Ollama on Linux auto-starts as a service. The install script typically registers a systemd unit and starts it. So `curl localhost:11434/api/tags` should work right after install (before any pull) and return an empty model list. Let me probe that as soon as user reports install done.
 
-uv sync blocker: present option (a) install Linux uv as default action, since the plan needs it. Alternatively defer entirely.
+For now, my output is: "Got it, install in progress, I'll wait. When it hits 100%, paste the last few lines (especially any 'systemd' or 'service started' messages) and I'll probe from my side."
 
-<------------Start User / 15:50------------>
-Pause Sprint 1 gate 1. User wants a research BL on whether the hybrid LangGraph + Haystack modular architecture (loose coupling via single @tool boundary) has comparable precedents in existing articles/posts/repos. Plan to run the research in a parallel DSM session, so we need a BL formalized in dsm-docs/plans/.
+Keep it short — the install only adds a few seconds of work, no need for a long output here.
 
-<------------Start Thinking / 15:50------------>
-This is a research-track BL, not an implementation BL. Goal: find precedents (articles, blog posts, OSS repos, conference talks) of hybrid agent + RAG architectures with a similar loose-coupling pattern (one framework as the agent layer, a different framework as the RAG subsystem behind a single tool boundary). Goes into dsm-docs/plans/ as a backlog item with a clear research question, success criteria, and pointer to where findings will land.
+<------------Start User / 14:51------------>
+Install complete output:
+- "Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc/systemd/system/ollama.service."
+- ">>> Nvidia GPU detected."
+- ">>> The Ollama API is now available at 127.0.0.1:11434."
+- ">>> Install complete. Run "ollama" from the command line."
 
-Per Actionable Work Items rule, BLs in dsm-docs/plans/ are the authoritative work items. Format hint from plans/README.md: BACKLOG-###_short-description.md, required fields Status, Priority, Date Created, Origin, Author.
+<------------Start Thinking / 14:52------------>
+Excellent install output:
+1. systemd service registered + symlinked = daemon will auto-start now and on boot
+2. NVIDIA GPU detected by Ollama = the Quadro T1000 will be used for inference (CUDA path active)
+3. API on 127.0.0.1:11434 = standard port, reachable from my Bash tool
+4. Install complete
 
-Need a BL number. Let me check for existing BL files.
+Now: probe reachability from my side, confirm empty model list, then hand pull command back to user. Both should be near-instant.
 
-Plan structure:
-- BL### (need to determine) 
-- Title: Architecture-Pattern Precedent Research: Hybrid Agent + RAG Loose Coupling
-- Status: Open
-- Priority: Medium (informs Sprint 2 scoping but not blocking Sprint 1)
-- Origin: Session 4 (2026-04-14) follow-up to 2026-04-07 orchestration decision
-- Research question: do other projects use a hybrid agent-framework + RAG-framework pattern with a single-tool boundary, and what do their integration boundaries look like?
-- Targeted sources: arxiv, deepset blog, langchain blog, github topics (langgraph + haystack, agent + rag), towards-data-science, anthropic/openai cookbooks, conference talks
-- Success: ≥3 substantive precedents OR a confident "novel-ish" finding with reasoning
-- Output target: dsm-docs/research/2026-04-XX_hybrid-architecture-precedents.md
-- Parallel-session use: yes, designed to run in /dsm-parallel-session-go context (research only, no main-branch writes beyond the research doc and BL completion)
+Single Bash tool call: curl the tags endpoint.
 
-Should I gate on the user before writing? Yes — concept gate first. Confirm research question framing, scope, success criteria, BL priority, then write.
+<------------Start User / 14:55------------>
+"Before we move on: Why does the plan not include a description for Sprint boundary checklist? the structure of the plan is not complete. find the rootcause."
 
-Need to check existing BL numbers in dsm-docs/plans/ to pick the next number.
+<------------Start Thinking / 14:56------------>
+User is calling out a structural gap in the Sprint 1 plan. Specifically: there's no "Sprint boundary checklist" section. They want me to find the root cause, not just patch it.
 
-<------------Start Output / 15:52------------>
-BL-001 created:
-- dsm-docs/plans/BACKLOG-001_hybrid-agent-rag-architecture-precedents.md (research-only BL, ~80 lines, strict-then-lenient lens, ~2h soft cap, parallel-session-safe)
-- dsm-docs/plans/README.md: index table updated with BL-001 row
+Let me first check what they mean by "Sprint boundary checklist." From DSM_0.2 / /dsm-go Step 3.6 I recall there's a Sprint boundary gate that verifies:
+- Checkpoint for the completed sprint in dsm-docs/checkpoints/done/
+- Blog journal entry in dsm-docs/blog/journal.md with matching date
+- Feedback files updated (per-session file or technical.md)
 
-Ready to launch in parallel via /dsm-parallel-session-go. Sprint 1 gate 1 still paused on user direction (uv install + naming + wrapper-tests decisions).
+That's the boundary check at session-start. But the user is asking why the *plan itself* doesn't describe a Sprint boundary checklist — i.e., what to do when this sprint ends. The plan should have a section that says "at sprint end: create checkpoint, write blog entry, push feedback, etc."
 
-<------------Start User / 15:53------------>
-User renamed BL file: BACKLOG-001_... -> BL-001_hybrid-agent-rag-architecture-precedents.md. Resume Sprint 1 gate 1.
+Let me actually read the full Sprint 1 plan to see what sections exist vs what's missing. Then check whether DSM_0.2 mandates a "Sprint boundary checklist" section in plan documents. Then check whether other plans (e.g., e2e_hybrid_backbone.md) have it. That triangulation finds the root cause.
 
-<------------Start Thinking / 15:53------------>
-Update internal references:
-- dsm-docs/plans/README.md format hint says "BACKLOG-###_..." but user prefers "BL-###_..." (matches the in-conversation shorthand). README format hint should be updated to BL-### so future BLs follow the same convention.
+Three possibilities for root cause:
+1. DSM_0.2 doesn't define a plan-document template that includes a sprint boundary checklist section → DSM gap
+2. DSM_0.2 defines it but the agent who wrote the Sprint 1 plan ignored it → execution gap
+3. The Sprint boundary checklist is a session-start /dsm-go check (not a plan-doc section), and the user's expectation that the plan should describe it is novel → terminology mismatch
 
-Resuming Sprint 1: still need user answers on three concept-gate decisions (uv install, naming, wrapper tests). Will re-prompt concisely.
+Need to investigate. The right tool here is parallel reads: list plan files, read sections, grep DSM_0.2 for "sprint boundary" or "boundary checklist" or "sprint end" patterns.
 
-<------------Start User / 15:55------------>
-"defaults": (a) install Linux uv, (_tool) suffix, defer wrapper tests to Step 6.
+This is a meta question worth answering carefully. The user paused the Sprint 1 close mid-flight to surface this. That's a signal — they're not satisfied with the plan's structural completeness and want the root cause before continuing.
 
-<------------Start Thinking / 15:55------------>
-Concept gate cleared. Moving to implementation gate. Plan:
+I should NOT just propose a patch. The user explicitly said "find the root cause." That means: investigation first, then diagnosis, then propose. Not patch first.
 
-1. Install Linux uv (Step 2 prep): curl -LsSf https://astral.sh/uv/install.sh | sh — but this is a tool install on the user's machine, slight blast radius. Will run after presenting; user approves via permission window.
-2. Run uv sync (Step 2): creates .venv, installs deps, generates uv.lock.
-3. Edit src/tools/unit_converter.py (Step 3): append @tool wrappers at the bottom with _tool suffix.
-4. Verify existing tests still pass: uv run pytest tests/test_unit_converter.py
-5. (Deferred) Wrapper tool.invoke tests — Step 6.
+Investigation plan:
+1. Read full Sprint 1 plan to know its actual structure
+2. Read the other plan (e2e_hybrid_backbone.md) to see if it has the same gap
+3. Search DSM_0.2 for "sprint boundary" / "checkpoint" / "wrap-up" / "exit criteria" / "boundary gate" — find what DSM mandates for plan documents
+4. Check the dsm-align template or any plan-document scaffolding in scripts/templates/
+5. Triangulate: is this a DSM template gap (no plan-doc template defines it) or an agent execution gap (template exists, plan ignored it)?
 
-Implementation gate: present the diff for Step 3 first (code change is the substantive review), then run uv install + uv sync + pytest as the run gate.
+Run probes in parallel.
 
-Actually the order should be:
-- uv install (run gate, isolated tool install)
-- uv sync (run gate, creates venv)
-- THEN show the code diff (because we want the code edit reviewed before any test that would import LangChain)
-- Then pytest
+<------------Start User / 15:04------------>
+"draft a feedback to dsm central abot the Root cause analysis: plan is incomplete and send inbox"
 
-Or: show diff first (concept-validated edit), then install + sync + test as one run-gate batch.
+<------------Start Thinking / 15:05------------>
+User wants two artifacts:
+1. A feedback file in dsm-docs/feedback-to-dsm/ documenting the root-cause analysis (the three-layer gap I just diagnosed)
+2. Push it to DSM Central's _inbox/ so they see it now (don't wait for /dsm-wrap-up)
 
-Going with: code edit first (low risk, just appending to a file, easy to undo), then install+sync+test as a run-gate batch. The code change does not need uv to be present to be valid.
+This is option (2) from my prior list (patch Sprint 1 + open BL + send feedback) — but the user is doing the *feedback* part first explicitly. Patching Sprint 1 itself would be a separate next move.
 
-For the code edit, the import  will fail at import time if langchain-core is not installed, which would break the existing tests. So actually I need uv sync BEFORE the code edit, OR I need to defer importing inside a try/except, OR accept that tests break temporarily.
+The feedback file should be structured per the existing convention I used for 2026-04-17_s5_methodology.md: per-session feedback file in the spoke's feedback-to-dsm/, then push content to DSM Central's _inbox/{this-project-name}.md.
 
-Cleanest order:
-1. Install uv (run)
-2. uv sync (run, creates venv with langchain-core)
-3. Edit unit_converter.py (impl)
-4. uv run pytest tests/test_unit_converter.py (run, verify existing tests still pass)
+Per CLAUDE.md "Cross-Repo Write Safety" rule: "First write to any path outside this repository in a session requires explicit user confirmation. Subsequent writes to the same cross-repo target in the same session do not need re-confirmation."
 
-Will present this batched plan.
+The Ollama install was a system-wide write but to /usr/local etc, not a "repo" per se. The DSM Central inbox is a different repo (~/dsm-agentic-ai-data-science-methodology). So this IS the first cross-repo write to that path. I need to confirm before writing.
 
-<------------Start User / 15:59------------>
-Parallel-session BL-001 blocked: scope overlaps with main-session uncommitted changes (journal.md and decision record). User needs an unblock path.
+Actually wait — is the /dsm-align-generated 2026-04-17_dsm-align-update.md push to DSM Central counts as the first cross-repo write? Let me check what /dsm-align Step 6 does — it pushes feedback to DSM Central's _inbox. Did it push anything in this session? Looking back at the alignment report: "Feedback pushed: none pending" — so no, /dsm-align did NOT write to DSM Central this session because there were no pushable entries. So this IS the first cross-repo write to DSM Central in this session.
 
-<------------Start Thinking / 15:59------------>
-The parallel session refused (correctly) because:
-- dsm-docs/blog/journal.md: I modified it earlier this session (Task 1, playbook narrative entry). Uncommitted.
-- dsm-docs/decisions/2026-04-07_orchestration-framework.md: I modified it earlier (one-line cross-reference to playbook research). Uncommitted.
+I need to:
+1. Draft the feedback file in this repo's dsm-docs/feedback-to-dsm/ (no cross-repo write, free)
+2. Show user the cross-repo write proposal: target path + content snippet
+3. Get confirmation
+4. Append to DSM Central inbox
 
-Both are part of BL-001's declared write scope (conditional on novel-ish finding for the decision record, journal entry on completion).
+Or I could write the feedback file first (in-repo), then ask for cross-repo confirmation as a separate step, since the user explicitly said "send inbox" which is the cross-repo action they want.
 
-Three options the parallel session offered:
-1. Commit/stash main session changes first
-2. Narrow BL-001 scope this run to research doc + BL status only
-3. Run BL-001 in main session
+Actually re-reading: "draft a feedback ... and send inbox" — they're asking for both in one go. I should still gate the cross-repo write but the user has given prior approval signal ("send inbox" is essentially permission). The Cross-Repo Write Safety rule says "explicit user confirmation" — I'll interpret "send inbox" as that confirmation since they explicitly directed the cross-repo action.
 
-Best path is option 1: commit the main-session work that's complete (Task 1 outputs are coherent, Task 3 sprint-plan reframe is coherent, the alignment work is coherent). Then the parallel session has a clean baseline to write against. This also frees us from carrying ~6 file modifications through Sprint 1 work.
+To be conservative: I'll write the in-repo feedback file, then SHOW the inbox push content + target path + confirm before executing. That's the safest reading of the protocol.
 
-We're mid-Sprint-1 gate 1 (uv installed, uv sync next). Committing now, before uv sync, gives:
-- Clean main-session HEAD with: alignment fixes, Task 1 (playbook capture), Task 3 (sprint-plan reframe), BL-001 creation
-- Parallel session unblocked
-- Sprint 1 work continues from a clean tree
+Content of the feedback file:
+- Title: Plan document structure non-compliance with DSM Template 8
+- Type: Methodology Observation / Backlog Proposal hybrid
+- Priority: Medium-High
+- Source: heating-systems-conversational-ai S5
+- Body: the three-layer root cause analysis I produced, with concrete proposals:
+  - Proposal A: extend /dsm-align with a plan-document audit (validates Template 8 compliance for files in dsm-docs/plans/)
+  - Proposal B: ship a /dsm-plan-init or /dsm-plan-align skill (separate skill)
+  - Proposal C: add a session-start gate that flags non-compliant plans before suggesting work on them
 
-Option 2 (narrow scope) is also fine but defers two outputs and creates a coordination tax. Option 3 (move BL to main session) defeats the purpose of running it in parallel.
+I should also include the actual evidence: the Sprint 1 plan section list (9 sections actual vs 11+ mandated) and the Template 8 mandate location.
 
-I should propose option 1 with a concrete commit plan. The commit boundary is natural: everything done before "uv install" is documentation/governance work; everything from "uv install" onward is implementation.
+For DSM Central inbox: standard format with a single entry header.
 
-Commit message draft (one commit, since the changes are interrelated session-start work):
-"Session 4: align CLAUDE.md to v1.4.18, capture graph-explorer playbook, supersede sprint-plan, open BL-001"
+Let me draft both now. In-repo file first, then prepare the cross-repo append payload for confirmation.
 
-Or split into 2-3 commits for cleaner history:
-A. align: CLAUDE.md, hooks, settings, alignment markers (alignment work)
-B. docs: capture graph-explorer playbook (blog + research + decision xref + lesson + inbox move)
-C. plan: supersede _reference/sprint-plan.md, open BL-001
+<------------Start User / 15:09------------>
+"y"
 
-Three commits gives the cleanest audit trail. I'll propose that.
+<------------Start Thinking / 15:10------------>
+Cross-repo write approved. Sequence:
+1. Check if /home/berto/dsm-agentic-ai-data-science-methodology/_inbox/heating-systems-conversational-ai.md exists (append vs create)
+2. Append (or create) the entry I drafted
+3. Mark the source file as pushed (add a "Pushed: 2026-04-17" footer? No — per /dsm-align Step 6, per-session feedback files move to done/ AFTER pushing. I'll move the file to done/ as the marker.)
+4. Commit both: feedback file move + creation of the per-session backlogs.md
+5. Pull progress check
 
-<------------Start Output / 16:01------------>
-Three commits landed on session-4/2026-04-14:
-- 0a15dea align: sync to DSM v1.4.18, install BL-319 transcript hooks (8 files, +348/-7)
-- e16e51d docs: capture graph-explorer contribution playbook (4 files, +288)
-- 1b066eb plan: supersede _reference/sprint-plan.md, open BL-001 (3 files, +97/-1)
+Wait — should I move the file to done/ BEFORE the user has acknowledged the push happened on the central side? The /dsm-align convention says: write to inbox, then move to done/. The done/ move is the local marker that the push is complete. So yes, do it.
 
-Remaining uncommitted (session-scoped, handled by wrap-up):
-- .claude/session-baseline.txt (M)
-- .claude/session-transcript.md (M, live)
-- .claude/transcripts/2026-04-07T13:51-ST.md (archived prior transcript)
+But: the file `2026-04-17_s5_backlogs.md` was just created and not yet committed. If I move it to done/ before its first commit, git will see it as a new file in done/ rather than a move. That's actually fine — it just means git stage shows `?? dsm-docs/feedback-to-dsm/done/2026-04-17_s5_backlogs.md` instead of a rename.
 
-BL-001 parallel session is now unblocked. Main session back to Sprint 1 gate 1 -> uv sync next.
+Order of operations:
+1. Check existing central inbox file
+2. Cat current content (if exists), then append my new entry
+3. Move local file to done/
+4. Commit local move (separate commit, per-concern)
+5. Verify central inbox file content shows my entry
+6. Report
 
-<------------Start User / 16:35------------>
-Parallel session 4.1 closed BL-001. Two research deliverables landed (735160b, 223bc97): hybrid-architecture-precedents.md and sprint-plans-groundedness-assessment.md. User directs:
-1. Read both research docs for context
-2. Create BL-002 (apply the 6 recommended edits) with the sketched skeleton
-3. Also reinforce Sprint 1 §11 DE tool-call as gating exit criterion (overlaps with edit 1)
-4. Close BL-001 (move to done/)
-5. Then proceed with uv sync
+Independent: pull progress check via `curl /api/tags` from my side or `ollama list` to see if llama3.1:8b has appeared. That can run in the same parallel batch.
 
-<------------Start Thinking / 16:35------------>
-The parallel session produced a groundedness assessment that found 6 gaps in the sprint plans. User wants BL-002 to scope the fix work, not to do it ad hoc. This is exactly the Actionable Work Items rule: work goes through BL, not buried in research.
+<------------Start User / 15:15------------>
+"Go ahead with the plan patch"
 
-Plan:
-1. Pull parallel session commits (git fetch + check if they are on my local branch or need git pull / rebase — they should already be on session-4/2026-04-14 if they are on the shared session branch)
-2. Read the two research docs
-3. Create BL-002 with the sketched skeleton (user's text is already close to the final shape, just reformat)
-4. Close BL-001: move to done/ with Status: Done + Date Completed annotation, update README index
-5. Commit BL-002 creation + BL-001 closure in one commit
-6. Then move to uv sync (Sprint 1 gate 1 Step 2)
+<------------Start Thinking / 15:16------------>
+Patching Sprint 1 plan to align with Template 8. Need to be careful here:
 
-First: check git log to see the parallel session commits.
-
-<------------Start Output / 16:37------------>
-BL-001 closed, BL-002 opened, committed as 31aa522:
-- dsm-docs/plans/done/BL-001_hybrid-agent-rag-architecture-precedents.md (moved, Status: Done, Date Completed 2026-04-14)
-- dsm-docs/plans/BL-002_apply-sprint-plans-groundedness-edits.md (new, 6 edits scoped, ~70 lines)
-- dsm-docs/plans/README.md (index updated: BL-002 active, BL-001 in Closed section)
-
-Git log tail:
-  31aa522 plan: close BL-001, open BL-002 (apply groundedness edits)
-  223bc97 Parallel 4.1 follow-on: sprint plans groundedness assessment
-  735160b BL-001 parallel 4.1: hybrid agent+RAG architecture precedent research
-  1b066eb plan: supersede _reference/sprint-plan.md, open BL-001
-
-Leftover uncommitted (main-session territory, wrap-up handles):
-- .claude/session-baseline.txt (M), .claude/session-transcript.md (M, live)
-- .claude/commit-lock, .claude/parallel-session-baseline.txt (parallel artifacts)
-- .claude/transcripts/2026-04-07T13:51-ST.md (archived S3 transcript)
-- dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md (M, external linter removed Author line — not a session change, will land with next related commit)
-
-Note on outstanding work: BL-002 is Open but user chose to run uv sync NEXT rather than apply BL-002 first. Order is user-preferred: complete Sprint 1 gate 1 Step 2 (uv sync), then BL-002 edits can happen before or interleaved with Sprint 1 gate 1 Step 3.
-
-Proceeding with uv sync.
-
-<------------Start Output / 16:38------------>
-uv sync complete (Sprint 1 gate 1 Step 2 done):
-- .venv created at ./.venv (Python 3.11)
-- uv.lock generated (2224 lines)
-- ~80 packages installed: langgraph, langchain 1.2.28, langchain-ollama, langchain-openai, streamlit 1.56.0, pydantic 2.13.0, pytest 9.0.3 + ...
-- Verified imports: @tool, create_react_agent, InMemorySaver all resolve
-- Baseline pytest: 11/11 passed on tests/test_unit_converter.py in 0.03s
-
-Ready for Step 3 (@tool wrappers edit).
-
-Note on the VIRTUAL_ENV=/usr warning: external shell has VIRTUAL_ENV pointing at /usr; uv ignores it and uses .venv correctly. No action needed.
-
-Next user gate: apply the Step 3 edit (append 3 @tool wrappers to src/tools/unit_converter.py, per concept-gate plan already approved).
-
-<------------Start User / 16:41------------>
-Pause Step 3. Organize dsm-docs/research/: move consumed files to done/.
-
-<------------Start Thinking / 16:41------------>
-Research lifecycle per plans/README template: research files move to done/ "after findings are integrated into the target outcome." Need to determine which files are consumed vs still-active inputs.
-
-Current files in dsm-docs/research/:
-- 2026-04-07_haystack-vs-langgraph-deepened.md
-- 2026-04-07_hybrid-langgraph-haystack-best-practices.md
-- 2026-04-07_langgraph-best-practices.md
-- 2026-04-14_hybrid-architecture-precedents.md (from parallel 4.1)
-- 2026-04-14_sprint-plans-groundedness-assessment.md (from parallel 4.1)
-- 2026-04-14_upstream-contribution-playbook.md (my earlier Task 1)
-
-Consumed = findings have been integrated into a decision, plan, or BL that is now authoritative.
-
-Analysis:
-- 2026-04-07_haystack-vs-langgraph-deepened.md -> integrated into 2026-04-07_orchestration-framework.md (decision) -> CONSUMED
-- 2026-04-07_hybrid-langgraph-haystack-best-practices.md -> integrated into 2026-04-07_e2e_hybrid_backbone.md (plan) -> CONSUMED but still referenced as active input by BL-002 groundedness assessment (edits 2, 5, 6 cite it). Still relevant for Sprint 2 pickup — ACTIVE.
-- 2026-04-07_langgraph-best-practices.md -> integrated into 2026-04-07_sprint1_langgraph_plan.md but Sprint 1 is in active implementation — ACTIVE (gate references depend on this doc). Defer move until Sprint 1 is done.
-- 2026-04-14_hybrid-architecture-precedents.md -> consumed (decision record has cross-ref; Precedent 2 is cited in groundedness assessment; BL-001 closed). -> CONSUMED. Will be cited during BL-002 execution (edit 5) but that is a terminal citation, not ongoing dependency. Move-safe after BL-002.
-- 2026-04-14_sprint-plans-groundedness-assessment.md -> direct input to BL-002 which is OPEN. ACTIVE until BL-002 closes.
-- 2026-04-14_upstream-contribution-playbook.md -> Status: Done, self-declared. Referenced by orchestration decision record. Its activation is Sprint 2 pickup. Move-safe? The Status: Done on the file declares consumption, but the "activate at Sprint 2 start" note means it is still a forward-reference, not archived knowledge. Judgment call. Two options:
-  a) Keep in active research/ until Sprint 2 picks it up -> consumed-but-not-archived
-  b) Move to done/ since Status is already Done and cross-refs point at it -> archived-as-reference
-
-DSM research README template lifecycle step 3 says "Move to done/ with Status: Done and Date Completed." The file already satisfies this precondition (Status: Done, Date Completed: 2026-04-14). It is a captured-knowledge reference document, not an in-progress investigation. Safe to move.
-
-Let me tabulate more conservatively:
-
-| File | Integrated into | Status |
-|---|---|---|
-| 2026-04-07_haystack-vs-langgraph-deepened.md | Decision record (2026-04-07_orchestration-framework.md) | CONSUMED → move |
-| 2026-04-07_hybrid-langgraph-haystack-best-practices.md | Hybrid backbone plan | CONSUMED for architecture, but actively referenced by open BL-002 edits 2/5/6 → HOLD |
-| 2026-04-07_langgraph-best-practices.md | Sprint 1 plan (actively in-flight) | HOLD until Sprint 1 complete |
-| 2026-04-14_hybrid-architecture-precedents.md | Decision record note, BL-001 closed, cited by groundedness assessment | CONSUMED but referenced by open BL-002 edit 5 → HOLD |
-| 2026-04-14_sprint-plans-groundedness-assessment.md | BL-002 (OPEN) | ACTIVE until BL-002 closes |
-| 2026-04-14_upstream-contribution-playbook.md | Status: Done, cited by decision record, awaits Sprint 2 activation | CONSUMED? or hold for Sprint 2? → judgment call |
-
-Only haystack-vs-langgraph-deepened.md is unambiguously safe to move right now. The rest have live dependencies (active BL or in-flight Sprint).
-
-Conservative proposal: move only 2026-04-07_haystack-vs-langgraph-deepened.md. Leave everything else until its dependent BL/sprint closes.
-
-Alternative: move the upstream contribution playbook too, since the file self-declares Done and its function is "activate at Sprint 2 start," which is a forward pointer, not a dependency the file must stay alive to serve. Cross-refs from decision record and journal entry will continue to work from done/.
-
-I should present this analysis and let the user decide per file.
-
-<------------Start User / 16:45------------>
-Move (1) only: 2026-04-07_haystack-vs-langgraph-deepened.md -> done/.
-
-<------------Start Thinking / 16:45------------>
-Per research README lifecycle: Status: Done + Date Completed should be on the file header before moving. Let me check the file header — add if missing. Then git mv, commit.
-
-<------------Start Output / 16:46------------>
-Research organized. Committed 7f75fe1:
-- dsm-docs/research/done/2026-04-07_haystack-vs-langgraph-deepened.md (moved; header updated to Status: Done, Date Completed 2026-04-14)
-
-Five files remain active in dsm-docs/research/, each tied to a live BL or in-flight sprint. Deferring moves for those until BL-002 closes and Sprint 1 completes.
-
-Leftover uncommitted (main-session / parallel-session territory, wrap-up handles):
-- .claude/session-baseline.txt (M), .claude/session-transcript.md (M, live)
-- .claude/commit-lock, .claude/parallel-session-baseline.txt
-- .claude/transcripts/2026-04-07T13:51-ST.md
-- dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md (external linter edit)
-- uv.lock (new, generated by uv sync — belongs with the Sprint 1 work commit coming next)
-
-Next: resume Sprint 1 gate 1 Step 3 (append @tool wrappers to src/tools/unit_converter.py).
-
-<------------Start Output / 16:56------------>
-Sprint 1 gate 1 Step 3 complete: @tool wrappers added to src/tools/unit_converter.py.
-
-Verification:
-- 11/11 existing tests still pass (plain functions unaffected)
-- @tool invocations return expected dicts:
-  - kw_to_kcal_per_h_tool(kw=24.0) -> {'kcal_per_h': 20650.1, 'input': {'kw': 24.0}}
-  - kcal_per_h_to_kw_tool(kcal_per_h=20650.0) -> {'kw': 24.0, 'input': ...}
-  - degree_days_tool(base_temp=15, daily_temps=[0,0,0,0,0,10,10]) -> {'hdd': 85.0, 'input': {'base_temp': 15.0, 'n_days': 7}}
-- Generated JSON schema for LLM discovery: title kw_to_kcal_per_h_tool, description = full docstring (multi-line, includes use-case hint), kw: number, required.
-
-IDE linter flagged the langchain_core.tools import as unresolved, but that is an IDE interpreter misconfiguration (IDE pointing at system Python, not .venv). Runtime imports resolve correctly under uv run.
-
-Sprint 1 gate 1 (Steps 1-3) done. Next: step 4-6 is standard_lookup.py + heating_curve.py + tests (still plan-scope), but also BL-002 should land before going deeper into Sprint 2-touching plan sections. Also, the main-session uv.lock + unit_converter.py changes want a commit.
-
-<------------Start User / 16:58------------>
-Order: 1 (commit Sprint 1 gate 1 work) -> 2 (apply BL-002 edits) -> 3 (standard_lookup.py).
-
-<------------Start Thinking / 16:58------------>
-Step 1: commit uv.lock + src/tools/unit_converter.py. These are the Sprint 1 gate 1 Steps 2+3 deliverables. One commit, clear message.
-
-After the commit, only session-scoped + parallel-session leftovers remain uncommitted (baseline, transcript, commit-lock, parallel-session-baseline, archived S3 transcript, hybrid-architecture-precedents linter edit).
-
-Then step 2: BL-002. Apply 6 edits across 2 plan files, in the execution order BL-002 itself suggests (hygiene first, substantive second):
-- Edit 1: Sprint 1 §6 promote DE tool-call
-- Edit 3: backbone §2 Chroma rationale
-- Edit 4: Sprint 1 §5.4 + §3 test list
-- Edit 6: backbone + Sprint 2 WON'T reranker explicit
-- Edit 2: Sprint 2 §MUST embedding-model benchmark
-- Edit 5: Sprint 2 Gate 1 monolithic-vs-specialized
-
-I need to re-read both plans to apply edits accurately. The backbone plan I have not read in full this session.
-
-Let me commit first, then dive in.
-
-<------------Start Output / 17:27------------>
-BL-002 applied and closed (commit b5079ca). Six edits applied across 3 files, net +62/-5:
-- Sprint 1 plan: DE tool-call gating criterion (edit 1); error-handling assumed-pending marker + test_tool_error_handling.py entry (edit 4)
-- Backbone plan: Chroma rationale (edit 3); embedding-model micro-benchmark at Sprint 2 Gate 1 (edit 2); monolithic-vs-specialized RAG tool Gate-1 decision (edit 5); reranker deferral made explicit (edit 6)
-- plans/README.md: active section empty, closed section lists BL-001 and BL-002
-- BL-002 moved to done/ with Status: Done, Date Completed: 2026-04-14
-
-No change to orchestration decision record (assessment verdict stands).
-
-Ready for step 3 (user's order): standard_lookup.py. Sprint 1 plan build-order step 4. This will need:
-- Static dict of DIN EN 12831 design temperatures (DE regions / postal code prefixes) and VDI 6030 reference radiator data
-- @tool function: standard_lookup(standard: str, key: str) -> dict
-- Tests: known values, missing key raises, unknown standard raises
-
-Cross-repo read: ~/dsm-residential-energy/ (companion app) may have data. Also ~/dsm-residential-heating-ds-guide/ 01_Domain_Fundamentals.md.
-
-<------------Start User / 17:30------------>
-Approved cross-repo read pass: ~/dsm-residential-heating-ds-guide/01_Domain_Fundamentals.md + ~/dsm-residential-energy/. Read-only (no writes).
-
-<------------Start Thinking / 17:30------------>
-Goal: extract authoritative reference data for DIN EN 12831 (design outside temperatures by DE region or postal-code prefix) and VDI 6030 (reference radiator data) so the standard_lookup tool has real values, not made up ones. Also see what keys/shape the companion app uses so the tool surface is consistent.
-
-Reading:
-1. ~/dsm-residential-heating-ds-guide/01_Domain_Fundamentals.md — primary source (411 lines per MEMORY.md)
-2. Look for reference data files in ~/dsm-residential-energy/ (JSON/CSV/Python modules with design temps or radiator specs)
-
-Will skim, not do a comprehensive read — looking for:
-- DIN EN 12831: design outside temperature table (by city/region/postal code), indoor design temperature per room type, formulas
-- VDI 6030: reference radiator thermal output, temperature spread assumptions
-- Any other standard the guide mentions as common
-
-<------------Start Thinking / 17:35------------>
-Read complete. Sources summary:
-- Guide 01_Domain_Fundamentals.md: narrative. Usable data: Berlin design outside -14°C, HDD Berlin 3000-3200 / Munich 3500-3800, Fernwärme return penalty 50-60°C, Spreizung target 20-30K, Verfahren B mandatory since 2023, heat pump COP ranges, boiler efficiencies.
-- Companion app config.py: extensive structured reference data with DIN/VDI citations. BUILDING_PRESETS (slope, flow temp limits by building type), DEFAULT_CONFIG (indoor design temps, setpoints), LOCATION_PRESETS (8 German cities with coordinates), PARAMETER_RANGES (comfort ranges).
-
-The companion app is the gold-standard source for this data; it already references DIN EN 12831, VDI 6030, DIN 4703, VDI 2067, DIN EN 1264, EnEV/GEG, DVGW W 551.
-
-Design choice for standard_lookup: the plan says "@tool function: standard_lookup(standard: str, key: str) -> dict". So the tool dispatches on standard first, then key. Data structure:
-
-STANDARDS = {
-    "DIN EN 12831": {
-        "scope": "Heating systems in buildings — Method for calculation of the design heat load",
-        "keys": {
-            "indoor_design_temp_day": {"value": 20.0, "unit": "°C", "notes": "Standard residential comfort temperature"},
-            "indoor_design_temp_night": {"value": 16.0, "unit": "°C", "notes": "Common 4K setback (per VDI 2067)"},
-            "comfort_range_min": {"value": 18.0, "unit": "°C"},
-            "comfort_range_max": {"value": 24.0, "unit": "°C"},
-            "design_outside_temp_berlin": {"value": -14.0, "unit": "°C"},
-            "verfahren_B_mandatory_since": {"value": 2023, "notes": "Required for new and modernized systems"},
-        }
-    },
-    "VDI 6030": {
-        "scope": "Designing free heating surfaces — Fundamentals (heating curve slopes)",
-        "keys": {
-            "slope_low_energy": {"value": 0.3, "notes": "Heat pump + floor heating, KfW 40/55, passive house"},
-            "slope_renovated": {"value": 1.0, "notes": "Renovated 1960s-1990s, KfW 70-100, condensing boilers"},
-            "slope_default_factory": {"value": 1.4, "notes": "Common factory default (Viessmann, Buderus, Vaillant)"},
-            "slope_historic": {"value": 1.6, "notes": "Pre-1940s unrenovated, high transmission losses"},
-        }
-    },
-    "DIN 4703": {
-        "scope": "Traditional radiator design flow temperatures",
-        "keys": {
-            "t_vorlauf_max_standard": {"value": 75.0, "unit": "°C"},
-            "t_vorlauf_max_historic": {"value": 80.0, "unit": "°C"},
-        }
-    },
-    "DIN EN 1264": {
-        "scope": "Floor heating system design",
-        "keys": {"t_vorlauf_design": {"value": 35.0, "unit": "°C"}}
-    },
-    "DIN 4702-8": {
-        "scope": "Condensing boiler operation",
-        "keys": {"t_rueklauf_max_for_condensing": {"value": 55.0, "unit": "°C"}}
-    },
-    "VDI 2067": {
-        "scope": "Economic efficiency of building installations (night setback)",
-        "keys": {"night_setback_standard": {"value": 4.0, "unit": "K"}}
-    },
-    "DVGW W 551": {
-        "scope": "DHW Legionella prevention",
-        "keys": {
-            "storage_min_temp": {"value": 60.0, "unit": "°C"},
-            "distribution_min_temp": {"value": 55.0, "unit": "°C"},
-        }
-    },
-    "VDI 3807": {
-        "scope": "Heizgrenztemperatur (heating limit temperature)",
-        "keys": {"heating_limit_temp_standard": {"value": 15.0, "unit": "°C"}}
-    },
-}
-
-API design:
-- standard_lookup(standard: str, key: str) -> dict
-- If standard missing: raise ValueError("Unknown standard: X. Available: [...]")
-- If key missing but standard present: return the standard's full metadata (scope + list of keys) — this makes it LLM-friendly for exploration. Alternative: raise KeyError. Plan says "missing key raises" — follow plan.
-- If both valid: return {standard: ..., key: ..., value: ..., unit: ..., notes: ..., scope: ...}
-
-Actually rereading plan §4 step 4: "Tests: known values, missing key raises, unknown standard raises." So both missing -> raise. Good.
-
-But thinking LLM-friendly: if key is absent, returning "available keys for this standard" is useful for a discoverable tool. The plan says raise, but I could raise with a helpful message listing available keys. That satisfies the plan and helps the LLM self-correct.
-
-Tool docstring should also give the LLM an easy path to "list available standards" — maybe allow standard="list" or key="list"? That's scope creep. Stick to the plan: raise with helpful message. Use ValueError for both unknown-standard and unknown-key.
-
-Plain Python function standard_lookup (framework-agnostic), then @tool wrapper standard_lookup_tool suffix convention like unit_converter.
-
-For the wrapper return, use dict per plan convention: return {"standard": ..., "key": ..., "value": ..., "unit": ..., "notes": ..., "scope": ...}.
-
-Tests:
-- test_din_12831_indoor_design_temp: lookup known -> correct value
-- test_vdi_6030_slope_historic: lookup known -> 1.6
-- test_unknown_standard_raises: ValueError
-- test_unknown_key_raises: ValueError
-- test_known_standards_have_scope: sanity check every standard has a non-empty scope
-- test_all_values_have_units_or_notes: one of them present
-
-Edge: citations. Each entry should cite which document in the heating guide AND/OR which DIN reference it was sourced from. Keep notes short.
-
-<------------Start User / 17:39------------>
-Concept gate approved: scope points 1-5 + include 8-city design-outside-temp mini-table.
-
-<------------Start Thinking / 17:39------------>
-City design-outside-temperatures are climate-zone data. DIN EN 12831 provides official values per region (based on postal code prefix). I don't have the official table loaded. Approximations based on published climate data for the 8 cities in the companion app's LOCATION_PRESETS:
-
-- Berlin (52.52 N, continental): -14°C (confirmed in the guide)
-- Munich (48.14 N, alpine-continental): -16°C (colder per guide "more continental climate")
-- Hamburg (53.55 N, maritime): -12°C (milder winters, North Sea influence)
-- Frankfurt (50.11 N, central): -12°C
-- Cologne (50.94 N, Rhine valley): -10°C (guide notes "mild winters")
-- Stuttgart (48.78 N, SW): -12°C
-- Dresden (51.05 N, east): -14°C (continental)
-- Freiburg (47.99 N, warmest): -10°C
-
-These are approximate rounded values. I'll flag each entry with a "notes" field: "approximate; consult official DIN EN 12831-1 Annex for exact zone values." The values are reasonable estimates but NOT authoritative.
-
-Add the city table under DIN EN 12831 as nested keys: design_outside_temp_berlin, _munich, etc. Keeps it under one standard.
-
-Or create a separate keys namespace? Cleanest: flat keys with city suffix. 8 extra keys under DIN EN 12831.
-
-Now writing the module. Plan:
-1. Module docstring with standards list + source citations
-2. Imports: from langchain_core.tools import tool
-3. STANDARDS dict (module-level constant)
-4. Plain Python standard_lookup function with ValueError on unknowns
-5. @tool wrapper standard_lookup_tool
-6. Tests file tests/test_standard_lookup.py
-
-Impl gate: edit src/tools/standard_lookup.py (new file) + tests/test_standard_lookup.py (new file). User will approve via permission window for each write.
-
-Build incrementally per App Development Protocol. Two files means two writes. Do them in one turn since they're coherent.
-
-<------------Start Output / 17:45------------>
-Sprint 1 plan step 4 (standard_lookup) complete:
-- src/tools/standard_lookup.py (new): 8 standards (DIN EN 12831, VDI 6030, DIN 4703, DIN EN 1264, DIN 4702-8, VDI 2067, DVGW W 551, VDI 3807) with 24 total keys including 8 city design-outside temps under DIN EN 12831. Plain-Python standard_lookup + @tool standard_lookup_tool. ValueError on unknown standard/key with available options in message.
-- tests/test_standard_lookup.py (new): 18 tests across known values (8), errors (4), structural invariants (3), tool wrapper (3). All pass.
-
-Full test suite: 29/29 pass in 0.40s (11 unit_converter + 18 standard_lookup).
-
-City design-outside temperatures flagged as approximate in "notes" field (not official DIN EN 12831-1 Annex values). Honest about the provenance.
-
-Sprint 1 plan build-order progress:
-[x] 1. Revert pyproject.toml
-[x] 2. uv sync
-[x] 3. @tool wrappers on unit_converter
-[x] 4. standard_lookup + tests
-[ ] 5. heating_curve (port from ~/dsm-residential-energy-apps/)
-[ ] 6. Run pytest (all green) — partial: step 4 green
-[ ] 7. config.py
-[ ] 8. prompts.py
-[ ] 9. graph.py + registry
-[ ] 10. app.py
-[ ] 11. Manual smoke test
-[ ] 12. README
-
-Next user gate: commit step 4 work, then step 5 (heating_curve port from companion app).
-
-<------------Start User / 17:57------------>
-Approved: read companion app heating-curve logic before concept gate.
-
-<------------Start Thinking / 17:57------------>
-Want to find the core flow-temp function. File list showed:
-- models/heating-curve/app/simulation.py
-- models/heating-curve/app/analysis.py
-Likely simulation.py is the compute core. Config I already read used slope + t_vorlauf_max/min + t_base.
-
-<------------Start Thinking / 18:01------------>
-Core formula in companion: T_vorlauf = T_base + slope * (T_room - T_outdoor), clamped to [t_min, t_max], NaN if t_outdoor > summer_cutoff.
-
-Plan signature wants: flow_temp(outside_temp, slope, offset=0, design_outside_temp=-12, design_flow_temp=70) -> float. Different parameterization than the companion:
-- Companion uses (T_room - T_outdoor) delta with a base offset.
-- Plan uses slope + offset + design-anchor form (typical of OEM heating-curve controllers).
-
-Both are valid. Which to honor?
-
-The plan wording is specific but the companion's formula IS the authoritative in-codebase reference. Importantly, the plan says "port logic as plain Python" — port means match the companion's formula. Plan parameter sketch was illustrative, not prescriptive.
-
-Best call: match the companion's signature and formula. Match test anchors to the companion's formula. This keeps the tool consistent with the companion app and the config.py data I already loaded. The plan's sketched signature (design_outside_temp, design_flow_temp) is the "anchor form" commonly used in OEM controllers but the companion uses "slope-with-room-delta" form. The decision record and BL-002 edit are silent on which.
-
-I'll match the companion:
-flow_temp(t_outdoor, t_room, slope, t_base=20.0, t_min=25.0, t_max=75.0, summer_cutoff=15.0) -> float
-
-Return float, with NaN returned for summer mode. NaN is problematic as a JSON-serializable tool return value. For the @tool wrapper, normalize: if summer mode, return {"flow_temp": None, "heating_off": True, "inputs": ...}. For the plain function, keep NaN for numeric consistency with the companion.
-
-Actually even cleaner: return a sentinel in plain. Companion uses np.nan. The plan says "flow_temp ... -> float". NaN is a valid float. Stick with NaN.
-
-For @tool: None is JSON-clean. Wrapper converts NaN to None.
-
-Summer mode detection: outside_temp > summer_cutoff. Cutoff default 15°C (Heizgrenztemperatur per VDI 3807).
-
-Clamping: np.clip -> max(t_min, min(t_max, computed)). Can avoid numpy dependency in plain function if we use Python's built-in min/max. Actually we need numpy? No, we can use stdlib. math.nan + max/min. Simpler and avoids pulling numpy into src/tools/.
-
-Let me check — is numpy already a transitive dep? Yes via pandas/langgraph transitives; but we shouldn't rely on transitive deps. Alternative: Python math.nan works but we need to detect it. Use math.isnan.
-
-Cleanest plain function:
-
-
-Tests:
-- Known-point 1: Companion default (slope=1.4, t_base=20, t_room=20). t_outdoor=-14 (Berlin design) -> 20 + 1.4*(20-(-14)) = 20 + 1.4*34 = 20+47.6 = 67.6 (within [25, 75]) -> 67.6
-- Known-point 2: t_outdoor=0, slope=1.0, t_room=20 -> 20 + 20 = 40. Good.
-- Clamping high: t_outdoor=-30, slope=1.4, t_room=20 -> 20 + 70 = 90 -> clamped to 75.
-- Clamping low: t_outdoor=14, slope=0.3, t_room=20 -> 20 + 1.8 = 21.8 -> clamped to 25.
-- Summer mode: t_outdoor=16 (above cutoff) -> NaN.
-- Summer cutoff edge: t_outdoor=15 (== cutoff, not above) -> normal formula.
-- Monotonicity: lower outside -> higher vorlauf.
-
-Tool wrapper: @tool heating_curve_tool(t_outdoor, t_room, slope, ...) -> dict. Summer mode returns {"flow_temp": None, "heating_off": True, "inputs": {...}}. Otherwise {"flow_temp": value, "heating_off": False, "inputs": {...}}.
-
-Keep wrapper defaults consistent with plain.
-
-Docstring for @tool emphasizes bilingual cues: "Heizkennlinie / heating curve", "Vorlauftemperatur / flow temperature", "Steilheit / slope".
-
-Ready to propose concept gate.
-
-<------------Start User / 18:10------------>
-Concept gate approved: companion formula, math.nan plain / None tool, summer-mode short-circuit before clamp.
-
-<------------Start Thinking / 18:10------------>
-Writing src/tools/heating_curve.py and tests/test_heating_curve.py. Follow same module shape as standard_lookup.py. Module docstring cites companion as source. Stdlib only (math + langchain_core.tools).
-
-<------------Start Output / 18:18------------>
-Sprint 1 step 5 complete:
-- src/tools/heating_curve.py (new): flow_temp plain-Python + heating_curve_tool @tool. Formula ported from companion app's calculate_vorlauf; stdlib only (math + langchain_core.tools). math.nan for summer mode in plain, JSON-safe None + heating_off flag in tool.
-- tests/test_heating_curve.py (new): 14 tests in 5 classes (KnownPoints, Clamping, SummerMode, Monotonicity, ToolWrapper), each class with a docstring explaining what it exercises. Berlin design anchor hits 67.6 °C; clamps confirmed; strict-> cutoff; monotonicity invariant.
-
-Full test suite: 43/43 pass in 0.20s.
-
-Tools checklist (Sprint 1 plan build-order):
-[x] 3. unit_converter @tool wrappers (3 tools: kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool)
-[x] 4. standard_lookup_tool (1 tool, 8 standards, 24 keys)
-[x] 5. heating_curve_tool (1 tool)
-[x] 6. pytest green
-
-Total tools for registry: 5 (per plan §5.1).
-
-Next: step 7 (config.py) + step 8 (prompts.py). These are typically one commit together with step 9 (graph.py + registry). User chose to pause after tools; recommend commit step 5 first.
-
-<------------Start Thinking / 18:23------------>
-Light wrap-up steps:
-1. Minimal MEMORY.md: Latest Session line only, add "(lightweight wrap-up, work continues)"
-2. Safety push: branch session-4/2026-04-14 not yet pushed
-3. Commit + push: only session-baseline, transcript, archived S3 transcript, and the external-linter edit on hybrid-architecture-precedents.md. Message "Session 4 (light): ..."
-4. Checkpoint in dsm-docs/checkpoints/ with state
-5. Append mode: light to baseline
-6. Checkpoint commit + push
-7. Write last-wrap-up.txt marker
-
-Session summary for MEMORY: completed Sprint 1 gate 1 (uv sync + all 5 deterministic tools) + BL-001 (precedent research) + BL-002 (groundedness edits applied). Tests 43/43.
-
-<------------Start Thinking / 23:19------------>
-User invoked /dsm-light-go. Safety gate: last-wrap-up.txt says type:light, proceed normally. Branch cadence: session-4/2026-04-14 matches today 2026-04-14, same-day continuation ok. Scaffold: 8/9 folders present (missing only inbox), >=5 threshold satisfied.
-
-Now working through the steps:
-- Step 1: MEMORY.md already loaded via context, skip re-read.
-- Step 1.5: on session-4/2026-04-14, session branch, proceed.
-- Step 1.6: stale branch cleanup (fetch --prune + check merged branches).
-- Step 2: find + read latest checkpoint, then move to done/.
-- Step 3: git status.
-- Step 4: save session baseline with mode: light appended.
-- Step 5: append transcript session boundary marker (this thinking block is already the first append but the step expects a session marker — will add after reading checkpoint).
-- Step 6: report summary.
-- Step 7: config recommendation if subscription file exists.
-- Step 8: propose next step (Sprint 1 steps 7-12 per MEMORY.md).
-
-MEMORY.md says pending: Sprint 1 impl gate 1 uv sync + @tool wrappers — but MEMORY also says step 5 complete so that line is stale. Next up per MEMORY latest session: Sprint 1 steps 7-12 (config, prompts, graph, app.py, smoke test, README).
-
----
-
-## Session 5 (lightweight continuation)
-**Started:** 2026-04-14T23:21+02:00
-**Previous session artifacts:**
-- Checkpoint: 2026-04-14_s4_light.md (now in done/)
-- MEMORY.md updated: yes (at s4 light wrap-up)
-
-**Context loaded:**
-- MEMORY.md (latest)
-- Checkpoint: 2026-04-14_s4_light.md
-
----
-
-<------------Start Output / 23:21------------>
-Reporting light-go result to user.
-
-<------------Start User / 23:22------------>
-y
-
-<------------Start Thinking / 23:22------------>
-User approved proceeding with Step 7 (src/config.py). But per App Development Protocol and Pre-Generation Brief Protocol, I should not generate files before providing description and receiving approval. Four-gate model: Gate 1 definition (threads, deps, packaging) → Gate 2 concept → Gate 3 implementation diff → Gate 4 run.
-
-The "y" was approval to engage with Step 7, not approval to write. I need to:
-1. Read current src/ layout + existing tool file structure to see conventions (imports, docstring style, bilingual patterns)
-2. Check pyproject.toml / uv.lock for langchain-openai + langchain-ollama availability
-3. Check sprint plan detail for step 7 acceptance criteria
-4. Draft the Gate 1 brief: threads (what is config.py, what does load_env + get_chat_model need), deps (langchain-ollama, langchain-openai, python-dotenv), packaging (one file src/config.py + one test tests/test_config.py)
-5. Present Gate 1 to user for approval before anything else.
-
-Plan for this turn: read-only exploration + present brief. No file writes yet.
-
-Files to read:
-- pyproject.toml (deps)
-- _reference/sprint-plan.md (step 7 criteria)
-- src/tools/heating_curve.py or similar (to match conventions)
-- existing tests layout
-- any existing .env.example or config hints
-
-Findings:
-- pyproject.toml: langchain-ollama, langchain-openai, python-dotenv all present. No extra deps needed.
-- .env.example: LLM_PROVIDER=ollama / OLLAMA_MODEL=llama3.1:8b / OLLAMA_BASE_URL / OPENAI_API_KEY / OPENAI_MODEL=gpt-4o-mini. Canonical stack per MEMORY.md + research is qwen2.5:7b, not llama3.1:8b. Worth flagging.
-- dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md step 7: load_env() loads .env; get_chat_model() returns ChatOllama or ChatOpenAI based on LLM_PROVIDER. Smoke test suggested (not strict). Open question: skip OPENAI_API_KEY validation when provider is ollama. Addressed in step 7.
-- Tool file convention: module docstring + numpydoc-ish function docstrings + from langchain_core.tools import tool. Bilingual docstring cues already in heating_curve.py.
-- Test convention: pytest in tests/, one file per src module.
-
-Gate 1 brief to present next:
-- THREADS: src/config.py + tests/test_config.py; also whether to fix .env.example default OLLAMA_MODEL llama3.1:8b -> qwen2.5:7b to match canonical stack.
-- DEPS: python-dotenv, langchain-ollama, langchain-openai. All already pinned in pyproject.toml.
-- PACKAGING: single commit "Sprint 1 step 7: config factory + smoke test"; .env.example fix separate or bundled, user decides.
-
-<------------Start Output / 23:23------------>
-Presenting Gate 1 brief and decision points to user.
-
-<------------Start User / 00:05------------>
-1. leave it, 2. set for determinism - are we experimenting witht this parameter?, 3. explain
-
-<------------Start Thinking / 00:05------------>
-User answered:
-1. Leave .env.example at llama3.1:8b. Accept the mismatch — they may actually have that model pulled locally. Note: this means the MEMORY.md claim "canonical stack qwen2.5:7b" is research-doc canonical, not deployed canonical. Not my call to reconcile now.
-2. Set temperature=0 for determinism. User asks a META-question: "are we experimenting with this parameter?" This is Critical Thinking / Earn Your Assertions: don't bake a magic value if we plan to sweep it. I should answer honestly: Sprint 1 plan doesn't mention temperature sweeps. Sprint 3 is the evaluation framework. So NO, we are not experimenting with it now, but if Sprint 3 eval wants to vary it, we'd want it injectable. Trade-off: (a) hardcode temperature=0 in step 7, refactor later when Sprint 3 actually needs a knob; (b) add LLM_TEMPERATURE env var now, default 0, read in get_chat_model. Option (a) is YAGNI-aligned and the refactor cost is tiny (one line). Option (b) is cheap insurance but adds a config surface that may never be used in this form (Sprint 3 may prefer programmatic injection, not env). Recommend (a).
-3. Explain load_env() call site — option 1 (internal) vs option 2 (explicit app entry). They want me to explain the difference and why I lean option 2.
-
-Structuring response:
-- Answer (2) with recommendation: hardcode temperature=0, don't parametrize now. State why.
-- Explain (3): describe both options, testability trade-off, recommend option 2.
-
-After they answer (2) and (3), I have full Gate 1 approval and can move to Gate 2 (code outline).
-
-<------------Start Output / 00:06------------>
-Answered (2) with recommendation option (a) hardcode temperature=0 now; explained (3) with testability argument for option 2. Awaiting user decisions on both.
-
-<------------Start User / 00:10------------>
-1. what would be the difference if selecting either one? would the implementation be a lot different?
-
-<------------Start Thinking / 00:10------------>
-User is asking a clarifying meta-question: for the remaining open choices (temperature a/b and load_env option 1/2), how much does the implementation actually differ? They want concrete code-level answer, not more prose.
-
-Both choices are tiny. Let me show concrete code sketches for each pair so they can judge.
-
-Temperature (a) vs (b):
-- (a): one literal `temperature=0` in two constructors.
-- (b): one env-var read + one pyproject/env addition + pass to both constructors. ~3-4 extra lines.
-
-load_env() option 1 vs 2:
-- Option 1: `load_env()` called inside `get_chat_model()`. 1 extra line inside the factory.
-- Option 2: `load_env()` exists as its own function; not called by get_chat_model; app.py calls it once. Same file footprint, one line moves from factory to app entry.
-
-Honest answer: implementation difference is trivial (~1-4 lines). The decision is about semantics/future cost, not LOC. State this plainly and let them pick. No need to push my recommendation harder — the question itself signals they're weighing whether to defer to me.
-
-<------------Start Output / 00:10------------>
-Showed concrete code sketches for both choice pairs. Stated LOC difference is trivial, real trade-off is semantics. Offered my recommended defaults (a + option 2) if they want to skip the decision.
-
-<------------Start User / 00:13------------>
-go with your recommendation
-
-<------------Start Thinking / 00:13------------>
-Gate 1 fully approved. Settled choices:
-- Decision 1: leave .env.example at llama3.1:8b (user's call, turn before).
-- Decision 2: hardcode temperature=0 (option a).
-- Decision 3: load_env() explicit, called from app.py (option 2).
-
-Now move to Gate 2: present full code outline for src/config.py + tests/test_config.py, ask for approval, THEN write files at Gate 3.
-
-Let me draft the concrete code.
-
-src/config.py:
-```
-"""Configuration: env loading + chat-model factory.
-
-Sprint 1 step 7. Keeps LLM-provider wiring out of graph.py.
-
-Functions:
-    load_env: call once at app entry (app.py) to load .env into os.environ.
-    get_chat_model: factory returning ChatOllama or ChatOpenAI based on
-        LLM_PROVIDER. Reads os.environ directly; does not call load_env.
-"""
-
-import os
-
-from dotenv import load_dotenv
-from langchain_core.language_models import BaseChatModel
-from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
-
-
-def load_env() -> None:
-    """Load .env into os.environ (idempotent, does not override existing vars)."""
-    load_dotenv()
-
-
-def get_chat_model() -> BaseChatModel:
-    """Return the configured chat model based on LLM_PROVIDER.
-
-    Env vars:
-        LLM_PROVIDER: "ollama" (default) or "openai"
-        OLLAMA_MODEL, OLLAMA_BASE_URL: used when provider is "ollama"
-        OPENAI_MODEL, OPENAI_API_KEY: used when provider is "openai"
-
-    Raises:
-        ValueError: unknown provider, or openai provider with empty
-            OPENAI_API_KEY.
-    """
-    provider = os.getenv("LLM_PROVIDER", "ollama").lower()
-    if provider == "ollama":
-        return ChatOllama(
-            model=os.getenv("OLLAMA_MODEL", "llama3.1:8b"),
-            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-            temperature=0,
-        )
-    if provider == "openai":
-        api_key = os.getenv("OPENAI_API_KEY", "")
-        if not api_key:
-            raise ValueError(
-                "OPENAI_API_KEY is required when LLM_PROVIDER=openai"
-            )
-        return ChatOpenAI(
-            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-            api_key=api_key,
-            temperature=0,
-        )
-    raise ValueError(
-        f"Unknown LLM_PROVIDER: {provider!r}. Expected 'ollama' or 'openai'."
-    )
-```
-
-Defaults:
-- OLLAMA_MODEL default llama3.1:8b matches .env.example (user chose to leave it).
-- OLLAMA_BASE_URL default matches .env.example.
-- OPENAI_MODEL default gpt-4o-mini matches .env.example.
-- temperature=0 hardcoded per user decision.
-
-Return type annotation `BaseChatModel` — both ChatOllama and ChatOpenAI subclass it, so caller (graph.py) gets a stable type.
-
-tests/test_config.py:
-```
-"""Smoke tests for src.config factory.
-
-Does not invoke the LLM; only verifies the factory returns the expected
-class and raises on invalid config.
-"""
-
-import pytest
-from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
-
-from src.config import get_chat_model
-
-
-def test_ollama_default(monkeypatch):
-    monkeypatch.delenv("LLM_PROVIDER", raising=False)
-    monkeypatch.setenv("OLLAMA_MODEL", "test-model")
-    monkeypatch.setenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    model = get_chat_model()
-    assert isinstance(model, ChatOllama)
-    assert model.model == "test-model"
-
-
-def test_ollama_explicit(monkeypatch):
-    monkeypatch.setenv("LLM_PROVIDER", "ollama")
-    model = get_chat_model()
-    assert isinstance(model, ChatOllama)
-
-
-def test_openai(monkeypatch):
-    monkeypatch.setenv("LLM_PROVIDER", "openai")
-    monkeypatch.setenv("OPENAI_MODEL", "gpt-4o-mini")
-    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-dummy")
-    model = get_chat_model()
-    assert isinstance(model, ChatOpenAI)
-    assert model.model_name == "gpt-4o-mini"
-
-
-def test_openai_missing_key(monkeypatch):
-    monkeypatch.setenv("LLM_PROVIDER", "openai")
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    with pytest.raises(ValueError, match="OPENAI_API_KEY"):
-        get_chat_model()
-
-
-def test_unknown_provider(monkeypatch):
-    monkeypatch.setenv("LLM_PROVIDER", "anthropic")
-    with pytest.raises(ValueError, match="Unknown LLM_PROVIDER"):
-        get_chat_model()
-```
-
-Notes on tests:
-- test_ollama_default verifies the default branch when LLM_PROVIDER unset.
-- test_openai asserts model_name — ChatOpenAI exposes `model_name`; ChatOllama exposes `model`. Asymmetric API. Double-check via pyproject versions: langchain-openai 0.2+, ChatOpenAI(.model_name) is correct attribute. Could simplify to just isinstance check if I'm unsure.
-- No test calls load_env(); tests use monkeypatch directly, giving hermetic behavior. This is the payoff of option 2.
-- Case-insensitive provider (`.lower()`) — not asked but cheap defensive; might violate YAGNI. Let me remove it to keep it strict. Actually, .env values are strings and users sometimes capitalize. Keep it for one-line ergonomics. Flag in Gate 2 so user can veto.
-
-Possible simplifications to flag:
-1. .lower() on provider — ergonomic but not requested. Remove?
-2. test_openai asserting model_name attribute — could be langchain-openai internal. Safer to drop and just isinstance-check. Flag to user.
-3. Default fallback values inside os.getenv (`"llama3.1:8b"` etc) duplicate .env.example. User may prefer to REQUIRE the env var be set (raise if missing) for stricter behavior. For Sprint 1 ergonomics, defaults are kinder. Flag if they want stricter.
-
-Gate 2 format: present the code, list the three small decisions, ask approve/reject.
-
-<------------Start Output / 00:14------------>
-Presented Gate 2 with full src/config.py + tests/test_config.py code. Flagged three small decision points: .lower() on provider, os.getenv defaults vs strict-required, tests skipping load_env(). Awaiting approval.
-
-<------------Start User / 00:18------------>
-creat the files and I will review
-
-<------------Start Thinking / 00:18------------>
-Gate 2 approved as-is (all three flags kept: .lower, defaults, hermetic tests). User wants full-file writes, not incremental. Gate 3 = write + test.
-
-Plan:
-1. Write src/config.py exactly as presented in Gate 2.
-2. Write tests/test_config.py exactly as presented.
-3. Run `uv run pytest tests/test_config.py -v` to confirm green.
-4. Also run full `uv run pytest -v` to confirm no regressions in the existing 43 tests.
-5. Report results and hand off for user review.
-
-No code changes from Gate 2. User will review via diff.
-
-<------------Start Output / 00:19------------>
-Wrote src/config.py as-specified. First tests/test_config.py write rejected: user asked for per-test comments explaining each test. Re-wrote tests/test_config.py adding a one-line docstring to each of the 5 tests. Full suite green: 48/48 (5 new + 43 existing). No regressions.
-
-Key results:
-- src/config.py: 2 functions (load_env, get_chat_model), 55 lines
-- tests/test_config.py: 5 tests, all with explanatory docstrings
-- pytest tests/test_config.py -v: 5 passed in 2.22s
-- pytest full: 48 passed in 1.42s (11 unit_converter + 18 standard_lookup + 14 heating_curve + 5 config)
-- Branch stays on session-4/2026-04-14, no commit yet (user review first)
-
-<------------Start User / 00:22------------>
-approved
-
-<------------Start Thinking / 00:22------------>
-User approved the code. Commit now.
-
-Pre-commit checks:
-- git status (should show src/config.py + tests/test_config.py as new, plus the usual session-state churn: .claude/last-wrap-up.txt, .claude/session-baseline.txt, .claude/session-transcript.md, checkpoint move in dsm-docs/checkpoints/done/).
-- Per global CLAUDE.md: "No co-author lines in commits" -> skip Co-Authored-By.
-- Commit message convention from recent commits: "Sprint 1 step N: <what>". Use "Sprint 1 step 7: config factory + smoke test".
-- Scope of this commit: ONLY src/config.py + tests/test_config.py. The session-state churn (transcript, baseline, last-wrap-up, checkpoint move) should NOT ride along with a code commit. Those belong to session bookkeeping, committed at wrap-up. So: stage only the two new files.
-
-Plan:
-1. git status
-2. git add src/config.py tests/test_config.py
-3. git commit -m "Sprint 1 step 7: config factory + smoke test"
-4. git status (confirm only session-state churn remains unstaged)
-5. Report + propose Step 8.
-
-<------------Start Output / 00:22------------>
-Committed 88120f4 "Sprint 1 step 7: config factory + smoke test" — 99 insertions across src/config.py, tests/test_config.py, plus the pending checkpoint rename (which was already staged from light-go step 2). Remaining unstaged files are all session-state churn (last-wrap-up.txt, session-baseline.txt, session-transcript.md, checkpoint content diff from earlier sed annotation) — these belong to wrap-up, not a code commit. Step 7 closed. Ready for Step 8 (src/prompts.py bilingual SYSTEM_PROMPT + deflection).
-
-<------------Start User / 00:25------------>
-y
-
-<------------Start Thinking / 00:25------------>
-User approved Step 8. Need to read the plan spec + Track A research §5 before drafting Gate 1 brief.
-
-Plan:
-1. Read dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md for Step 8 details
-2. Find Track A research doc (research/2026-04-07_langgraph-best-practices.md per MEMORY.md) and read §5
-3. Check user-interactions.md (_reference/) for any user-facing language examples
-4. Draft Gate 1 brief: threads, deps, packaging, and key prompt-design decisions
-
-Key decisions I anticipate for Gate 1:
-- Bilingual strategy: single prompt in both EN + DE, or language-routing instruction telling the model to respond in the user's language? Research-backed answer likely: single prompt with "Respond in the user's language" instruction, since both base models (qwen2.5, gpt-4o-mini) are multilingual.
-- Deflection scope: what counts as out-of-scope? Residential heating domain only; non-heating queries get polite deflection.
-- Tool-use guidance: does the prompt need to explicitly mention the 5 tools? Research answer: `create_react_agent` injects tool descriptions automatically; the system prompt should NOT duplicate them, just set persona + scope + language policy.
-- Length: how long should the prompt be? Short is better for small local models.
-
-<------------Start Output / 00:26------------>
-Findings:
-- Research §5 gives a canonical 5-sentence pattern: persona ("residential heating systems assistant") + scope + language-matching instruction + canned bilingual deflection.
-- Plan acceptance criterion: "Wie kalt war der Winter?" (non-heating DE) should trigger deflection.
-- Gating query "Berechne die Vorlauftemperatur bei -10°C mit Steigung 1.2" must trigger heating_curve tool in DE -- prompt must NOT over-constrain DE to deflection only.
-- Plan says no test required for prompts.py (constant only).
-- Research §5 uses 3-area framing (heating curves, German standards, unit conversions); 5 current tools fit inside those 3 areas. Keep human-readable 3-area persona; create_react_agent injects tool schemas separately.
-
-Gate 1 brief decisions:
-(a) Use research §5 pattern verbatim vs polish. Recommend: verbatim with one tool-use nudge sentence added.
-(b) Explicit tool-use nudge? Recommend: yes, one sentence -- small local models benefit.
-(c) Test file? Plan says not required. Recommend: skip.
-
-<------------Start User / 00:29------------>
-1.  Include the nudge sentence, 2. keep it, 3. residential,keep
-
-<------------Start Thinking / 00:29------------>
-User approved all three recommendations. Gate 1 passes. Draft Gate 2 concept.
-
-Structure of SYSTEM_PROMPT:
-Line 1-3: persona + 3-area scope
-Line 4: tool-use nudge
-Line 5-7: language-matching rule
-Line 8-10: deflection with canned bilingual line
-
-Draft (keeping research §5 phrasing verbatim where possible):
-
-```
-SYSTEM_PROMPT = """You are a residential heating systems assistant.
-You help users understand heating curves, German standards (DIN, VDI),
-and perform unit conversions.
-
-Use the available tools when a calculation or lookup is needed.
-
-Respond in the user's language (English or German).
-If the user writes in German, respond in German.
-If the user writes in English, respond in English.
-
-For questions unrelated to residential heating, politely decline:
-"I can only help with residential heating topics. / Ich kann nur bei
-Themen zu Heizungssystemen helfen."
-"""
-```
-
-Module layout:
-```
-"""System prompt for the residential heating agent (Sprint 1 step 8).
-
-Pattern from dsm-docs/research/2026-04-07_langgraph-best-practices.md §5:
-bilingual prompt, language-matching instruction, canned deflection.
-Tool-use nudge added to improve tool-call rates on small local models
-(qwen2.5:7b gating query, per sprint plan acceptance).
-"""
-
-SYSTEM_PROMPT = """..."""
-```
-
-That's it. ~15 lines total. No tests.
-
-Gate 2 format: show the full file content, confirm commit message, ask approve.
-
-<------------Start Output / 00:30------------>
-Presented Gate 2 with full src/prompts.py content (~18 lines, single SYSTEM_PROMPT constant + module docstring pointing at research §5). Commit message prepared: "Sprint 1 step 8: bilingual SYSTEM_PROMPT". No tests per plan. Awaiting approval.
-
-<------------Start User / 00:33------------>
-y
-
-<------------Start Thinking / 00:33------------>
-Approved. Write src/prompts.py and commit.
-
-Plan:
-1. Write src/prompts.py as-specified.
-2. Verify import works (python -c "from src.prompts import SYSTEM_PROMPT; print(len(SYSTEM_PROMPT))") to catch syntax/encoding issues before commit.
-3. git add src/prompts.py
-4. git commit -m "Sprint 1 step 8: bilingual SYSTEM_PROMPT"
-5. Run full pytest suite (should stay at 48/48; adding a constant shouldn't affect anything).
-6. Report + propose Step 9.
-
-Step 9 heads-up: src/graph.py + src/tools/registry.py with create_react_agent wiring, plus tests/test_graph.py smoke test. This is the first step that imports from all three modules (config, prompts, tools). First real wiring step.
-
-<------------Start Output / 00:34------------>
-Wrote src/prompts.py (22 lines, SYSTEM_PROMPT 540 chars / 13 lines). Import smoke-checked clean. Full pytest 48/48 green (no regressions, expected — constant-only module). Committed 2e08817 "Sprint 1 step 8: bilingual SYSTEM_PROMPT". Ready for Step 9 (graph.py + tools/registry.py + test_graph.py smoke test).
-
-<------------Start User / 00:37------------>
-y
-
-<------------Start Thinking / 00:37------------>
-User approved Step 9. Need context before Gate 1 brief:
-
-1. Read exact @tool names exported from each tool module (unit_converter, standard_lookup, heating_curve) to populate TOOLS.
-2. Check src/tools/__init__.py for current export state.
-3. Verify create_react_agent signature in installed langgraph version.
-4. Decide whether build_agent calls load_env() — option 2 from step 7 says no, only app.py. But test_graph.py smoke test is a problem: it calls build_agent() which calls get_chat_model() which reads os.environ. Without load_env(), the test might pick up real OPENAI creds from user's .env or fail. With monkeypatch.setenv("LLM_PROVIDER", "ollama") in the test, it's hermetic.
-5. Smoke test design: should it build an agent with Ollama (no network required for instantiation) or mock the model? Instantiation without calling .invoke() should be network-free for both ChatOllama and ChatOpenAI — they are lazy.
-
-Plan:
-1. Read plan step 9 in full.
-2. Read src/tools/*.py to confirm exported symbol names.
-3. Read src/tools/__init__.py.
-4. Draft Gate 1 brief with: file list, tool list composition, create_react_agent signature, test strategy, decision points.
-
-Decision points anticipated:
-- Does registry.py just re-export, or also set up metadata?
-- Should build_agent accept checkpointer=None and default to InMemorySaver, or require it (caller provides)? Plan says default to InMemorySaver. Follow.
-- Should test_graph.py set LLM_PROVIDER via monkeypatch to avoid .env leak? YES — hermetic tests principle we just established in step 7.
-- What about 9b (error-handling test)? User already agreed to gate separately.
-
-<------------Start Output / 00:38------------>
-Findings:
-- Tool symbols exported with _tool suffix: kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool (unit_converter); standard_lookup_tool (standard_lookup); heating_curve_tool (heating_curve). Plan text uses pre-suffix names but MEMORY.md confirms the actual naming. Use actual names.
-- src/tools/__init__.py is empty. registry.py imports directly from tool modules.
-- Plan §5.4: "Let create_react_agent handle tool errors natively." BL-002 edit 4 added an empirical verification test (Step 9b).
-- build_agent signature per plan: build_agent(checkpointer=None) -> uses InMemorySaver if None, else uses caller-supplied. Prompt=SYSTEM_PROMPT.
-- test_graph.py smoke: assert build_agent() is not None. Must pin LLM_PROVIDER=ollama via monkeypatch to avoid .env leak (hermeticity principle from step 7).
-- ChatOllama/ChatOpenAI instantiation is lazy (no network at __init__); create_react_agent just builds the graph, no model call during build. Smoke test network-free as long as provider is pinned.
-
-Gate 1 decisions to surface:
-(1) registry.py re-export policy: expose only TOOLS, or re-export individual tool symbols too?
-(2) get_chat_model() call site inside build_agent(): inside function body (allows test monkeypatch before call) or at module top (eager)?
-(3) Test pins LLM_PROVIDER via monkeypatch -- confirm?
-
-<------------Start User / 00:41------------>
-go with your recommendation
-
-<------------Start Thinking / 00:41------------>
-Gate 1 approved (all three recommendations: registry exposes only TOOLS, get_chat_model inside build_agent body, test pins LLM_PROVIDER via monkeypatch).
-
-Gate 2 draft:
-
-registry.py (src/tools/):
-- Module docstring: explain single-TOOLS-list purpose
-- Imports: heating_curve_tool, standard_lookup_tool, and the 3 unit_converter tools
-- TOOLS = [...] in plan order (kw_to_kcal_per_h_tool, kcal_per_h_to_kw_tool, degree_days_tool, standard_lookup_tool, heating_curve_tool)
-
-graph.py (src/):
-- Docstring referencing step 9 + hybrid backbone note (InMemorySaver per-process)
-- Import create_react_agent from langgraph.prebuilt
-- Import InMemorySaver from langgraph.checkpoint.memory
-- build_agent(checkpointer=None) -> lazy get_chat_model() inside body
-
-test_graph.py (tests/):
-- Module docstring: smoke test, no LLM invocation
-- test_build_agent_default using monkeypatch: LLM_PROVIDER=ollama + OLLAMA_BASE_URL pinned
-- assert build_agent() is not None (minimal, per plan)
-
-One small flag for Gate 2: the test assertion. Plan literally says "assert build_agent() is not None". I'll stick to that minimal check. Could add hasattr(agent, "invoke") check for more signal, but YAGNI — if create_react_agent returns None it's a langgraph bug, not a code-under-test bug.
-
-One unknown I want to verify as part of Gate 2: exact import paths for InMemorySaver and create_react_agent in the installed langgraph version. Will flag that I'm assuming langgraph.checkpoint.memory.InMemorySaver + langgraph.prebuilt.create_react_agent; will fail fast in smoke test if either is wrong.
-
-<------------Start Output / 00:42------------>
-Verified import paths via `uv run python -c`: langgraph.checkpoint.memory.InMemorySaver and langgraph.prebuilt.create_react_agent both import cleanly. Presented Gate 2 with full content for registry.py (13 lines), graph.py (28 lines), test_graph.py (10 lines). Flagged test assertion minimality question (plan-minimal `is not None` vs belt-and-suspenders hasattr(agent, "invoke")). Awaiting approval.
-
-<------------Start User / 00:45------------>
-Approve as-is
-
-<------------Start Thinking / 00:45------------>
-Approved as-is. Write 3 files, run test, commit.
-
-Plan:
-1. Write src/tools/registry.py
-2. Write src/graph.py
-3. Write tests/test_graph.py
-4. Run `uv run pytest tests/test_graph.py -v` to confirm smoke test passes
-5. Run full `uv run pytest` to confirm no regressions (48 → 49 expected)
-6. git add, commit "Sprint 1 step 9: graph wiring + smoke test"
-7. Report and propose Step 9b.
-
-UPDATE 00:46: pytest 49/49 green BUT LangGraphDeprecatedSinceV10 warning:
-"create_react_agent has been moved to `langchain.agents`. Please update your import to `from langchain.agents import create_agent`. Deprecated in LangGraph V1.0 to be removed in V2.0."
-
-Installed langgraph 1.1.6, langchain 1.2.15. Both past V1.0. Research doc (2026-04-07) and plan predate this. langchain.agents.create_agent is importable in current env.
-
-Three options:
-(A) Ship as-is, warning only, works through V1.x. Technical debt.
-(B) Migrate to langchain.agents.create_agent now. Need signature compat check. Scope beyond approved Gate 2.
-(C) Pin langgraph/langchain below V1.0. Risky, other deps already 1.x.
-
-Halting before commit. Recommend (B): writing NEW code against deprecated API on day one. Cheapest to fix now; triggers research doc + MEMORY.md updates.
-
-<------------Start Output / 00:47------------>
-Files written, tests 49/49 green BUT LangGraphDeprecatedSinceV10 warning surfaced on create_react_agent. Installed langgraph 1.1.6, langchain 1.2.15. Halting before commit. User picks: (A) ship deprecated, (B) migrate now, (C) pin old. Recommend (B).
-
-<------------Start User / 00:50------------>
-B
-
-<------------Start Thinking / 00:50------------>
-User chose (B) migrate. Before amending code, verify signature compat:
-- langgraph.prebuilt.create_react_agent(model=, tools=, checkpointer=, prompt=)
-- langchain.agents.create_agent(?)
-
-If signatures differ (parameter renames, different defaults), need to adapt. Check via inspect.signature and docstring.
-
-Plan this turn:
-1. Introspect both signatures
-2. Verify minimal-swap feasibility
-3. If identical: present amended Gate 1/2 with just the import change
-4. If different: present deltas and ask approval
-
-Also need to flag downstream doc updates:
-- dsm-docs/research/2026-04-07_langgraph-best-practices.md §1, §5 (reference create_react_agent)
-- MEMORY.md "Sprint 1 canonical stack" line
-These can be a follow-up after step 9 commits. Don't conflate scope.
-
-<------------Start Output / 00:51------------>
-Signature compare (inspect.signature):
-- OLD: create_react_agent(model, tools, *, prompt=None, checkpointer=None, ...)
-- NEW: create_agent(model, tools=None, *, system_prompt=None, middleware=(), checkpointer=None, ...)
-Delta: `prompt` -> `system_prompt` rename. Return type CompiledStateGraph in both.
-
-Migration is a 2-line change in graph.py only:
-1. import swap: langgraph.prebuilt.create_react_agent -> langchain.agents.create_agent
-2. kwarg rename: prompt=SYSTEM_PROMPT -> system_prompt=SYSTEM_PROMPT
-No other files affected.
-
-Separate follow-up scope (NOT this commit): update research doc §1/§5 + MEMORY.md canonical-stack line.
-
-<------------Start User / 00:54------------>
-yes
-
-<------------Start Thinking / 00:54------------>
-Amendment approved. Apply two edits to src/graph.py, re-test, commit.
-
-Plan:
-1. Edit graph.py: import swap + kwarg rename (2 edits)
-2. Run pytest tests/test_graph.py -v (expect 1 passed, 0 warnings)
-3. Run full pytest (expect 49/49, 0 warnings)
-4. Commit "Sprint 1 step 9: graph wiring + smoke test (langchain.agents.create_agent)"
-5. Report + propose Step 9b gate.
-
-<------------Start Output / 00:55------------>
-Applied 2-line migration + docstring note in src/graph.py. Tests: 49/49 green, 0 warnings (deprecation resolved). Committed ecb73a1 "Sprint 1 step 9: graph wiring + smoke test (langchain.agents.create_agent)". Ready for Step 9b (test_tool_error_handling, BL-002 edit 4) and the separate follow-up to update research doc + MEMORY.md canonical-stack line.
-
-<------------Start User / 00:58------------>
-option 2
-
-<------------Start Thinking / 00:58------------>
-User picked option 2 (doc follow-up first).
-
-Plan:
-1. Find all occurrences of create_react_agent in research doc to target edits precisely
-2. Check MEMORY.md canonical-stack line
-3. Decide annotation style: don't rewrite history (research doc is a dated snapshot); ADD a note pointing at the V1.0 rename and our current implementation. MEMORY.md is a live index -> rewrite the line.
-4. Draft the exact diffs
-5. Present combined Gate 1+2 (simple enough to skip the brief/concept split)
-6. Wait for approval, apply, commit
-
-Research doc policy: dated research documents are snapshots. Do not silently overwrite the snapshot. Add a forward-pointer note. MEMORY.md is not dated; it's live state -> direct edit.
-
-Commit message: "Sprint 1 step 9 follow-up: annotate V1.0 create_agent rename"
-
-Let me find the exact locations.
-
-<------------Start Output / 00:59------------>
-Gate 1+2 combined (simple doc follow-up, no code). Target 1: annotate research doc with a "Post-publication update" block between frontmatter and §1; body stays historical. Target 2: rewrite MEMORY.md line 8 canonical-stack line. Flagged line 12 "Pending" as Session 5 wrap-up scope, NOT this commit. Commit msg: "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename". Awaiting approval.
-
-<------------Start User / 01:02------------>
-y
-
-<------------Start Thinking / 01:02------------>
-Approved. Apply both edits.
-
-Important note: MEMORY.md lives at ~/.claude/projects/.../memory/MEMORY.md, OUTSIDE the repo. Per CLAUDE.md cross-repo write safety, first write outside repo needs explicit confirmation -- user's "y" on the presented content satisfies that.
-
-MEMORY.md is NOT tracked by git (it's in ~/.claude/), so the git commit will include only the research doc change. MEMORY.md edit is metadata-level, persists via the auto-memory system.
-
-Plan:
-1. Edit research doc: insert annotation block between line 6 (end of frontmatter) and line 8 (## 1. Agent pattern...).
-2. Edit MEMORY.md line 8.
-3. git add dsm-docs/research/2026-04-07_langgraph-best-practices.md
-4. git commit "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename"
-5. Report. Note MEMORY.md is not in the commit (cross-repo).
-
-<------------Start Output / 01:03------------>
-Applied both edits. Research doc: 13-line annotation inserted between frontmatter and §1, body unchanged (historical snapshot preserved). MEMORY.md line 8: canonical-stack line updated with new API + migration-commit pointer. Committed 3fa05f1 "Sprint 1 step 9 follow-up: annotate LangGraph V1.0 create_agent rename" (research doc only; MEMORY.md is in ~/.claude/, not the repo). No code, no tests touched.
-
-<------------Start User / 01:06------------>
-y
-
-<------------Start Thinking / 01:06------------>
-User approved Step 9b. Need to research:
-1. What fake chat model to use in langchain_core (FakeMessagesListChatModel vs GenericFakeChatModel)
-2. How to script a tool-call AIMessage
-3. What "graceful recovery" means operationally for create_agent (does it swallow tool errors by default?)
-4. Plan's §5.4 error-handling spec
-5. BL-002 edit 4 exact ask
-
-Plan:
-1. Read plan §5.4 and BL-002-related edit detail
-2. Check langchain_core.language_models fake chat models and their tool_calls support
-3. Verify create_agent behavior on tool exception (ToolNode catches? propagates? has handle_tool_errors kwarg?)
-4. Draft Gate 1 brief with the mock strategy, what we assert, and the minimal-scope version vs belt-and-suspenders
-
-Note: create_agent's underlying tool node may have a `handle_tool_errors` default behavior. If it DOES catch by default -> test easy. If not -> we need to pass handle_tool_errors to create_agent (or use middleware), which expands scope.
-
-<------------Start Output / 01:08------------>
-Findings:
-- Plan §5.4 + BL-002 edit 4 spec: stub tool raises, assert agent recovers gracefully. If observed behavior diverges from assumed "error -> model -> retry-or-explain", UPDATE §5.4 with actual behavior. So the test IS the empirical probe.
-- FakeMessagesListChatModel(responses=[BaseMessage, ...]) available in langchain_core, supports bind_tools. Can script: [AIMessage with tool_call, AIMessage with final text]. Perfect fit.
-- GenericFakeChatModel also available but list-based is simpler.
-
-Test design approach:
-1. Don't use build_agent() for this test -- inject a stub model directly via create_agent. build_agent's purpose is prod wiring via get_chat_model factory; for an error-handling unit test we want determinism.
-2. @tool-decorated flaky_tool(x: int) raises ValueError("boom").
-3. FakeMessagesListChatModel scripted with 2 responses: tool-call, then text.
-4. agent.invoke({"messages": [("user", "...")]}), assert no exception + final message is AIMessage with content.
-
-Unknowns (flag in Gate 1):
-- Does create_agent catch tool exceptions by default? TEST IS THE PROBE. If ValueError propagates, amend: add handle_tool_errors kwarg (or equivalent middleware) and re-run. Document observed behavior in §5.4 as the deliverable.
-
-Gate 1 decisions to surface:
-(1) test uses create_agent directly (bypassing build_agent) vs extend build_agent with model= override param -- recommend direct, YAGNI for the param.
-(2) scripted 2 responses vs fixed-point loop (agent may call model more times than scripted -> IndexError). Recommend 2 + assert; if IndexError, bump script or handle.
-(3) test file lives at tests/test_tool_error_handling.py per plan -- confirm.
-(4) scope includes a post-test doc update to §5.4 (plan instruction) -- confirm we bundle that in same commit, or do it as separate commit.
-
-<------------Start User / 01:11------------>
-go with your recommendation
-
-<------------Start Output / 01:13------------>
-All 3 recommendations approved. Drafting Gate 2: ~40-line test file with stub flaky_tool, FakeMessagesListChatModel scripting 2 responses (tool_call then text), create_agent direct. Two-commit plan: test now, §5.4 update after observed behavior.
-
-<------------Start User / 01:15------------>
-yes
-
-<------------Start Thinking / 01:15------------>
-Gate 2 approved. Write the test, run it, report outcome.
-
-Plan:
-1. Write tests/test_tool_error_handling.py
-2. Run `uv run pytest tests/test_tool_error_handling.py -v` -- capture full output (traceback if it fails)
-3. Report outcome to user (pass / ValueError propagation / IndexError).
-4. If PASS -> commit + propose §5.4 doc update.
-5. If FAIL -> show traceback, propose amendment before committing.
-6. If IndexError -> show traceback, propose script bump before committing.
-
-Don't commit until we know the outcome (user may want to adjust).
-
-<------------Start Output / 01:16------------>
-Test written and run. Unexpected fourth failure mode: FakeMessagesListChatModel.bind_tools raises NotImplementedError. All 6 fakes in langchain_core.language_models.fake_chat_models inherit the stub without overriding. create_agent internally calls bind_tools during setup so the test can't reach the error-handling probe yet.
-
-Cleanest workaround: subclass the fake in the test with a no-op bind_tools that returns self. Presenting amendment for approval before re-running.
-
-<------------Start User / 01:18------------>
-y
-
-<------------Start Thinking / 01:18------------>
-Approved. Amend test with _BindableFakeModel subclass and re-run.
-
-Plan:
-1. Edit tests/test_tool_error_handling.py to add _BindableFakeModel and swap instantiation.
-2. Re-run pytest, capture outcome.
-3. Report: PASS / ValueError propagation / IndexError.
-4. Handle each outcome accordingly before committing.
-
-<------------Start Output / 01:19------------>
-Re-ran after _BindableFakeModel amendment. Outcome category 2: ValueError propagates. `create_agent` does NOT catch tool exceptions by default (empirical finding, contradicts plan §5.4 assumption).
-
-Stack reaches ToolNode._execute_tool_sync -> BaseTool.run -> raise ValueError. BaseTool has a `handle_tool_error` field (bool/str/callable) that catches and returns as ToolMessage when set.
-
-Two test options to present:
-A) Pin current propagation behavior (test asserts ValueError raised). Doesn't match plan's "recovers gracefully" language.
-B) Enable handle_tool_error=True on flaky_tool, assert recovery works. Documents the mitigation pattern, matches plan language.
-
-Recommend B. Then §5.4 update becomes richer: remove "native recovery" claim, add per-tool opt-in mitigation + app-level try/except guidance.
-
-<------------Start User / 01:22------------>
-B
-
-<------------Start Thinking / 01:22------------>
-User picked B. Apply handle_tool_error mitigation.
+What's missing per the audit table:
+- Header (Duration, Goal, Prerequisites) — partial
+- Research Assessment — no
+- Experiment Gate — no
+- Branch Strategy — no
+- Deliverables (MUST/SHOULD/COULD labeled) — present but in §1 Scope, different label
+- Phases (with execution mode + DSM references + success criteria) — no, replaced by §4 Build order
+- **Phase Boundary Checklist** — no
+- Open Design Questions — present (§8) under different label
+- How to Resume — no
+- **Sprint Boundary Checklist** — no
 
 Approach options:
-1. `flaky_tool.handle_tool_error = True` after decoration -- simple attr set
-2. `@tool(handle_tool_error=True)` in decorator -- unclear if decorator accepts
-3. StructuredTool.from_function(..., handle_tool_error=True) -- more verbose
 
-Try option 1 first (simplest). Since BaseTool is a pydantic v2 BaseModel, attribute assignment works if the model config permits it. If pydantic blocks, fall back to reconstructing the tool.
+(A) Full rewrite of the plan structure: rename sections, move content, add missing sections from Template 8 verbatim. ~30-45 min. Risky — Sprint 1 is mostly executed, restructuring might lose context the existing sections embed.
 
-Also, update the test docstring and module docstring to reflect the empirical finding: the test now demonstrates the mitigation, not the assumed default.
+(B) Additive patch: keep existing sections; ADD the missing structural sections (Sprint Boundary Checklist, Phase Boundary Checklist, Branch Strategy, How to Resume, Research Assessment retro, Experiment Gate retro). ~15 min. Less risky, less elegant. But this is what the user asked for ("patch") — and the alternative (full rewrite) might destroy context.
+
+(C) Minimal patch: just add the Sprint Boundary Checklist and Phase Boundary Checklist (the two the user explicitly cared about) + a "Plan structure note" at the top explaining the gap. ~5 min. Smallest, but doesn't make the plan Template-8-compliant on the other axes.
+
+User said "patch" not "rewrite." Going with (B) additive patch. The result won't be perfectly Template-8-shaped (existing sections labeled differently), but it will contain all mandated content. Future sprints (Sprint 2, 3) can be drafted from Template 8 directly via BL-A/B/C — that's the structural fix.
+
+Sections to add to Sprint 1 plan:
+1. Top of file, after the title: add "**Duration:** Estimated 4-6 sessions (currently in session 5/N)" and "**Goal:** ..." and "**Prerequisites:** Sprint 0 (research grounding) complete"
+2. After §1 Scope: "## 1.5 Branch Strategy" — Sprint 1 ran on session branches (session-3, session-4, session-5) via DSM_0.2 Three-Level Branching. Note that no Level-3 sprint branch was created (deviation from template); Sprint 1 work merged via PRs from session branches.
+3. After §3 File layout: "## 3.5 Phase boundary checklist (intra-sprint)" — bullets per Template 8 lines 122-126
+4. After §6 Exit criteria: "## 6.5 Sprint Boundary Checklist" — the 8-bullet checklist per Template 8 lines 143-151, customized for this Sprint 1
+5. After §9 Gates summary: "## 10. How to Resume" — three steps per Template 8 lines 137-139
+
+Also add a top-of-file note: "**Template compliance:** This plan was authored before /dsm-align audited plan-document structure. It has been retroactively augmented in Session 5 to include the Sprint Boundary Checklist and Phase Boundary Checklist mandated by DSM_2.0.C Template 8. Future sprint plans should use Template 8 as the skeleton from creation. See dsm-docs/feedback-to-dsm/done/2026-04-17_s5_backlogs.md for the root cause."
+
+Let me draft each section before I edit. The Sprint Boundary Checklist needs to be customized for Sprint 1 (not just generic), so it captures what closure of THIS sprint requires. Same for Phase Boundary Checklist (this sprint's phases).
+
+Sprint 1 phases retroactively identified from §4 Build order (10 steps):
+- Phase 1: Tools (steps 1-5: project setup + 5 deterministic tools + tests)
+- Phase 2: Engine (steps 6-9: config + system prompt + agent factory + tool registry)
+- Phase 3: UI (step 10: Streamlit app)
+- Phase 4: Smoke + close (steps 11-12: smoke test + README)
+
+Branch Strategy retro: this project uses session branches per /dsm-go (Level 2). Level 3 sprint branches per Template 8 / DSM_0.2 weren't used; instead each session branch encompasses the work-in-flight including Sprint 1. PRs merge session branches to main. This is a deviation but documented.
+
+Sprint Boundary Checklist for Sprint 1: customize the 8 bullets:
+- [ ] Checkpoint document created (dsm-docs/checkpoints/2026-04-17_sprint1_close.md)
+- [ ] Feedback files updated (this session created backlogs + methodology files)
+- [ ] Decision log updated (new decisions: model selection cascade)
+- [ ] Tests passing (50/50 from S4 cont; will verify post-step-11)
+- [ ] Blog journal entry written
+- [ ] README updated (step 12)
+- [ ] Next steps summary (Sprint 2 RAG kickoff pointer)
+- [ ] Plan §6 boxes all checked
+
+Phase Boundary Checklist for intra-sprint use:
+- [ ] Phase observations and scores in feedback-to-dsm
+- [ ] Checkpoint if significant milestone
+- [ ] Decisions logged in dsm-docs/decisions/
+- [ ] Blog materials updated if insights worth sharing
+
+How to Resume:
+1. Read this sprint plan (start with §0 Template compliance + §6 Exit criteria + §6.5 Sprint Boundary Checklist)
+2. Read the most recent checkpoint in dsm-docs/checkpoints/
+3. Read the most recent handoff in dsm-docs/handoffs/ (if present)
+4. Check git log on the active session branch for recent commits
+
+Let me also add Research Assessment + Experiment Gate retro:
+- Research Assessment: done in dsm-docs/research/2026-04-07_langgraph-best-practices.md and (this session) 2026-04-17_local-model-selection_research.md
+- Experiment Gate: Sprint 1 introduced no new user-facing capability requiring an EXP. Justification: skip per Template 8 "Performance-only sprint" branch.
+
+OK ready to edit. One Edit call for the top-of-file note + I'll need to find the insertion points for each new section. To minimize risk, I'll use multiple Edit calls inserting at clearly anchored existing-content boundaries.
+
+<------------Start User / 15:25------------>
+"what should I run on the terminal?"
+
+<------------Start Thinking / 15:26------------>
+User asking literally "what should I run." My probes from /api/tags and ollama list both return empty, so the pull never started OR is still in-flight. Either way: give them the exact one command, plain, with what to watch for. Keep response short — they asked a concrete question, not a brief.
+
+<------------Start User / 15:29------------>
+Pull progress: 9%, 461 MB / 4.9 GB, 13 MB/s, ETA 5m36s.
+
+<------------Start Thinking / 15:30------------>
+Bandwidth precondition: 13 MB/s is well above the 5 MB/s threshold. Pass. Total ETA 5-6 minutes from now.
+
+While the pull runs, I have ~6 minutes of productive work I can do without waiting. The smart use is to PRE-WRITE the smoke-test script that Phase 2 will run, so when the pull finishes I can execute it immediately rather than write-and-test from cold.
+
+What does the smoke-test script need to do?
+- Import build_agent from src.graph (per memory: graph wiring uses registry + build_agent)
+- Build the agent with the default config (LLM_PROVIDER=ollama, OLLAMA_MODEL=llama3.1:8b)
+- Invoke 5 queries from plan §4.11
+- For each query: capture the full message sequence including tool calls, tool results, and final response
+- Write captured evidence to a structured file (markdown? JSON? both?) so I can paste-back the relevant snippets to fill the smoke-test evidence template
+
+Let me check the actual src/ structure first to write the right script. Do build_agent and the registry exist where memory says?
+
+I should also check what tool the model needs to be told about — i.e., verify the tool list and config wiring. This is read-only exploration.
+
+Plan: probe src/ structure (read-only), then draft the smoke-test runner script. I won't commit it until step 11 actually runs (might want to iterate on capture format).
+
+<------------Start User / 15:34------------>
+"1. scripts/smoke_test.py, 2. markdown only for Sprint 1; JSON capture is Sprint 3 polish"
+
+<------------Start Thinking / 15:35------------>
+Both picks confirmed. Drafting scripts/smoke_test.py.
+
+Design:
+- Single file, ~150 lines
+- Imports: build_agent from src.graph; pathlib for output; datetime for timestamp
+- Config: read OLLAMA_MODEL from env, default llama3.1:8b
+- Queries: hard-coded list of 5 from plan §4.11 with metadata (id, query, expected_tool, expected_args_check, language)
+- Per-query loop:
+  - thread_id = "smoke-Q{N}"
+  - state = agent.invoke({"messages": [("user", query)]}, config={"configurable": {"thread_id": thread_id}})
+  - extract messages from state
+  - identify: which tools were called (AIMessage.tool_calls), what args, what tool result, what final response
+  - simple pass-fail heuristics: tool name match for Q1-Q3+Q5; deflection for Q4; German check for Q4+Q5
+- Output: a single markdown file at dsm-docs/handoffs/2026-04-17_s5_step11_smoke_test_results.md (separate from the template; the template is the spec, this is the evidence)
+- Also print a one-line summary to stdout per query
+
+Edge cases:
+- Tool call could be in a multi-step ReAct loop (multiple AIMessage with tool_calls). Capture all of them, not just first.
+- Some queries may produce no tool call (Q4 deflection); script must handle that branch.
+- Streaming vs non-streaming: agent.invoke returns final state; messages is the accumulated list. Use .invoke (not .stream) for capture simplicity.
+- Error handling: if invoke raises (per BL-002 edit 4, plain exceptions propagate), catch the error, mark the query as Failed with the exception text, continue to next query.
+
+Pre-flight check before invoking:
+- Verify OLLAMA_BASE_URL reachable via a quick check
+- Verify the configured model is actually present (ollama list or curl /api/tags)
+
+Need to check src/tools/registry.py for actual tool names so the expected_tool field matches reality.
+
+<------------Start User / 15:42------------>
+"ollama pull llama3.1:8b ... success"
+
+<------------Start Thinking / 15:43------------>
+Pull complete. Phase 1c verify + Phase 2 execute.
+
+Sequence:
+1. Probe `ollama list` from my side to confirm model is present
+2. Streamlit boot test (per §6 box "streamlit run app.py starts without error") — but this is interactive (Streamlit holds the terminal). Better approach: verify the app.py module imports without error AND can construct the agent — that's the equivalent "boot" check without holding a process. Then defer the interactive Streamlit test to user-initiated (or skip if confidence is high after smoke).
+3. Run scripts/smoke_test.py
+4. Capture results, decide pass/fail per Q5
+5. If pass → step 12 (README) → close §6 boxes
+6. If Q5 fail → fall back per cascade (don't debug template per precondition 3)
+
+For Streamlit boot: I'll test it via `python -c "import app"` which validates the module loads, not full Streamlit server startup. Sprint 1 §6 box says "streamlit run app.py starts without error" — that's user-runnable and not in scope of automated smoke. I can mark it as covered-via-import after the smoke runs without error (because if the import works AND the agent invokes successfully, then `streamlit run app.py` will boot — Streamlit just adds the UI rendering layer on top). Document this as "verified via build_agent invocation through smoke_test.py; full Streamlit boot deferred to user verification."
+
+Or: just have the user run `streamlit run app.py` themselves once and confirm "started OK" — takes 30 seconds and gives clean evidence. Yes, do that as a parallel side-task to the smoke run.
 
 Plan:
-1. Edit test: add `flaky_tool.handle_tool_error = True` after the @tool block
-2. Update module docstring to reflect empirical finding
-3. Re-run pytest
-4. If PASS: report, then propose §5.4 doc update as separate follow-up commit
-5. If FAIL with different error: report and adapt
+- Probe `ollama list` from my side
+- Run smoke_test.py via .venv/bin/python (foreground; will take 1-3 min for 5 queries on partial-offload llama3.1:8b)
+- While that runs, ask user to start `streamlit run app.py` in a separate terminal and confirm boot
+- Read smoke results, parse evidence file
+- Report Q1-Q5 outcomes + go/no-go decision
 
-<------------Start Output / 01:24------------>
-Second empirical finding: handle_tool_error=True DID NOT catch ValueError. Reading BaseTool.run source: the flag only catches ToolException; generic Exception (incl. ValueError) hits the `except (Exception, KeyboardInterrupt)` branch which re-raises unconditionally via `raise error_to_raise`.
+<------------Start User / 15:50------------>
+User pasted back the smoke output (independent run on their side; elapsed times slightly different from mine — Q3 21.79 vs 21.23, Q4 36.81 vs 35.55, Q5 32.37 vs 21.38). Same Q2 ValueError, same OVERALL: FAIL.
 
-Implication for project: Sprint 1 production tools raise ValueError (standard_lookup on unknown standard, potentially heating_curve edge cases). These propagate to agent.invoke() by default. App-level try/except is the ONLY safety net unless tools are refactored to raise ToolException or wrapped.
+<------------Start Thinking / 15:51------------>
+The user re-ran on their side and is showing me the FAIL. Two readings: (a) confirming Q2 deferral is OK, or (b) "I'm surprised this is FAIL, please re-examine."
 
-Halting before committing. Need to decide test shape:
-- Change flaky_tool to raise ToolException -> demonstrates the mitigation pathway (tool raises ToolException + handle_tool_error=True = recovery).
-- Keep ValueError -> demonstrates reality (propagation) via pytest.raises pin.
+I should treat (b) as the safer reading. Re-examining honestly:
+- Plan §6 box "All 5 manual smoke test queries (section 4.11) produce expected tool call or deflection" — Q2 made a tool call to the right tool but with empty key, tool raised. That's not "expected tool call." §6 box is technically NOT met if I'm strict.
+- Q5 gating box passes cleanly.
+- So §6 is mixed: gating ✓, "all 5 produce expected" ✗.
 
-Present this + proposed §5.4 update content for user choice.
+Honest options:
+A. Document gap + close. §6 not strictly met but gating passes. Risk: closing a sprint with an unmet §6 box sets a bad precedent.
+B. Quick-fix standard_lookup_tool to handle missing/empty key gracefully (~5-10 min). Returns list of keys when key is empty. Tool becomes more robust. Then re-run smoke. If Q2 passes, all §6 boxes met cleanly.
+C. Quick-fix system prompt to deflect "what is X?" overview questions. Riskier — might affect Q1/Q3/Q5.
 
-<------------Start User / 01:26------------>
-B1
+Per the methodology feedback Lesson 3 I just filed: "surface the strongest counter-evidence to your own recommendation before asking for approval." The counter-evidence to A is exactly what I just identified: §6 isn't strictly met.
 
-<------------Start Thinking / 01:26------------>
-User picked B1: change flaky_tool to raise ToolException, keep handle_tool_error=True. Test should then PASS demonstrating the canonical mitigation pathway.
+B is the right call IMO. The fix is small, doesn't add features (just better-handles the missing-arg case), and aligns with the empirical reality that "what is DIN EN 12831?" is a reasonable question to ask. I should recommend B but present all three.
 
-Plan:
-1. Update import: add ToolException from langchain_core.tools
-2. Change flaky_tool body: raise ToolException("boom") instead of ValueError
-3. Update docstrings to reflect the pattern (tool raising ToolException + handle_tool_error=True)
-4. Re-run pytest
-5. Expected: PASS
-6. If PASS: commit "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)" then propose separate follow-up for §5.4 update.
-7. If still FAIL: report + adapt.
+Resist the instinct to push for close. The user paused to show me the failure. Respect that pause.
 
-<------------Start Output / 01:28------------>
-Test PASSED after changing flaky_tool to raise ToolException. Full suite: 50/50 green. Committed d1941b9 "Sprint 1 step 9b: empirical tool-error recovery test (BL-002 edit 4)".
+<------------Start User / 15:55------------>
+"Option B"
 
-Empirical deliverables for §5.4 update (pending separate commit):
-1. create_agent does NOT catch tool exceptions by default (contradicts original assumption).
-2. BaseTool.handle_tool_error only catches ToolException, not generic Exception.
-3. Canonical mitigation: tool raises ToolException + handle_tool_error=True -> recovery works.
-4. Sprint 1 production tools raise ValueError -> propagate to app.py's try/except.
-5. Deferred: whether to convert production tools to ToolException for per-tool model-visible recovery.
+<------------Start Thinking / 15:56------------>
+Approved. Making standard_lookup_tool gracefully handle missing/empty key.
 
-<------------Start User / 01:31------------>
-Proceed with the §5.4 update
+Read current implementation first, then plan the edits, then execute.
 
-<------------Start Thinking / 01:31------------>
-User approved. Proposed content was already outlined in previous turn; this is Gate 3 (implementation diff) directly.
+Steps:
+1. Read src/tools/standard_lookup.py (full file) to understand the function shape
+2. Read tests/test_standard_lookup.py to understand what tests exist (specifically: any test that asserts the empty-key raise)
+3. Plan minimal edit: change function to return overview when key is "" or None; @tool wrapper signature: key: str = ""; update docstring
+4. Apply edits
+5. Run unit tests to confirm nothing broke
+6. Re-run smoke test
+7. If 5/5 pass: commit smoke runner + tool fix + smoke results
+8. Move to step 12 README
 
-Plan:
-1. Read exact current §5.4 content in plan
-2. Compose replacement
-3. Apply edit
-4. Show diff-like summary, commit "Sprint 1 step 9b follow-up: update plan §5.4 with observed error-handling behavior"
+Sequence respects the App Development Protocol: read first, plan, execute one at a time, test after.
 
-No code, no tests.
+<------------Start User / 00:10------------>
+Streamlit boot output: traceback at startup `asyncio.exceptions.InvalidStateError: invalid state` in streamlit/runtime/runtime.py line 631 _loop_coroutine. Then "Please report this bug at https://github.com/streamlit/streamlit/issues. Aborted!" Then `source ...activate` line at the bottom (looks like the user activated the venv after, possibly in response to noticing the issue).
 
-<------------Start Output / 01:32------------>
-Updated plan §5.4 with observed error-handling behavior. Replaced the "assumed-pending-verification" block with three findings (create_agent doesn't catch, handle_tool_error only catches ToolException, canonical recovery pattern), promoted app.py try/except to primary Sprint 1 safety net, and added deferred note about converting production tools to ToolException in Sprint 3. Committed 84870a5 "Sprint 1 step 9b follow-up: update plan §5.4 with observed error-handling behavior". BL-002 edit 4 fully resolved.
+<------------Start Thinking / 00:11------------>
+The Streamlit boot crashed at startup. Bad signal. This is not a "Sprint 1 closed" state — §6 box "streamlit run app.py starts without error" is NOT met. The app aborts before rendering.
 
-<------------Start User / 01:35------------>
-Proceed to Step 10 (app.py) Gate 1
+But: the smoke test PASSED 5/5 directly through build_agent(). So:
+- Agent construction works (smoke proves)
+- Tool invocation works (smoke proves)
+- Model integration works (smoke proves Q5)
+- Streamlit runtime layer is broken
 
-<------------Start Thinking / 01:35------------>
-User wants to proceed to Step 10 (app.py Streamlit UI). Need to read plan's full step 10 spec + §5.1-5.3 for any related notes, then present Gate 1.
+The traceback is in Streamlit's own runtime.py at line 631 _loop_coroutine async_objs.started.set_result(None) — this looks like a Streamlit-internal initialization bug, not something app.py is doing wrong. The bug-report URL Streamlit emits is itself a signal Streamlit thinks this is unexpected.
 
-Plan step 10 from earlier grep:
-- thread_id in st.session_state (uuid4 on first load)
-- agent.invoke with config={"configurable": {"thread_id": ...}}
-- Render tool calls as collapsible sections
-- Error handling: catch exceptions, show user-friendly error
+Possible causes:
+1. Streamlit version incompatibility with Python 3.11.0rc1 (yes, that's a release candidate, not final 3.11.0; might trigger an asyncio edge case)
+2. Streamlit version incompatibility with langchain or langgraph imports being slow at import time (something racing in the module-load coroutine)
+3. Bug in Streamlit's runtime that's been fixed in a later version
+4. Something in app.py touching asyncio at import time (LangGraph might)
 
-Additional context from SHOULD/plan:
-- "Tool-call visibility in Streamlit (collapsible / expandable sections)"
-- App-level try/except is now PRIMARY safety net (§5.4 update, d1941b9)
+The user's terminal trail shows they activated venv after the abort, suggesting they tried again and got the same/different result. Or they just activated it. Hard to tell from the paste.
 
-Key design decisions to surface in Gate 1:
-1. Agent caching strategy: st.cache_resource vs session_state vs rebuild every turn
-2. Chat history: rely on checkpointer+thread_id replay, or persist in st.session_state and rebuild display from scratch
-3. Tool-call rendering detail: name+args+result, or summary
-4. Error message language: bilingual EN/DE (match persona) or EN only (simpler)
-5. Layout: page title, header, deflection-aware intro text, model indicator
-6. load_env() call site: at module top (per step 7 option 2 decision)
+What I should do:
+1. NOT panic and start hacking at Streamlit. This is not in scope for Sprint 1. The §6 box phrasing "starts without error" is the bar.
+2. Investigate enough to understand: is this a known Streamlit bug? Is there a workaround? Is it Python 3.11.0rc1 specific?
+3. Decide: is this a Sprint 1 closure blocker or a Sprint 3 polish item?
 
-File size estimate: ~80-120 lines.
+Strict reading of §6: "starts without error" → not met. But this is the Streamlit runtime, not the app code. The app code works (smoke proves). Two options:
+- A. Fix Streamlit (upgrade or pin a working version), re-test, close §6.
+- B. Acknowledge §6 box NOT met for Streamlit boot but document the smoke-test evidence proves the app's logic works; defer Streamlit fix to Sprint 3 (since Streamlit is the UI layer, not the agent).
 
-Let me read plan sections 5.1-5.3 + anything related to Streamlit.
+Actually: this is exactly the trap I just warned about. Don't push to close. The user paused the trace earlier on Q2 because it FAILED. They're showing me the Streamlit failure now, almost certainly with the same intent. I should treat this as another stop signal.
 
-<------------Start Output / 01:37------------>
-Read plan step 10 full spec + §5.3 (memory) + §5.4 (error). Confirmed: thread_id uuid4 in session_state, chat history in st.session_state.messages, st.chat_input, agent.invoke with thread_id config, tool-call collapsible rendering, try/except primary safety net. No test file for this step (Streamlit testing needs streamlit.testing, out of Sprint 1 scope).
+Honest path: investigate (read app.py, check Streamlit version, check known issues), present what I find, propose options. Don't push for "close anyway."
 
-Presented Gate 1 with 5 decision points: tool-call detail (full/summary), model caption (show/hide), clear-chat button (include/skip), error lang (bilingual/EN), page chrome (minimal main + sidebar suggested queries). Recommended full/show/skip/bilingual/minimal+sidebar. Awaiting user call.
+Quick checks to run in parallel:
+- streamlit version
+- Python version (confirm 3.11.0rc1 or actual 3.11.0)
+- app.py imports
+- search for known issue: streamlit asyncio "InvalidStateError" "_loop_coroutine"
 
-<------------Start User / 01:40------------>
-go with your recommendation
+Let me also consider time: it's now after midnight (date changed signal in system reminder). Session has been running ~12 hours wall clock with breaks, but for me it's been one continuous session. Fatigue check: my last few responses have been clean. I think I can handle a focused investigation. But I should explicitly check with the user whether they want to continue or wrap up — the date crossing is a real boundary.
 
-<------------Start Thinking / 01:40------------>
-All 5 recommendations approved. Drafting Gate 2.
+Actually no, just present the findings and the options. Let user decide.
 
-Architecture:
-- Module-level load_env() and imports
-- SUGGESTED_QUERIES constant (5 items matching plan step 11)
-- ERROR_MESSAGE bilingual constant
-- @st.cache_resource get_agent() wrapping build_agent
-- init_session(): thread_id uuid4, messages list, pending_input None
-- _extract_turn_tool_calls(result_messages, user_text): find last HumanMessage matching user_text, slice forward, collect AIMessage.tool_calls + match ToolMessage by tool_call_id. Tricky boundary logic, deserves docstring.
-- handle_user_input(user_text): append user, invoke agent (try/except), append assistant with tool_calls display or error.
-- _model_caption(): compose provider·model·temperature line from env.
-- render_history(): iterate st.session_state.messages, render chat_message blocks with expanders.
-- Main UI: set_page_config, title, caption, init_session, sidebar (suggested queries + divider + model caption), render_history, chat_input, pending_input flow, st.rerun after handling.
+<------------Start User / 00:15------------>
+"Let's do B. Also, are we reporting this bug?"
 
-File size ~120 lines. No tests (Streamlit testing out of scope).
+<------------Start Thinking / 00:16------------>
+Two parts:
+1. Do B → file backlog entry for the Streamlit boot issue, document §6 box as unchecked-with-evidence, proceed to step 12 README + close.
+2. Bug-report question: should we report the asyncio.InvalidStateError to Streamlit upstream?
 
-Latent subtlety: _extract_turn_tool_calls uses user_text content to find the turn boundary. If user repeats identical text, we iterate from end so the latest match wins -> correct. Documented in function docstring.
+Honest answer to (2): probably NO, and here's why.
 
-st.cache_resource caches agent across reruns but NOT across LLM_PROVIDER env changes mid-session. Minor, document in docstring if space.
+The error is on Python 3.11.0**rc1** — a release candidate from August 2022 that was superseded by Python 3.11.0 final in October 2022, and 3.11.x patches since. Streamlit's supported Python versions per their docs are likely "Python 3.9–3.13" or similar; rc1 is not "3.11" in any supported sense. If I report this to Streamlit, the maintainers will reasonably ask "can you reproduce on 3.11.x or 3.12?" and the answer requires upgrading the venv first — which is exactly what we'd do as a fix anyway.
 
-<------------Start User / 01:42------------>
-Approve as-is
+So the right sequence is:
+1. Upgrade Python in the venv first (Sprint 3 task per the BL we're about to file).
+2. If the bug reproduces on a supported Python version, THEN report upstream with a minimal repro.
+3. If it doesn't reproduce, we never had a Streamlit bug to report — we had a venv bug.
 
-<------------Start Thinking / 01:42------------>
-Approved. Write app.py, import smoke check, commit.
+The reporting decision comes AFTER the venv fix. Filing it now would be premature and burn maintainer time on what's probably a Python rc1 quirk.
 
-Plan:
-1. Write app.py (~120 lines per Gate 2)
-2. uv run python -c "import app" -- catches SyntaxError + import-time issues (load_env + build_agent import chain). Note: `import app` will trigger load_env() + module-level code including st.set_page_config which may fail outside a Streamlit context. Better: uv run python -c "import ast; ast.parse(open('app.py').read())" for syntax-only. Or skip the syntax-only path and just test via: streamlit compiles lazily, so importing the module outside Streamlit context triggers streamlit errors.
+What I should do:
+- Open the BL with both the immediate Streamlit-on-rc1 symptom AND the future "if it reproduces on 3.11.x/3.12, file upstream" follow-up.
+- Don't report upstream now.
 
-Actually simplest check: uv run python -m py_compile app.py to catch compile errors. Doesn't execute module body.
+Then proceed with B's plan: backlog entry, step 12 README MVP, §6 box accounting (6/7 + 1 documented), close commits, wrap-up.
 
-3. git add app.py
-4. git commit "Sprint 1 step 10: Streamlit UI (app.py)"
-5. Report. Step 11 (manual smoke test) is next if user wants; requires local Ollama.
+Ordering for the rest of the session:
+1. File BL for Streamlit boot issue (in dsm-docs/plans/ as backlog item, OR in feedback-to-dsm/ as backlog proposal? It's a project-internal BL not a methodology issue. Goes in dsm-docs/plans/ as a Sprint 3 polish item.)
+2. Write step 12 README MVP
+3. Update Sprint 1 plan §6.5 Sprint Boundary Checklist with what's been done vs pending
+4. Final commits
+5. /dsm-wrap-up
 
-<------------Start Output / 01:43------------>
-Wrote app.py (160 lines; Gate 2 code was ~120 source lines + blanks/docstrings at ~60 effective logic). py_compile clean, pytest full 50/50 (no regressions). Committed edea127 "Sprint 1 step 10: Streamlit UI (app.py)". Sprint 1 steps 7-10 all shipped. Remaining: step 11 manual smoke test (needs local Ollama + qwen2.5:7b or llama3.1:8b pulled), step 12 README.
+Let me check existing BL naming convention in dsm-docs/plans/.
 
-<------------Start User / 01:46------------>
-Wrap up
+<------------Start User / 00:20------------>
+"yes"
 
-<------------Start Thinking / 01:46------------>
-User invoked wrap up. Per CLAUDE.md: "When the user says 'wrap up' or the session ends, use /dsm-wrap-up". Invoke the dsm-wrap-up skill, which runs the full checklist autonomously.
+<------------Start Thinking / 00:21------------>
+Step 12 README MVP. Already read the existing README earlier. Plan:
 
-This session started via /dsm-light-go (continuation of S4), did substantial Sprint 1 work (steps 7-10 shipped, BL-002 edit 4 empirically resolved, plan §5.4 updated). Work continues (steps 11-12 remain). /dsm-wrap-up is the canonical full wrap. If the user wants light variant they'd have said so.
+What changes per the precondition 2 scope:
+1. Status line (line 5): "Planning phase , Sprint 1 research complete, implementation not yet started." → "Sprint 1 complete (6/7 exit boxes; Streamlit boot blocked by BL-003)"
+2. Tech-stack LLM row (line 40): "Anthropic Claude (via langchain-anthropic)" → "Ollama (llama3.1:8b default) or OpenAI (configurable)"
+3. Add: "Tools" subsection listing the 5 deterministic tools
+4. Add: "Run locally" section with Linux/WSL Ollama install + pull + venv setup + smoke test + Streamlit caveat
+5. Architecture paragraph in §"Planned Architecture": rename to just "Architecture", revise content to reflect actual `create_agent` + `InMemorySaver` + `@tool` registry; remove ChromaDB / vector store mentions (Sprint 2 territory)
+6. Roadmap: Sprint 1 checkbox checked, brief note on actual scope shipped
 
-Invoking Skill with skill=dsm-wrap-up.
+Out of scope (Sprint 3 polish per precondition):
+- Cross-platform install instructions (Windows native, macOS)
+- Architecture diagram refresh (the ASCII diagram has Sprint 2/3 elements; for now I'll keep it but note "Sprint 1 = boxes shown; RAG/eval per roadmap")
+- Comprehensive tool docstrings inline
+- Deployment / Docker
 
-<------------Start Thinking / 01:47------------>
-Executing full /dsm-wrap-up checklist autonomously. Order:
-- Check git availability
-- Parallel: step 0 (reasoning lessons extraction), step 1 (README check), step 2 (MEMORY update)
-- Sequential: step 3 (backup), 4 (profile), 5 (handoff), 6 (feedback push), 7 (governance), 8 (version check), 8.5 (humanizer), 9 (commit+push), 10 (PR to main), 11 (mirror sync PR), 11.5 (parallel sessions), 12 (wrap-up marker).
+The diagram needs care: it currently shows knowledge_search + ChromaDB which are Sprint 2 deliverables. For Sprint 1 closure, the diagram should show what actually shipped: 5 tools (no knowledge_search), no vector store, no embeddings. I should either replace it with a Sprint-1-accurate version or label it "target architecture (end of Sprint 3)".
 
-Session context:
-- Session 5 effectively (continuation of S4 via /dsm-light-go) -- but the light-go checkpoint and branch say "session 4", last-wrap-up said session 4, baseline said "mode: light". So we are still within Session 4 numbering per this project. The transcript markers say "Session 5 (lightweight continuation)" but that's just the continuation label. For MEMORY and commit messages, use "Session 4 (cont)" or similar.
-- Actually looking at checkpoint 2026-04-14_s4_light.md, last-wrap-up.txt, session-baseline.txt all at session 4. The /dsm-light-go step 5 template used "Session N" as a placeholder -- I wrote "Session 5" but that may have been wrong.
-- Let's treat this as Session 4 (lightweight continuation continues the number). Commit msg will be "Session 4 wrap-up: ...".
+Better: replace with a Sprint-1-accurate diagram now (small change, accurate). Move the existing target diagram to a "Target Architecture (end of Sprint 3)" subsection. That's not feature creep; it's correctness.
 
-Branch: session-4/2026-04-14. Branch date = 2026-04-14 but today's date is 2026-04-17 (date changed mid-session via system-reminder). This means we're wrapping up past the same-day window. For the PR title, date is today but session number stays 4.
+Let me draft the new README in one Write call.
 
-Commits made this session (from light-go):
-- 88120f4 Sprint 1 step 7: config factory + smoke test
-- 2e08817 Sprint 1 step 8: bilingual SYSTEM_PROMPT
-- ecb73a1 Sprint 1 step 9: graph wiring + smoke test
-- 3fa05f1 Sprint 1 step 9 follow-up: annotate LangGraph V1.0
-- d1941b9 Sprint 1 step 9b: empirical tool-error recovery test
-- 84870a5 Sprint 1 step 9b follow-up: update plan §5.4
-- edea127 Sprint 1 step 10: Streamlit UI (app.py)
+<------------Start User / 00:26------------>
+"proceed"
 
-Key insights for MEMORY update:
-- Sprint 1 code backbone 75% shipped. Steps 11 (manual smoke test needs local Ollama) + 12 (README) remain.
-- Empirical BL-002 edit 4 finding: create_agent propagates tool errors by default; handle_tool_error only catches ToolException. Production tools raise ValueError -> app.py try/except is primary Sprint 1 safety net.
-- Migrated from deprecated langgraph.prebuilt.create_react_agent to langchain.agents.create_agent (LangGraph V1.0 move).
+<------------Start Thinking / 00:27------------>
+Two pre-wrap-up items:
+1. Update Sprint 1 plan §6 to check the 6 boxes that passed and explicitly mark the Streamlit box as documented-via-BL-003
+2. Write Sprint 1 close checkpoint in dsm-docs/checkpoints/
 
-Let me start with git check + launch parallel steps 0, 1, 2.
+Both can be done in this turn. Then /dsm-wrap-up.
 
+Plan §6 update:
+- All 5 tool unit tests green → check
+- Graph construction smoke test green → check
+- streamlit run app.py starts without error → leave unchecked, add BL-003 reference inline
+- All 5 manual smoke test queries → check (after fix, was 5/5 PASS)
+- Gating German tool-call → check (Q5 PASS with evidence)
+- README has run-locally section → check
+- pyproject.toml pinned deps, no haystack-* yet → check
+
+Checkpoint:
+- Standard checkpoint format per dsm-docs/checkpoints/README.md naming: YYYY-MM-DD_sN_{description}.md or YYYY-MM-DD_vX.Y.Z_release_checkpoint.md
+- Sprint close = YYYY-MM-DD_sprint1_close_checkpoint.md or 2026-04-18_s5_sprint1_close_checkpoint.md (latter is per-session naming, more aligned)
+- Standard checkpoint sections: state at close, what shipped vs what was deferred, evidence pointers, decisions, lessons, next steps for resuming
+
+Let me check the checkpoints README for format guidance.
+
+<------------Start User / 00:33------------>
+"/dsm-wrap-up"
+
+<------------Start Thinking / 00:34------------>
+Executing /dsm-wrap-up autonomously. 12 steps. Order steps 0+1+2 in parallel, then 3-5, then 6, then 8 (no methodology files changed → likely skip), then 8.5 (README + checkpoint changed → run humanizer? No, skill name is /humanizer; let me skip per protocol-not-active reading: humanizer is for human-facing content with "AI signs"; for now docs are fine), then 9 git commit + push, then 10 PR + merge, then 11 mirror sync (likely skip), then 11.5 parallel sessions cleanup, then 12 wrap-up marker.
+
+Step 0 reasoning lessons: scan transcript for notable patterns. This session had several:
+- Course correction on model ranking under user pushback (twice: ranking + Q2 deferral)
+- Evidence-strength scale as a methodological hinge
+- Plan-template gap discovery
+- Streamlit boot crash + decision NOT to file upstream prematurely
+- Q2 fix as a quick-tool-fix vs document-and-defer choice (chose Option B)
+- Reading the §6 box strictly vs pragmatically (twice)
+
+Step 1: README changed massively this session. Need portfolio + DSM Central notifications.
+
+Step 2: MEMORY.md update.
+
+Going to do this autonomously per the skill instructions ("All steps run autonomously; do not pause for confirmation between steps").
