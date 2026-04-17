@@ -22,6 +22,7 @@ by source session and scope (`ecosystem` | `pattern` | `project`).
 
 - [STAA] S1 [pattern]: When recommending tech-stack defaults that touch core dependencies (LLM provider, framework), present options with tradeoffs rather than a single recommendation. Defaults reveal training-data bias.
 - [STAA] S3 [pattern]: When a pivot decision requires both "validate option X" and "validate combination of X+Y," split into named parallel research tracks; converge at the plan-update stage.
+- [STAA] S3 [pattern]: Before executing a pivot batch, enumerate surviving artifacts explicitly ("sunk cost is X; Y and Z survive because they are framework-agnostic"). Converts vague rework fear into a scoped inventory and exposes any hidden coupling.
 
 ## Batching & Efficiency
 
