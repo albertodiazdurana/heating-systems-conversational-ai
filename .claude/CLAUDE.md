@@ -129,8 +129,8 @@ tests/               # pytest test suite
 
 ### Knowledge Base (external, read-only)
 
-- `~/dsm-residential-heating-ds-guide/` — 6 markdown documents (~5,800 lines) covering German heating standards, ML/DS applications, MLOps, technical stack, applied scenarios
-- `~/dsm-residential-energy/` — Companion Streamlit app (heating curve simulator, DIN EN 12831, VDI 6030), source for deterministic tool logic
+- `/home/berto/_projects/dsm-residential-heating-ds-guide/` — 6 markdown documents (~5,800 lines) covering German heating standards, ML/DS applications, MLOps, technical stack, applied scenarios
+- `/home/berto/_projects/dsm-residential-energy-apps/` — Companion Streamlit app (heating curve simulator, DIN EN 12831, VDI 6030), source for deterministic tool logic
 
 ### Tech Stack
 
