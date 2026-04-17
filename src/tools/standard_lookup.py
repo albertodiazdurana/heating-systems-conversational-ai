@@ -179,20 +179,25 @@ STANDARDS: dict[str, dict] = {
 }
 
 
-def standard_lookup(standard: str, key: str) -> dict:
+def standard_lookup(standard: str, key: str = "") -> dict:
     """Look up a reference value from a German heating standard.
 
     Args:
         standard: Standard identifier, e.g. "DIN EN 12831" or "VDI 6030".
-        key: Key within that standard, e.g. "indoor_design_temp_day".
+        key: Key within that standard, e.g. "indoor_design_temp_day". If
+            empty or omitted, returns an overview of the standard with the
+            list of available keys instead of a specific value.
 
     Returns:
-        Dict with keys: standard, scope, key, value, and optionally unit + notes.
+        When key is provided: dict with keys: standard, scope, key, value,
+        and optionally unit + notes.
+        When key is empty: dict with keys: standard, scope, available_keys,
+        note (overview shape, no specific value).
 
     Raises:
-        ValueError: If the standard or key is unknown. The error message
-            lists the available options so callers (including LLMs) can
-            self-correct.
+        ValueError: If the standard is unknown, or if the key is given but
+            unknown. The error message lists the available options so
+            callers (including LLMs) can self-correct.
     """
     if standard not in STANDARDS:
         available = ", ".join(sorted(STANDARDS.keys()))
@@ -201,6 +206,18 @@ def standard_lookup(standard: str, key: str) -> dict:
         )
 
     entry = STANDARDS[standard]
+
+    if not key:
+        return {
+            "standard": standard,
+            "scope": entry["scope"],
+            "available_keys": sorted(entry["keys"].keys()),
+            "note": (
+                "Overview returned because no specific key was requested. "
+                "Call again with one of available_keys to get a value."
+            ),
+        }
+
     if key not in entry["keys"]:
         available = ", ".join(sorted(entry["keys"].keys()))
         raise ValueError(
@@ -223,7 +240,7 @@ def standard_lookup(standard: str, key: str) -> dict:
 
 
 @tool
-def standard_lookup_tool(standard: str, key: str) -> dict:
+def standard_lookup_tool(standard: str, key: str = "") -> dict:
     """Look up reference values from German residential-heating standards.
 
     Supports: DIN EN 12831 (design heat load, indoor/outdoor design temps),
@@ -233,12 +250,17 @@ def standard_lookup_tool(standard: str, key: str) -> dict:
     legionella thresholds), VDI 3807 (Heizgrenztemperatur).
 
     Use when the user asks about specific values, thresholds, or ranges
-    defined by a named standard. On unknown standard or key, the tool
-    raises with a list of available options.
+    defined by a named standard. If the user asks about a standard
+    generally without a specific value (e.g. "What is DIN EN 12831?",
+    "Was steht in VDI 6030?"), call with only the standard argument; the
+    tool will return an overview with the list of available keys.
+    On unknown standard or unknown key, the tool raises with a list of
+    available options.
 
     Args:
         standard: e.g. "DIN EN 12831", "VDI 6030".
         key: e.g. "indoor_design_temp_day", "slope_historic",
-            "design_outside_temp_berlin".
+            "design_outside_temp_berlin". Omit (empty string) for an
+            overview of the standard.
     """
     return standard_lookup(standard, key)

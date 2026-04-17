@@ -75,6 +75,39 @@ class TestErrors:
         assert "slope_low_energy" in msg
 
 
+class TestOverviewMode:
+    """When key is omitted or empty, return overview shape (Sprint 1 step 11
+    fix: 'What is DIN EN 12831?' overview questions previously raised."""
+
+    def test_empty_key_returns_overview_shape(self):
+        result = standard_lookup("DIN EN 12831", "")
+        assert result["standard"] == "DIN EN 12831"
+        assert "scope" in result
+        assert "available_keys" in result
+        assert isinstance(result["available_keys"], list)
+        assert "value" not in result
+
+    def test_omitted_key_defaults_to_overview(self):
+        result = standard_lookup("VDI 6030")
+        assert "available_keys" in result
+        assert "slope_historic" in result["available_keys"]
+
+    def test_overview_lists_all_keys_for_standard(self):
+        result = standard_lookup("DIN EN 12831")
+        keys = set(result["available_keys"])
+        assert "indoor_design_temp_day" in keys
+        assert "design_outside_temp_berlin" in keys
+
+    def test_overview_includes_actionable_note(self):
+        result = standard_lookup("VDI 6030", "")
+        assert "note" in result
+        assert "available_keys" in result["note"].lower()
+
+    def test_unknown_standard_still_raises_in_overview_mode(self):
+        with pytest.raises(ValueError, match="Unknown standard"):
+            standard_lookup("ISO 9999", "")
+
+
 class TestStructuralInvariants:
     def test_every_standard_has_nonempty_scope(self):
         for name, entry in STANDARDS.items():
