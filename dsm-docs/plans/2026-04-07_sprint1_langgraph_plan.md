@@ -196,10 +196,14 @@ reference pattern.
 - [ ] **Gating: German tool-call works end-to-end on the default Ollama
       model.** Query "Berechne die Vorlauftemperatur bei -10°C mit Steigung
       1.2" must trigger the `heating_curve` tool and return a correct
-      German-language response. If this fails on `qwen2.5:7b`, document the
-      observed failure and switch `LLM_PROVIDER=openai` as the Sprint 1
-      baseline; do not treat the failure as a decision reversal (per
-      groundedness assessment, BL-002 edit 1)
+      German-language response. Default model is `llama3.1:8b` per
+      `dsm-docs/research/2026-04-17_local-model-selection_research.md`.
+      Fallback ladder if the gating query fails:
+      1. `llama3.2:3b` (faster, lower German quality, same template family)
+      2. `qwen3:4b` (no measured evidence, vendor tool-call claim)
+      3. `LLM_PROVIDER=openai`
+      Document any failure in the smoke-test evidence; do not treat as a
+      decision reversal (per groundedness assessment, BL-002 edit 1).
 - [ ] README has "run locally" section
 - [ ] `pyproject.toml` pinned deps, no haystack-* deps yet
 
