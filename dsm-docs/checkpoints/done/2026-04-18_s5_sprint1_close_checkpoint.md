@@ -1,3 +1,5 @@
+**Consumed at:** Session 6 start (2026-04-18)
+
 # Sprint 1 Close Checkpoint (Session 5)
 
 **Date:** 2026-04-18 (work completed late on 2026-04-17 / early 2026-04-18 local time)

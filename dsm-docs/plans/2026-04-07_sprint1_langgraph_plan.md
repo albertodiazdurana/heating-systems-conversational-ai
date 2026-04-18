@@ -291,7 +291,7 @@ reference pattern.
 
 - [x] All 5 tool unit tests green (55/55 suite total, Session 5 commit `1d9ab3f`)
 - [x] Graph construction smoke test green (`tests/test_graph.py` from Session 4 cont)
-- [ ] `streamlit run app.py` starts without error , **DOCUMENTED GAP, see [BL-003](BL-003_streamlit-boot-asyncio-invalidstate.md).** `asyncio.InvalidStateError` in Streamlit runtime on Python 3.11.0rc1; agent layer fully working via `scripts/smoke_test.py` (5/5 PASS). Fix path: recreate `.venv` on Python 3.11.x final or 3.12.
+- [x] `streamlit run app.py` starts without error , closed in Session 6 via [BL-003](BL-003_streamlit-boot-asyncio-invalidstate.md). `.venv` recreated on Python 3.12.13 (was 3.11.0rc1); boot banner emits cleanly on `--server.headless true --server.port 8503`, no `InvalidStateError`. Sprint 1 is now 7/7 §6 boxes. Evidence: `dsm-docs/handoffs/done/2026-04-18_s6_bl003_closure_smoke_test_results.md`.
 - [x] All 5 manual smoke test queries (section 4.11) produce expected
       tool call or deflection (5/5 PASS, evidence in
       [`dsm-docs/handoffs/2026-04-17_s5_step11_smoke_test_results.md`](../handoffs/2026-04-17_s5_step11_smoke_test_results.md))
