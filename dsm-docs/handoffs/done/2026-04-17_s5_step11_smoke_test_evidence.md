@@ -1,5 +1,8 @@
 # Sprint 1 Step 11 Smoke Test Evidence
 
+**Date Completed:** 2026-04-18
+**Outcome Reference:** Consumed at Session 6 start
+
 **Date created:** 2026-04-17 (Session 5 prep)
 **Date completed:** _to fill in next session_
 **Outcome reference:** _to fill in next session (commit hash, plan §6 box check)_

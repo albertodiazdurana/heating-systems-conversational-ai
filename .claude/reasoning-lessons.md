@@ -11,23 +11,28 @@ by source session and scope (`ecosystem` | `pattern` | `project`).
 - [STAA] S3 [pattern]: When preliminary research recommends a framework, verify the comparison baseline matches the actual alternatives in scope. Comparing to the wrong alternative is a silent failure mode that survives review.
 - [auto] S4 [ecosystem]: `BaseTool.handle_tool_error` is narrower than its name implies, it only catches `ToolException` subclasses, not generic `Exception`. Read the source before treating an opt-in recovery flag as universal. Verified empirically in `tests/test_tool_error_handling.py` (BL-002 edit 4).
 - [auto] S4 [pattern]: Frame "assumed behavior" tests as empirical probes with three pre-enumerated outcome categories (PASS / expected fail / unexpected fail). Each failure mode becomes a documented finding, not a blocker. One probe delivered two cascading findings in this session (default propagation + narrow `handle_tool_error` scope).
+- [STAA] S4 [pattern]: Pre-enumerated outcome categories are a starting point, not a complete catalog. An unexpected N+1 outcome (e.g., `FakeMessagesListChatModel.bind_tools` NotImplementedError before the expected propagation/catch fork) is information, not a blocker. Document each as a finding and keep probing. Extends the `[auto] S4` empirical-probe lesson.
 
 ## Pipeline Discipline
 
 - [STAA] S1 [ecosystem]: Material in `_reference/` is preliminary input, not actionable. Pipeline is `_reference/` → `dsm-docs/research/` → `dsm-docs/plans/` → implementation. Never propose implementation directly from `_reference/`.
 - [STAA] S1 [ecosystem]: Defer edits to CLAUDE.md Section 4 (project specifics) until research validates assumptions. Section 4 is downstream of the planning pipeline, not upstream.
 - [STAA] S3 [pattern]: For experimental projects, framework choice should optimize for replaceability of subsystems, not for stack uniformity. State the project's experimental vs. production posture before choosing a framework.
+- [STAA] S4 [ecosystem]: Before `git mv <research-file> done/`, grep the repo for inbound references from open BLs, in-flight sprints, and decision records. If ANY active artifact cites it, HOLD until that artifact closes. Reversing a move disrupts git history and inbound links. Observed with 6 research files where only 1 was unambiguously consumable.
 
 ## Decision Heuristics
 
 - [STAA] S1 [pattern]: When recommending tech-stack defaults that touch core dependencies (LLM provider, framework), present options with tradeoffs rather than a single recommendation. Defaults reveal training-data bias.
 - [STAA] S3 [pattern]: When a pivot decision requires both "validate option X" and "validate combination of X+Y," split into named parallel research tracks; converge at the plan-update stage.
 - [STAA] S3 [pattern]: Before executing a pivot batch, enumerate surviving artifacts explicitly ("sunk cost is X; Y and Z survive because they are framework-agnostic"). Converts vague rework fear into a scoped inventory and exposes any hidden coupling.
+- [STAA] S4 [pattern]: Plan signature sketches are illustrative when the plan says "port from X"; the ported module's signature is authoritative unless the plan explicitly overrides with rationale. Verified on `src/tools/heating_curve.py`: plan's anchor-form `flow_temp(outside_temp, slope, offset, design_outside_temp, design_flow_temp)` was overridden by the companion app's `T_base + slope * (T_room - T_outdoor)` form.
+- [STAA] S4 [pattern]: At Gate 2, when all remaining decision flags have trivial (≤5 LOC) implementation differences, collapse to a single recommended path with a one-line opt-out rather than presenting a 3-option palette. Palettes on trivial-LOC decisions create fatigue because the real trade-off is semantic, not implementation. Observed in step 7 config.py: user asked "is the implementation a lot different?" then "go with your recommendation."
 
 ## Batching & Efficiency
 
 - [STAA] S1 [ecosystem]: When research surfaces multiple decision points, batch them into a numbered list for one user response rather than asking serially.
 - [STAA] S3 [ecosystem]: When research output drives multiple downstream artifact changes, present them as a labeled batch (A/B/C…) for single-pass approval.
+- [STAA] S4 [ecosystem]: When a parallel session refuses work due to overlapping uncommitted main-session changes, prefer a commit boundary on the nearest natural seam (governance/docs before implementation begins) over narrowing parallel scope (defers outputs) or moving the work to main (defeats parallelism). BL-001 unblock landed as three commits split on the align / docs / plan seam.
 
 ## Protocol Hygiene
 
@@ -36,6 +41,7 @@ by source session and scope (`ecosystem` | `pattern` | `project`).
 - [STAA] S3 [ecosystem]: Session Transcript Protocol violations are silent. The harness does not enforce appends; only a user reminder catches the lapse. Self-check at every output: "did I append a thinking block since the last user turn?" If no, append before output.
 - [STAA] S3 [ecosystem]: `git mv` requires the source to be tracked. For files staged-but-not-committed or untracked, use plain `mv` then `git add` the new path.
 - [auto] S4 [pattern]: When a deprecation warning surfaces on the FIRST pytest run of new code, halt and decide migration before committing. Shipping with the warning means the deprecated API spreads across modules and the later migration is a multi-file refactor instead of a two-line import swap.
+- [STAA] S4 [ecosystem]: Persistent session markers (`session-baseline.txt`, `last-wrap-up.txt`, checkpoint filename) are authoritative for session numbering; inline transcript labels ("Session N+1 cont") may drift. At any session-number-sensitive moment (wrap-up, commits, PR titles, MEMORY.md updates), trust the persistent markers, not the transcript header.
 
 ## Cross-Repo & Governance
 
