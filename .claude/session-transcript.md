@@ -233,6 +233,26 @@ Sprint 2 plan doc drafted. Asking user for Gate 3 review before commit.
 <------------Start Thinking / 10:51------------>
 Gate 3 approved. Committing plan doc on sprint-2/rag-pipeline branch. Scope of commit: the new plan doc + session-transcript updates. Nothing else changed this session since the BL-003 closure commit. Branch lineage: main → session-6/2026-04-18 → sprint-2/rag-pipeline. Commit message should reference: Sprint 2 kickoff, Template 8 compliance, GE playbook integration.
 
+Commit `d0c9433` landed on sprint-2/rag-pipeline: 2 files changed, 293 insertions. Plan doc + transcript. No push yet (user pattern is push + PR at wrap-up).
+
+<------------Start Output / 10:52------------>
+Sprint 2 plan doc committed as d0c9433 on sprint-2/rag-pipeline. Ready for wrap-up or more work.
+
+<------------Start User / 10:54------------>
+"/dsm-wrap-up"
+
+<------------Start Thinking / 10:54------------>
+Running /dsm-wrap-up autonomously. Branch situation needs careful handling:
+- main ← session-6/2026-04-18 (BL-003 closure `1366115`) ← sprint-2/rag-pipeline (plan doc `d0c9433`, current branch)
+- Per DSM_2.0.C Template 8: "Sprint 2 merges back to main at sprint close via a single sprint PR" — so the Sprint 2 plan doc should stay on sprint-2 until Sprint 2 closes, NOT merge to main at this session wrap-up.
+- BL-003 closure IS Sprint 1 / session-6 work and SHOULD merge to main now.
+
+Plan: push session-6 + sprint-2 both; PR session-6 to main only (BL-003 closure). Leave sprint-2 alive for continued Sprint 2 work. Next /dsm-go will create session-7 off... probably sprint-2 (so session-7 work lands on sprint-2 which eventually merges to main at sprint close).
+
+Steps 0, 1, 2 parallel-safe. Starting now.
+
+
+
 
 
 
