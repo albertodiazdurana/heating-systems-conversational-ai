@@ -2,7 +2,7 @@
 
 LangGraph-based conversational assistant for residential heating systems, bilingual (English / German). Portfolio project targeting AI Engineer roles in the energy and utility sector.
 
-**Status:** Sprint 1 complete (6/7 exit boxes met; Streamlit UI boot blocked by [BL-003](dsm-docs/plans/BL-003_streamlit-boot-asyncio-invalidstate.md), agent layer fully working).
+**Status:** Sprint 1 complete (7/7 exit boxes met, closed Session 6; [BL-003](dsm-docs/plans/done/BL-003_streamlit-boot-asyncio-invalidstate.md) resolved via Python 3.12 rebuild). Sprint 2 (RAG pipeline) in progress on `sprint-2/rag-pipeline`.
 
 ## Objective
 
@@ -101,7 +101,7 @@ Runs all 5 plan §4.11 queries through the full `create_agent + Ollama` stack an
 .venv/bin/streamlit run app.py
 ```
 
-On Python 3.11.0rc1 this aborts with `asyncio.InvalidStateError` , see [BL-003](dsm-docs/plans/BL-003_streamlit-boot-asyncio-invalidstate.md) for the diagnosis and fix path. The agent layer itself is fully working (smoke test confirms 5/5); only the Streamlit runtime needs a Python upgrade to a 3.11.x final or 3.12 venv.
+Python 3.12.13 is required; on Python 3.11.0rc1 this aborts with `asyncio.InvalidStateError` , see [BL-003](dsm-docs/plans/done/BL-003_streamlit-boot-asyncio-invalidstate.md) for the diagnosis and resolution.
 
 ### 5. Configuration
 
@@ -118,7 +118,7 @@ Model selection rationale: see [`dsm-docs/research/2026-04-17_local-model-select
 
 ## Roadmap
 
-- [x] **Sprint 1** , Conversation engine: LangGraph `create_agent`, 5 deterministic tools, bilingual handling. Evidence: [`dsm-docs/handoffs/2026-04-17_s5_step11_smoke_test_results.md`](dsm-docs/handoffs/2026-04-17_s5_step11_smoke_test_results.md). Streamlit UI boot deferred via [BL-003](dsm-docs/plans/BL-003_streamlit-boot-asyncio-invalidstate.md).
+- [x] **Sprint 1** , Conversation engine: LangGraph `create_agent`, 5 deterministic tools, bilingual handling. Evidence: [`dsm-docs/handoffs/2026-04-17_s5_step11_smoke_test_results.md`](dsm-docs/handoffs/2026-04-17_s5_step11_smoke_test_results.md). Streamlit UI boot resolved via [BL-003](dsm-docs/plans/done/BL-003_streamlit-boot-asyncio-invalidstate.md) (Python 3.12 rebuild, Session 6).
 - [ ] **Sprint 2** , RAG pipeline: ChromaDB ingestion of the heating knowledge base, retrieval tool, citation handling.
 - [ ] **Sprint 3** , Evaluation and polish: MLflow evaluation framework, prompt iteration, Dockerization, full Streamlit integration.
 

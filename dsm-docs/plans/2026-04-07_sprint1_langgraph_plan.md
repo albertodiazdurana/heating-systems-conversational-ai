@@ -1,7 +1,7 @@
 # Sprint 1 Plan — LangGraph Conversation Engine
 
 **Date:** 2026-04-07 (revised 2026-04-08; Template 8 retro-fit 2026-04-17)
-**Status:** In execution (Session 5)
+**Status:** Done (closed Session 6, 7/7 exit criteria met)
 **Duration:** ~5 sessions (S3 concept → S4 cont implementation → S5 close)
 **Goal:** End-to-end conversational agent with 5 deterministic tools on
 LangGraph + Ollama, bilingual EN/DE, no RAG yet.
