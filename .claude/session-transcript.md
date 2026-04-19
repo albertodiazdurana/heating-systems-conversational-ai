@@ -113,6 +113,9 @@ Plan:
 
 Let me execute.
 
+<------------Start Thinking / 11:30------------>
+Wrap-up progress: Steps 0-8.5, 11, 11.5, 12 done. Remaining: Step 9 (commit + push) and Step 10 (merge session-7 → sprint-2/rag-pipeline per Sprint 2 plan §51-54, NOT main).
+
 Findings mid-execution:
 - README line 5 status was also stale ("Sprint 1 complete (6/7 ...)", same staleness as the plan). Rewrote to 7/7 + BL-003 resolved + Sprint 2 context. Judgment call: parallel staleness, user's W3 approval covers the same intent on README.
 - README line 104 had the stale "needs Python 3.11.x final or 3.12 venv" instruction (now resolved on 3.12.13). Minimal fix: updated to "Python 3.12.13 is required" + new BL-003 path.
@@ -340,6 +343,55 @@ Ordering matters: append the Start Output AFTER the git operations complete, so 
 For minimum churn: do `git add` for all 8 paths together (transcript at its current state including this thinking block), commit, push, then write the Start Output. The post-commit modification to session-transcript.md is expected and will be in Phase B's wrap-up commit.
 
 Run all three git commands sequentially via && chain.
+
+<------------Start Thinking / 11:22------------>
+Phase A complete:
+- Commit: `ed285e3 Session 7 (in-progress): inbox processing for align warnings`
+- 8 files changed, 440 insertions, 334 deletions
+- Branch pushed: session-7/2026-04-18 -> origin (new branch, tracking set)
+
+User said "organize for this and then wrap-up", and Auto mode is active. Proceed to Phase B = invoke /dsm-wrap-up. Per CLAUDE.md "Session Wrap-Up": when the user says "wrap up" or the session ends, use `/dsm-wrap-up`. Auto mode says minimize interruptions and prefer action.
+
+Will call Skill tool with `dsm-wrap-up`. The skill will handle: cross-reference sprint plan, commit pending changes (the new transcript appends since the Phase A commit), push, update MEMORY.md, append reasoning lessons, write last-wrap-up marker, etc.
+
+Reporting Phase A URLs to user before invoking wrap-up so they have the GitHub links to review.
+
+<------------Start Output / 11:22------------>
+Phase A done. Commit ed285e3 on session-7/2026-04-18 pushed to origin. Invoking /dsm-wrap-up for Phase B.
+
+<------------Start Thinking / 11:24------------>
+/dsm-wrap-up start. GIT_AVAILABLE=true. Auto mode = no pause.
+
+Plan, run steps in order:
+- Step 0: extract reasoning lessons. Notable from S7:
+  * The "ask user for facts derivable from repo state" course correction on package manager. Maps to existing pattern category. Pattern-scope (generalizable to all DSM sessions).
+  * Continuation /dsm-go re-invocation handling: detect existing transcript, skip Step 5.5/6 to avoid destroying live S7 state. Pattern-scope.
+  * Two-phase organize-then-wrap-up pattern (commit+push first for review, then full wrap-up). Pattern-scope.
+- Step 1: README+FEATURES check. README WAS modified this session (yesterday's W2). Need to check if externally relevant.
+- Step 2: MEMORY.md update.
+- Step 3: refresh backup.
+- Step 4: contributor profile (likely skip).
+- Step 5: handoff (likely not needed; no complex pending).
+- Step 6: feedback push.
+- Step 7: governance storage commit (spoke; check ecosystem registry).
+- Step 8: version + mirror sync (no methodology files changed in this spoke).
+- Step 8.5: humanizer (README changed; MAY need humanizer).
+- Step 9: git session-scoped commit (the post-Phase-A transcript appends).
+- Step 10: merge to main via PR.
+- Step 11: mirror sync PR safety net (skip, spoke).
+- Step 11.5: parallel sessions cleanup (file likely doesn't exist).
+- Step 12: write last-wrap-up.txt.
+
+Sprint 2 NOT closing this session, only S7 closing. Sprint 2 work is at Gate 1 brief stage; Phase 1 not started. So no sprint boundary actions. Session-7 branch merges back to sprint-2/rag-pipeline (per Sprint 2 branch model in plan §51-55), NOT to main. Critical: Step 10 says "merge to main", but the project plan explicitly says Sprint 2 sessions merge to sprint-2/rag-pipeline, and sprint-2 merges to main only at sprint close. I must respect the Sprint 2 branch model and merge session-7 to sprint-2/rag-pipeline, not main.
+
+This is the kind of project-specific override that the wrap-up skill defaults can violate. Document the deviation in the wrap-up summary.
+
+Let me execute.
+
+<------------Start Thinking / 11:30------------>
+Wrap-up progress: Steps 0-8.5, 11, 11.5, 12 done. Remaining: Step 9 (commit + push) and Step 10 (merge session-7 → sprint-2/rag-pipeline per Sprint 2 plan §51-54, NOT main).
+
+
 
 
 
