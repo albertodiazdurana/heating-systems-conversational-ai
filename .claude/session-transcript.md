@@ -457,3 +457,45 @@ Need to also check: are there any research files I'm missing? Let me scan dsm-do
 Actually I should also list what's already in done/ plans — BL-001, BL-002, BL-003 are done. These are task BLs, not provenance nodes. I won't include them in the DAG — the DAG maps *supporting artifacts* to plans, not task tracking items.
 
 Let me proceed to write the three artifacts. I'll read the existing feedback file first to append correctly.
+
+<------------Start Output / 00:18------------>
+Three artifacts written and committed:
+1. dsm-docs/plans/dsm_provenance_DAG.md — Sprint 2 fully mapped (14 nodes, 22 edges), Sprint 1 partial; Mermaid diagram + node registry + edge registry + maintenance guide.
+2. dsm-docs/plans/BL-004_sprint1-provenance-DAG-audit.md — task to verify and complete Sprint 1 provenance (5 sub-tasks listed).
+3. dsm-docs/feedback-to-dsm/2026-04-21_s9_backlogs.md second BL — proposes dsm_provenance_DAG as a canonical DSM artifact type: spec (name, location, lifecycle, structure), DSM_2.0.C Template 8 addition, grounding in DSM_6.0 §1.3/1.5 + PMP Traceability Matrix + DSM_0.2 §7 complementarity, acceptance criteria, origin trace crediting user's "DAG not chain" insight.
+
+<------------Start Thinking / 00:22------------>
+/dsm-wrap-up. Running steps 0, 1, 2 in parallel.
+Step 0: extract reasoning lessons from session transcript.
+Step 1: README check (baseline SHA -> git diff).
+Step 2: MEMORY.md update.
+
+Key reasoning patterns from this session:
+1. Subscription reset cadence error: answered from stale file without challenging it against user-provided facts. Rule: read the file, but verify against user's live UI data when they provide it. Tagged as verification/ecosystem lesson.
+2. Resource-aware sprint planning: "no deferral, only reorder against pool topology" is a powerful framing that maps onto PMP procurement. Worth capturing as a project/ecosystem pattern.
+3. Pre-Generation Brief gate discipline: correctly halted before T2 to flag Opus→Sonnet handoff. Showed that the resource plan was respected even under user "start now" pressure. Good pattern.
+4. dsm_provenance_DAG: user identified a structural gap in DSM; agent correctly facilitated design conversation rather than immediately writing. The "DAG not chain" correction was user's insight, agent adopted it immediately. Good collaborative design pattern.
+5. EXP-002 spike structure (3-section, A/B/C outcome): following the plan's Experiment Gate specification directly, not improvising. Showed that reading the Experiment Gate before writing the spike script produces the right structure without extra reasoning.
+6. Subscription file was stale - the Friday 7:00 AM value was wrong. Agent sourced from file without cross-checking against user's live data. Should have caught this discrepancy immediately when user provided the real reset times.
+
+Scope assignments:
+- Stale subscription file lesson: ecosystem (could apply to any project)
+- Resource reorder vs. defer framing: ecosystem (generalizable)
+- Pre-generation gate under user pressure: ecosystem
+- Reading Experiment Gate before writing spike: pattern (methodology)
+- Collaborative design facilitation: ecosystem
+
+Step 1: baseline SHA is in .claude/session-baseline.txt. Need to read it.
+
+<------------Start Thinking / 00:00------------>
+Resuming /dsm-wrap-up after context compaction. State at interruption:
+- Steps 0-5: DONE (reasoning lessons, README check, MEMORY.md, backup, contributor profile, handoff)
+- Step 6: IN PROGRESS — feedback file read, ready to push to DSM Central inbox
+- Steps 7-12: NOT YET RUN
+
+Next action: push 2026-04-21_s9_backlogs.md to DSM Central inbox, then move to done/, then continue Steps 7-12.
+DSM Central path: ~/dsm-agentic-ai-data-science-methodology
+Target inbox: ~/dsm-agentic-ai-data-science-methodology/_inbox/heating-systems-conversational-ai.md
+Session branch: session-9/2026-04-21
+PR target: sprint-2/rag-pipeline (NOT main per project branch model)
+
