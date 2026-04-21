@@ -180,3 +180,51 @@ T3-T5 complete. Spike outcome: A (full tool-calling round-trip). Key results:
 - Integration path confirmed: Haystack Tool wrapped as LangChain @tool, LangGraph agent never sees Haystack.
 - Research doc written to dsm-docs/research/2026-04-21_haystack-ollama-tools-spike-result.md.
 - Both committed. T6 (Haystack issue text) and T7 (Gate 1 re-brief) remain, classified as post-Thu-21:00 Opus work per resource plan.
+
+<------------Start Thinking / 14:05------------>
+Phase 2: embedding model micro-benchmark. Per Sprint 2 plan:
+- Candidates: e5-base-v2 (multilingual-e5), bge-m3, paraphrase-multilingual-mpnet-base-v2
+- Goal: lock winner into pyproject + backbone §2
+- Resource plan: reading-heavy work via Sonnet subagent (separate pool), benchmark script via Sonnet direct.
+
+Phase 2 steps:
+1. Read model cards / benchmarks for the 3 candidates (Sonnet subagent)
+2. Write micro-benchmark script that tests them on representative heating domain queries (bilingual EN/DE)
+3. Run benchmark
+4. Select winner (mechanical based on scores, but the final decision call is Opus per resource plan)
+
+Wait - the resource plan says:
+- "Phase 2 embedding model reading" → Sonnet subagent (now)
+- "Phase 2 micro-benchmark script" → Sonnet direct (now)
+- "Phase 2 embedding model selection decision" → Opus 4.7 (post-Thu 21:00)
+
+So I should: spawn Sonnet subagent for reading, write benchmark script, run it, produce scored comparison. Then stop and let Opus make the selection decision on Thursday.
+
+What the benchmark needs to test:
+- Embedding quality for the heating domain (bilingual EN/DE)
+- Relevant metrics: cosine similarity scores on representative query-document pairs
+- Practical constraints: download size, inference speed on CPU (WSL2), memory
+
+Representative queries for the heating benchmark:
+- "What is the Heizkennlinie?" (DE terminology query)
+- "How does hydraulic balancing work?" (EN conceptual)
+- "Vorlauftemperatur bei -10°C Außentemperatur" (DE)
+- "heat pump COP calculation" (EN technical)
+
+Documents to embed: short passages from the heating knowledge base (dsm-residential-heating-ds-guide)
+
+For the micro-benchmark I should:
+1. Download/load each model
+2. Encode 10 query-document pairs (5 relevant, 5 irrelevant) 
+3. Compute cosine similarity
+4. Measure encoding time
+5. Report: model name, avg similarity (relevant), avg similarity (irrelevant), gap (relevant-irrelevant), encode time per batch
+
+Actually, loading 3 large sentence-transformer models may be slow on WSL. Better approach: use the sentence-transformers library with a small subset test. Check if sentence-transformers is installed.
+
+Also need to check: are these models available via sentence-transformers or HuggingFace? 
+- multilingual-e5-base: "intfloat/multilingual-e5-base" on HF
+- bge-m3: "BAAI/bge-m3" on HF  
+- paraphrase-multilingual-mpnet-base-v2: "sentence-transformers/paraphrase-multilingual-mpnet-base-v2" on HF
+
+First spawn the Sonnet subagent for the research reading (model cards, benchmarks). Then check if sentence-transformers is installed while that runs in background (actually can't background subagents easily — run subagent first, get key findings, then write script).
