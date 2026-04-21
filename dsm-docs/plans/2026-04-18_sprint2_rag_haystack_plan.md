@@ -94,6 +94,53 @@ Sprint 2 is the first user-facing capability sprint (`rag_search` is the new cap
 
 ---
 
+## Resource-Aware Execution Order (added S9, 2026-04-21)
+
+This section is local convention pending DSM Central formalization (feedback
+file `2026-04-21_s9_backlogs.md`). Going forward, every sprint plan in this
+project includes a Resource-Aware Execution Order section; when DSM Central
+promotes the pattern into DSM_2.0.C §1 Template 8, this section graduates to
+canonical template status.
+
+**Pool state at S9 open (Tue 2026-04-21 13:00 CEST):**
+
+- all-models weekly: 91% used · reset Thu 2026-04-23 21:00
+- sonnet-only weekly: 4% used · reset Mon 2026-04-27 09:59
+- claude-design: 0% · extra-usage off, €43 daily cap
+
+**Ordering heuristic:** front-load reading-heavy and mechanical work into
+sonnet-only (separate pool, ample headroom). Reserve Opus-needed
+architectural reasoning, language-quality writing, and synthesis for
+post-Thu-21:00 when the all-models pool resets. No work is deferred; only
+reordered against pool topology.
+
+| Task | Pool | Rationale | Window |
+|------|------|-----------|--------|
+| Phase 1 T2 `uv add haystack-ai ollama-haystack` | sonnet-4.6 direct | mechanical | Now (pre-reset) |
+| Phase 1 T3 write `scratch/haystack_ollama_tools_spike.py` | sonnet-4.6 direct + sonnet subagent for Haystack source reading | mechanical + reading | Now |
+| Phase 1 T4 run spike + classify outcome | sonnet-4.6 direct | mechanical | Now |
+| Phase 1 T5 write result research doc `dsm-docs/research/2026-MM-DD_haystack-ollama-tools-spike-result.md` | sonnet-4.6 direct | mechanical drafting | Now |
+| Phase 1 T6 draft Haystack upstream issue text | Opus 4.7 | language quality for upstream audience | Post-Thu 21:00 |
+| Phase 1 T7 Gate 1 re-brief applying BL-402 + BL-385 | Opus 4.7 + thinking ON | architectural reasoning | Post-Thu 21:00 |
+| Phase 2 embedding model reading (e5-base, bge-m3, paraphrase-multilingual-mpnet cards + benchmarks) | sonnet subagent (separate pool) | reading-heavy | Now |
+| Phase 2 micro-benchmark script | sonnet-4.6 direct | mechanical | Now |
+| Phase 2 embedding-model selection decision | Opus 4.7 | judgment call on weighted evidence | Post-Thu 21:00 |
+| Phase 3 ingestion pipeline code | sonnet-4.6 direct | mechanical after Phase 2 decision locked | Post-Thu 21:00 |
+| Phase 3 retrieval + `rag_search` tool | sonnet-4.6 direct | mechanical | Post-Thu 21:00 |
+| Phase 4 tests + EXP-001 hit@5 evaluation | sonnet-4.6 direct | mechanical | After Phase 3 |
+| Phase 5 upstream contribution issue filing | Opus 4.7 | language quality, external audience | Post-Thu 21:00 |
+
+**Re-enter Gate 1 trigger:** if pool state crosses a threshold that invalidates
+this ordering (e.g., sonnet-only jumps above 60% mid-sprint, or extra-usage is
+turned on mid-sprint), pause and re-brief before continuing.
+
+**Grounding:** DSM_6.0 Resource and Procurement Planning (compute is a
+procurement input); DSM_0.2 §8.7 BL-402 (asymmetric trigger at artifact
+granularity — this section extends the same discipline to sprint
+granularity); DSM_0.2 §14 (session baseline — sprint-scoped analog).
+
+---
+
 ## Phases
 
 ### Phase 1: Haystack Ollama tool-calling capability spike (EXP-002)
