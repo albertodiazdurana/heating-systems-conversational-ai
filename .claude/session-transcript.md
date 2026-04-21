@@ -138,3 +138,45 @@ T2 complete. Outcome:
 - Sprint 1 stack impact: uv downgraded langchain-core to 1.2.28, langgraph to 1.1.6. Source code already uses `create_agent` (not `create_react_agent`), so no breakage. Full Sprint 1 imports confirmed OK.
 - Side note: `VIRTUAL_ENV=/usr` warning appears on every uv run — pre-existing, not caused by T2.
 Ready for T3: write `scratch/haystack_ollama_tools_spike.py`.
+
+<------------Start Thinking / 13:47------------>
+T3: write the Haystack + Ollama tools spike script. Goal per Sprint 2 plan Phase 1: determine whether Haystack's tool-calling machinery works with a local Ollama model (llama3.1:8b), and whether it can be wired as a @tool behind the existing LangChain/LangGraph agent boundary.
+
+What the spike needs to test:
+1. Can we instantiate OllamaChatGenerator and call it with a simple prompt? (baseline connectivity)
+2. Does Haystack's tool-calling API work with llama3.1:8b? Haystack uses `Tool` + `ChatMessage` with `chat_completion` role. Need to pass a tool definition and see if the model returns a tool call.
+3. If tool calling works, can we extract the result and return it? (round-trip)
+4. Optional: does `haystack_experimental` add anything we need for agents?
+
+What the spike does NOT need to test:
+- Full RAG pipeline (that's Phase 3)
+- Embedding (Phase 2)
+- Integration with LangGraph (that's T7, after Gate 1 re-brief)
+
+The spike should be self-contained, run-and-observe, with a clear outcome classifiable as:
+- A: Full tool-calling works (Haystack Tool + OllamaChatGenerator invoke tool correctly)
+- B: Partial (generator works, tool-calling format broken or model doesn't emit tool calls)
+- C: Broken (generator fails to connect to Ollama, or crashes on import)
+
+Structure of scratch/haystack_ollama_tools_spike.py:
+1. Imports + version print
+2. Section 1: OllamaChatGenerator basic call (no tools) - proves connectivity
+3. Section 2: Define a simple tool (e.g., get_heating_curve that takes outdoor_temp and returns a flow_temp) using Haystack's Tool class
+4. Section 3: ChatMessage + tool invocation cycle
+5. Section 4: Print raw response + classification hint
+
+Let me read the Haystack + ollama-haystack API surface briefly to write correct code. I should check:
+- How OllamaChatGenerator is instantiated (model param, url)
+- How haystack Tool is defined (haystack.tools.Tool or haystack.components.tools)
+- How ChatMessage is structured for tool calls
+
+I'll check the installed package structure quickly rather than spawning a subagent for this small lookup.
+
+<------------Start Output / 14:02------------>
+T3-T5 complete. Spike outcome: A (full tool-calling round-trip). Key results:
+- Section 1: OllamaChatGenerator connects, basic response OK.
+- Section 2: llama3.1:8b issued tool call with correct args (outdoor_temp=-5, heating_curve_slope=1.5), tool returned flow_temp=77.5, model produced coherent final answer.
+- create_tool_from_function auto-generates schema from function signature + docstring; no manual JSON schema needed.
+- Integration path confirmed: Haystack Tool wrapped as LangChain @tool, LangGraph agent never sees Haystack.
+- Research doc written to dsm-docs/research/2026-04-21_haystack-ollama-tools-spike-result.md.
+- Both committed. T6 (Haystack issue text) and T7 (Gate 1 re-brief) remain, classified as post-Thu-21:00 Opus work per resource plan.
