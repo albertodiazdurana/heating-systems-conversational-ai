@@ -129,3 +129,12 @@ Files to stage:
 - dsm-docs/feedback-to-dsm/2026-04-21_s9_backlogs.md
 Also .claude/session-baseline.txt (written at session start, untracked — actually check if it's gitignored).
 Actually .claude/ is gitignored per the exclude rule. Let me not stage .claude/ files — they won't be tracked anyway. Check what git actually sees as stageable.
+
+<------------Start Output / 13:43------------>
+T2 complete. Outcome:
+- `haystack-ai==2.28.0` + `ollama-haystack==6.3.0` installed via `uv add`.
+- Both in `pyproject.toml` under [project] dependencies.
+- Haystack smoke import: OK (OllamaChatGenerator importable).
+- Sprint 1 stack impact: uv downgraded langchain-core to 1.2.28, langgraph to 1.1.6. Source code already uses `create_agent` (not `create_react_agent`), so no breakage. Full Sprint 1 imports confirmed OK.
+- Side note: `VIRTUAL_ENV=/usr` warning appears on every uv run — pre-existing, not caused by T2.
+Ready for T3: write `scratch/haystack_ollama_tools_spike.py`.
