@@ -228,3 +228,232 @@ Also need to check: are these models available via sentence-transformers or Hugg
 - paraphrase-multilingual-mpnet-base-v2: "sentence-transformers/paraphrase-multilingual-mpnet-base-v2" on HF
 
 First spawn the Sonnet subagent for the research reading (model cards, benchmarks). Then check if sentence-transformers is installed while that runs in background (actually can't background subagents easily — run subagent first, get key findings, then write script).
+
+<------------Start Output / 14:32------------>
+Phase 2 complete (benchmark run + research doc). Results:
+- paraphrase-mpnet eliminated (128-token limit, not a retrieval model).
+- e5-base: avg relevant 0.8859, avg irrelevant 0.7841, gap 0.1018, 20.7 texts/sec
+- bge-m3: avg relevant 0.6765, avg irrelevant 0.4144, gap 0.2621, 6.4 texts/sec
+- bge-m3 gap is 2.6x larger (stronger retrieval discrimination); e5-base is 3.2x faster on CPU.
+- Research doc written with per-pair scores, interpretation, and decision question for Opus.
+- sentence-transformers 5.4.1 added to pyproject.toml. All artifacts committed.
+- Model selection decision deferred to Opus turn (post-Thu 21:00) per resource plan.
+
+<------------Start Thinking / 14:40------------>
+User wants to understand WHY T3/T4/T5 were done the way they were. "Why did you do it like this?" — this is a justification/rationale question about the design of the spike and the research doc.
+
+Let me trace the chain of decisions:
+1. T3 (spike script) — why this structure (Section 1 basic connectivity, Section 2 tool-calling round-trip, outcome classification A/B/C)?
+2. T4 (run it) — trivial, but why run against llama3.1:8b specifically?
+3. T5 (result research doc) — why write a research doc rather than just commit the script?
+
+Where is this justified?
+- Sprint 2 plan: Phase 1 tasks T1-T7 are defined there. Let me check what it actually says about T3/T4/T5 vs what we did.
+- Orchestration decision: dsm-docs/decisions/2026-04-07_orchestration-framework.md — this is the KEY document. It describes why hybrid LangGraph + Haystack was chosen and the @tool boundary pattern. T3/T4/T5 test whether that decision is implementable.
+- MEMORY says: "Sprint 2 Phase 1 entry point ready: Gate 1 brief approved at S7 (T1-T7 threads)... execute T2 onward (uv add haystack-ai ollama-haystack, write scratch/haystack_ollama_tools_spike.py, run, classify outcome, write dsm-docs/research/2026-MM-DD_haystack-ollama-tools-spike-result.md, draft Haystack issue text)"
+
+So the MEMORY itself prescribes T3/T4/T5 in one sentence but does not explain WHY this structure. The user is asking for the WHY.
+
+The WHY chain is:
+1. The Sprint 2 goal is a RAG pipeline (Phase 3: `rag_search` tool).
+2. The architecture decision (2026-04-07_orchestration-framework.md) chose hybrid LangGraph + Haystack — specifically Haystack handles RAG, exposed as a LangChain @tool to the LangGraph agent. This was a theoretical design at that point.
+3. Before implementing anything, we need to validate the critical assumption: can Haystack's tool-calling API actually work with our local Ollama model (llama3.1:8b)? If it can't, the entire hybrid architecture needs to change. This is an experiment gate.
+4. The Sprint 2 plan has an "Experiment Gate" section (I saw it in the grep output: line 30). That section should describe what we're testing and why. Let me check what it says.
+5. The spike structure (3 sections, A/B/C classification) came from standard spike design: test the smallest thing first (connectivity), then the thing that could fail (tool-calling format), then the thing we actually need (round-trip). This is basic experimental design.
+
+Documents that justify this:
+- dsm-docs/decisions/2026-04-07_orchestration-framework.md — the architectural decision
+- dsm-docs/plans/2026-04-18_sprint2_rag_haystack_plan.md, specifically the "Experiment Gate" section — the experimental validation gate
+
+Let me read both to give accurate pointers. If the Experiment Gate section in the Sprint 2 plan is thin or doesn't explain the WHY well, we may need to create a brief rationale addendum or the user needs to read the orchestration decision.
+
+Let me check both documents now.
+
+<------------Start Output / 14:47------------>
+Both documents read. The WHY is fully documented. The user needs two documents:
+1. dsm-docs/decisions/2026-04-07_orchestration-framework.md — WHY the hybrid architecture (WHY Haystack + LangGraph boundary at all)
+2. dsm-docs/plans/2026-04-18_sprint2_rag_haystack_plan.md §EXP-002 — WHY the spike, its three-outcome structure, and what we were validating
+No new document needed.
+
+<------------Start Thinking / 15:02------------>
+User is proposing a new artifact type: "chain of reasoning." Let me understand precisely what they mean before agreeing or expanding.
+
+Their description: "collect all the necessary steps, research documents, decision files and other supportive files, like tests, experiments, etc. that enable and facilitate the development of a plan."
+
+This is essentially a provenance/lineage document for a plan. It answers: "why does this plan look the way it does, and where did each major decision in it come from?"
+
+What it is NOT:
+- Not a plan itself (the plan is already the sprint plan)
+- Not a decision record (that records one decision)
+- Not a research document (that records one investigation)
+- Not a summary (it links existing artifacts, not summarizes)
+
+What it IS:
+- A graph of dependencies: plan ← decision ← research ← experiment ← result
+- A navigation aid: reader can follow the chain without already knowing which docs to look for
+- A living document: grows as new decisions/experiments add to the chain
+- A justification layer: explains why each plan element exists and which artifact validates it
+
+DSM analogy: this is similar to what DSM calls "provenance" in its methodology documents but doesn't formalize as its own artifact type. It could also be thought of as a "rationale map" or "evidence chain."
+
+Where would it live? 
+- dsm-docs/decisions/ — it's related to decisions but is a meta-artifact across decisions
+- dsm-docs/plans/ — it's linked to a plan but is not itself a plan
+- dsm-docs/guides/ — maybe? It guides the reader through existing artifacts
+- A new section within the sprint plan itself — cleanest, no navigation needed
+- Standalone in dsm-docs/ with a new naming convention — most generalizable
+
+The user wants to understand if I "get" the concept before we design the format. This is a pure reasoning/discussion turn — no files to write. The question is whether I understand the concept.
+
+Do I understand it? Yes. But I want to be precise about two things:
+1. The "chain" metaphor implies linear; in practice it's a DAG (multiple research docs → one decision, one decision → multiple plan elements).
+2. The key value is that it makes the implicit explicit: right now the relationships exist but are scattered across references in individual documents. The "chain of reasoning" makes the whole graph navigable from one place.
+
+I should confirm I understand, articulate back their idea clearly, note the DAG vs chain distinction, and ask whether they want to proceed to designing the format — or whether they want to push this upstream to DSM Central as a new artifact type first.
+
+This is a content-trivial turn from a tool-call perspective — no files to write. But the protocol says pure-reasoning turns still require the transcript append. I've done the append above. Now respond in text only.
+
+<------------Start Thinking / 15:09------------>
+User has refined the concept significantly. Key design decisions now locked in:
+- Name: dsm_provenance_DAG (not "chain of reasoning")
+- Scope: project-level living document (spans sprints/epochs/phases)
+- Location: dsm-docs/plans/
+- Lifecycle: generated at project start, maintained throughout, append-only as new artifacts join
+- Structure: plans as backbone, connected to external supporting artifacts (research, decisions, experiments, results)
+- Purpose: make the network of interdependencies explicit
+
+The user wants TWO deliverables:
+1. Feedback to DSM Central (BL proposal) — append to today's backlogs file (2026-04-21_s9_backlogs.md)
+2. dsm_provenance_DAG.md for THIS project
+
+This is Gate 1 (collaborative definition) implicitly — user said "I would draft" meaning they want me to draft, not just describe. But per Pre-Generation Brief protocol, I should confirm what I'm about to create before writing.
+
+Let me think about what the DAG for this project looks like:
+
+**Backbone nodes (plans):**
+- Sprint 1 plan: dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md
+- Sprint 2 plan: dsm-docs/plans/2026-04-18_sprint2_rag_haystack_plan.md
+- (Sprint 3 plan: not yet created)
+
+**Decision nodes:**
+- dsm-docs/decisions/2026-04-07_orchestration-framework.md → feeds Sprint 2 architecture
+- dsm-docs/decisions/ (any others?)
+
+**Research nodes:**
+- dsm-docs/research/haystack-vs-langchain-preliminary-research.md → feeds orchestration decision
+- dsm-docs/research/2026-04-07_haystack-vs-langgraph-deepened.md → feeds orchestration decision
+- dsm-docs/research/2026-04-07_hybrid-langgraph-haystack-best-practices.md → feeds Sprint 1+2 patterns
+- dsm-docs/research/2026-04-07_langgraph-best-practices.md → feeds Sprint 1
+- dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md → validates orchestration decision
+- dsm-docs/research/2026-04-14_upstream-contribution-playbook.md → feeds Sprint 2 GE contribution
+- dsm-docs/research/2026-04-17_local-model-selection_research.md → feeds llama3.1:8b default
+- dsm-docs/research/2026-04-21_haystack-ollama-tools-spike-result.md → validates EXP-002 (today)
+- dsm-docs/research/2026-04-21_embedding-model-benchmark.md → feeds Phase 2 decision (today)
+
+**Experiment nodes:**
+- scratch/haystack_ollama_tools_spike.py + result research doc
+- scratch/embedding_benchmark.py + result research doc
+
+**External nodes (referenced but not in repo):**
+- /home/berto/_projects/dsm-residential-heating-ds-guide/ (knowledge base)
+- /home/berto/_projects/dsm-residential-energy-apps/ (companion app, deterministic tool source)
+- GE contribution playbook (in _inbox/done/)
+
+**Edges (key relationships):**
+- preliminary research → orchestration decision (input)
+- deepened research → orchestration decision (validates)
+- orchestration decision → Sprint 1 plan (frames agent-only scope)
+- orchestration decision → Sprint 2 plan (frames hybrid + spike requirement)
+- local model selection research → Sprint 1 plan (llama3.1:8b default)
+- hybrid best practices → Sprint 1 plan + Sprint 2 plan (implementation patterns)
+- GE contribution playbook → Sprint 2 plan (EXP-002 contribution format)
+- EXP-002 spike + result → Sprint 2 plan (validates hybrid architecture, feeds T6 Haystack issue)
+- embedding benchmark → Sprint 2 Phase 2 decision (feeds model selection)
+- knowledge base (external) → Sprint 2 plan (defines corpus scope)
+- Sprint 1 plan → Sprint 2 plan (Sprint 2 prerequisites: "Sprint 1 closed 7/7")
+
+**Format choices for the DAG document:**
+Since this is markdown (no graphviz), I have two options:
+1. Structured table: | Node | Type | Feeds | Fed By |
+2. Section per plan phase with bullet list of connected artifacts
+3. Mermaid diagram (GitHub renders it, VS Code with extension renders it)
+
+Option 3 (Mermaid) is most DAG-like and readable. But I should ask if the user wants Mermaid or a table-based format. Mermaid can get messy with many nodes.
+
+Actually — the user said "I would draft a feedback" and "then draft a dsm_provenance_DAG." I should propose format before writing either. This is Gate 1 for two artifacts.
+
+Plan:
+1. Present two artifact outlines (BL feedback + provenance DAG format) for approval
+2. On approval, write both
+
+For the BL feedback: append to existing 2026-04-21_s9_backlogs.md (already has the resource-aware sprint planning BL). Add a second BL entry.
+
+For the provenance DAG: new file dsm-docs/plans/dsm_provenance_DAG.md
+
+Format question: Mermaid vs table-based? I'll propose both mini-sketches and let user choose.
+
+<------------Start Thinking / 00:03------------>
+User approved: Option C (Mermaid + table), scope = Sprint 2 (in context), plus a BL to capture Sprint 1 artifacts needed to complete the DAG.
+
+Two deliverables to write:
+1. dsm-docs/plans/dsm_provenance_DAG.md — Sprint 2 scope, Option C format
+2. Append a second BL to dsm-docs/feedback-to-dsm/2026-04-21_s9_backlogs.md — proposing dsm_provenance_DAG as a DSM artifact type AND a BL to generate the Sprint 1 provenance section (i.e., audit Sprint 1 artifacts and append them to the DAG)
+
+Wait — re-reading: "draft a BL to generate the missing part related to sprint 1." So the BL is specifically about going back to document Sprint 1 provenance. That's a concrete task: read Sprint 1 research/decision docs, map their edges, append to the DAG. That BL goes into dsm-docs/plans/ as a formal backlog item (BACKLOG-###), not just a feedback file entry. Let me check current backlog numbering.
+
+Actually the feedback file is for DSM Central proposals. The BL for "complete Sprint 1 provenance section" is a project-local backlog item. It should live in dsm-docs/plans/ as BACKLOG-NNN.md. Let me check what BL numbers are in use.
+
+Actually looking at done/ list: BL-001, BL-002, BL-003. So next is BL-004. But wait — do project BL numbers follow the project sequence or DSM Central sequence? Looking at the done/ folder: BL-001, BL-002, BL-003. These are project-local BLs. Next available: BL-004.
+
+Also — the DSM Central feedback for "dsm_provenance_DAG as a new artifact type" — that goes in the existing 2026-04-21_s9_backlogs.md as a second entry.
+
+Plan:
+A. Write dsm-docs/plans/dsm_provenance_DAG.md (Sprint 2 scope, Mermaid + table)
+B. Write dsm-docs/plans/BL-004_sprint1-provenance-DAG-audit.md (backlog item to complete Sprint 1 section)
+C. Append to dsm-docs/feedback-to-dsm/2026-04-21_s9_backlogs.md a second BL proposing dsm_provenance_DAG as a DSM Central artifact type
+
+For the Mermaid DAG: Sprint 2 nodes I have in context:
+- SP2: dsm-docs/plans/2026-04-18_sprint2_rag_haystack_plan.md (backbone)
+- DEC-ORCH: dsm-docs/decisions/2026-04-07_orchestration-framework.md
+- RES-PRELIM: dsm-docs/research/haystack-vs-langchain-preliminary-research.md
+- RES-DEEP: dsm-docs/research/2026-04-07_haystack-vs-langgraph-deepened.md
+- RES-HYB-BP: dsm-docs/research/2026-04-07_hybrid-langgraph-haystack-best-practices.md
+- RES-LGBP: dsm-docs/research/2026-04-07_langgraph-best-practices.md
+- RES-PREC: dsm-docs/research/2026-04-14_hybrid-architecture-precedents.md
+- RES-CONTRIB: dsm-docs/research/2026-04-14_upstream-contribution-playbook.md
+- RES-MODEL: dsm-docs/research/2026-04-17_local-model-selection_research.md (Sprint 1 link too)
+- EXP-SPIKE: scratch/haystack_ollama_tools_spike.py + dsm-docs/research/2026-04-21_haystack-ollama-tools-spike-result.md
+- EXP-BENCH: scratch/embedding_benchmark.py + dsm-docs/research/2026-04-21_embedding-model-benchmark.md
+- EXT-KB: /home/berto/_projects/dsm-residential-heating-ds-guide/ (external)
+- EXT-APPS: /home/berto/_projects/dsm-residential-energy-apps/ (external)
+- INB-GE: _inbox/done/2026-04-13_dsm-graph-explorer_contribution-playbook.md (contribution playbook)
+
+Sprint 1 connections visible in Sprint 2 plan prerequisites:
+- SP1: dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md → SP2 (prerequisite)
+- RES-LGBP → SP1 (feeds Sprint 1 implementation)
+- RES-HYB-BP → SP1 (feeds Sprint 1 too, part of the hybrid decision)
+- RES-MODEL → SP1 (llama3.1:8b default locked in Sprint 1, Session 5)
+- DEC-ORCH → SP1 (frames agent-only scope for Sprint 1)
+
+Key edges for Sprint 2:
+- RES-PRELIM → DEC-ORCH (input to decision)
+- RES-DEEP → DEC-ORCH (validates/deepens)
+- DEC-ORCH → SP2 (frames hybrid architecture, spike requirement, contribution goal)
+- SP1 → SP2 (prerequisite: Sprint 1 closed 7/7)
+- RES-HYB-BP → SP2 (implementation patterns Phase 1+)
+- RES-PREC → DEC-ORCH (validates decision: pattern established in literature)
+- RES-CONTRIB → SP2 (GE contribution playbook → EXP-002 contribution format)
+- INB-GE → SP2 (same: GE playbook → EXP-002)
+- RES-MODEL → SP2 (llama3.1:8b used in spike)
+- EXP-SPIKE → SP2 (validates EXP-002, Outcome A, feeds T6 issue text)
+- EXP-BENCH → SP2 (feeds Phase 2 model selection decision)
+- EXT-KB → SP2 (defines corpus scope for Phase 3-5)
+- EXT-APPS → SP2 (deterministic tool source for SP1, reference for SP2 rag_search domain)
+
+Mermaid: I'll keep node IDs short, use subgraphs by type (Plans, Decisions, Research, Experiments, External). Use LR direction for DAG clarity.
+
+Need to also check: are there any research files I'm missing? Let me scan dsm-docs/research/ quickly to not miss any.
+
+Actually I should also list what's already in done/ plans — BL-001, BL-002, BL-003 are done. These are task BLs, not provenance nodes. I won't include them in the DAG — the DAG maps *supporting artifacts* to plans, not task tracking items.
+
+Let me proceed to write the three artifacts. I'll read the existing feedback file first to append correctly.
