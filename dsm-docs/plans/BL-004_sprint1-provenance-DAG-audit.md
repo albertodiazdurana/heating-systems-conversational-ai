@@ -1,8 +1,9 @@
 # BL-004: Complete Sprint 1 Provenance in dsm_provenance_DAG
 
-**Status:** Open
+**Status:** Done
 **Priority:** Low
 **Date Created:** 2026-04-22
+**Date Completed:** 2026-04-29
 **Origin:** Session 9 — dsm_provenance_DAG.md created with Sprint 2 fully mapped;
 Sprint 1 provenance partially mapped due to Sprint 1 artifacts not being in active context.
 **Author:** albertodiazdurana
@@ -47,18 +48,12 @@ The following Sprint 1 provenance is unconfirmed or missing:
 
 ## Tasks
 
-- [ ] Read `dsm-docs/research/done/2026-04-06_sprint1_conversation_engine_research.md`
-      and confirm or correct the RES_CONVO → SP1 edge description
-- [ ] Read `dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md` (the full plan)
-      and check the References section for any research files not yet in the DAG
-- [ ] Read `dsm-docs/plans/2026-04-07_e2e_hybrid_backbone.md` §1-3
-      and determine whether additional edges exist to SP1
-- [ ] Check `dsm-docs/decisions/` for any decision files other than
-      `2026-04-07_orchestration-framework.md`
-- [ ] For each new node found: add to Node Registry + Mermaid + Edge Registry
-      in `dsm-docs/plans/dsm_provenance_DAG.md`
-- [ ] Update "Pending: Sprint 1 provenance gap" section once complete;
-      remove or mark resolved
+- [x] Read `dsm-docs/research/done/2026-04-06_sprint1_conversation_engine_research.md` and broadened RES_CONVO → SP1 edge description
+- [x] Read `dsm-docs/plans/2026-04-07_sprint1_langgraph_plan.md` (full plan); identified `EXT_KB → SP1` (standard_lookup) and EXT_APPS specificity (simulation.py:calculate_vorlauf)
+- [x] Read `dsm-docs/plans/2026-04-07_e2e_hybrid_backbone.md` §1-3; added `BB → SP1` edge
+- [x] Audited `dsm-docs/decisions/`: only `2026-04-07_orchestration-framework.md` exists; no new decision node needed
+- [x] Added BL_003 node + edge to SP1 (closes §6 exit criterion 3)
+- [x] Updated Node Registry, Mermaid, Edge Registry; converted Pending section to Provenance status
 
 ---
 
