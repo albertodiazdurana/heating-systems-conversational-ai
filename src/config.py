@@ -9,6 +9,7 @@ Functions:
 """
 
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 from langchain_core.language_models import BaseChatModel
@@ -52,3 +53,22 @@ def get_chat_model() -> BaseChatModel:
     raise ValueError(
         f"Unknown LLM_PROVIDER: {provider!r}. Expected 'ollama' or 'openai'."
     )
+
+
+def get_kb_source_dir() -> Path:
+    """Return the knowledge-base source directory.
+
+    Env var:
+        KB_SOURCE_DIR: path to the directory holding the heating-guide MD files.
+            Defaults to the sibling `dsm-residential-heating-ds-guide` repo.
+
+    Raises:
+        FileNotFoundError: configured path does not exist.
+    """
+    default = Path.home() / "_projects" / "dsm-residential-heating-ds-guide"
+    path = Path(os.getenv("KB_SOURCE_DIR", str(default)))
+    if not path.is_dir():
+        raise FileNotFoundError(
+            f"KB_SOURCE_DIR points to {path}, which is not a directory."
+        )
+    return path

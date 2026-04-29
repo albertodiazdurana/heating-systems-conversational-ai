@@ -82,7 +82,7 @@ unit_converter  standard_lookup  heating_curve      rag_search
 | UI | Streamlit | Sprint 1 |
 | RAG framework | Haystack 2.x (inside `rag_search` tool boundary) | Sprint 2 |
 | Vector store | ChromaDB via `chroma-haystack` (zero-ops local persistence for portfolio scope; one-component swap to Qdrant/Weaviate if scale demands) | Sprint 2 |
-| Embeddings | `intfloat/multilingual-e5-base` via SentenceTransformers | Sprint 2 |
+| Embeddings | `BAAI/bge-m3` via SentenceTransformers (selected Phase 2; see `dsm-docs/decisions/2026-04-24_phase2-embedding-model-selection.md`) | Sprint 2 |
 | Markdown chunking | LangChain `MarkdownHeaderTextSplitter` → convert to Haystack Documents | Sprint 2 |
 | Eval | MLflow + hand-crafted test set | Sprint 3 |
 | Tests | pytest | Sprint 1 |
@@ -154,7 +154,7 @@ document Haystack's Ollama tool-calling upstream.
 - **Ingestion pipeline** `src/rag/ingest.py` + `scripts/ingest.py`:
   - LangChain `MarkdownHeaderTextSplitter` (header-aware)
   - Convert to Haystack `Document` (one-line conversion)
-  - `SentenceTransformersDocumentEmbedder` (multilingual-e5-base)
+  - `SentenceTransformersDocumentEmbedder` (BAAI/bge-m3)
   - `DocumentWriter` → Chroma (persistent at `data/chroma/`)
   - Idempotent: doc id = hash(source path + chunk index)
 - **Retrieval pipeline** `src/rag/retrieval.py`:
@@ -323,7 +323,7 @@ README.md
 
 ### Bilingual handling
 - Single system prompt with language-matching instruction
-- Multilingual embeddings (e5) handle DE queries → EN docs
+- Multilingual embeddings (bge-m3) handle DE queries → EN docs
 - No router node; prompt-level handling only
 - Eval set tags each question with `language`
 

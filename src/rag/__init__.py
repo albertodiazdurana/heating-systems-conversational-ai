@@ -1,0 +1,1 @@
+"""RAG subsystem: chunking, ingestion, retrieval (Sprint 2)."""

@@ -1,4 +1,3 @@
-session: 8
-date: 2026-04-21
+session: 10
+date: 2026-04-29
 type: full
-STAA recommended: no. Short maintenance session: /dsm-go, /dsm-align version-delta surface (v1.5.4 -> v1.6.3), /dsm-light-wrap-up cadence-gate refusal, /dsm-wrap-up. No novel domain reasoning.
