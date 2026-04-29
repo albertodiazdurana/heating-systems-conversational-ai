@@ -847,6 +847,41 @@ Decision: proceed with the step sequence as previously listed, just dropping ste
 <------------Start Output / 02:02------------>
 Plan (c) locked. Executing the wrap-up now.
 
+<------------Start Output / 02:18------------>
+S10.L2 light wrap-up complete. Commit e318fbd on session-10/2026-04-23 pushed to remote (ba5ac16..e318fbd). 12 files changed, 1003 insertions, 102 deletions. Parallel session's backbone + decision record left untouched in working tree. S10 pre-staged checkpoint rename also left for the parallel session. last-wrap-up.txt = s10.L2/light. MEMORY.md updated. Transcript NOT reset (preserved for parallel session). Feedback file 2026-04-29_s10.L2_concurrent-session-guard.md queued for next full /dsm-wrap-up push to Central.
+
+<------------Start User / 18:04------------>
+"I have just now properly wrapped up the other running session. You will notice this in the git history and in memory. Let's leave this session organized and the git clean before we fully wrap up"
+
+<------------Start Thinking / 18:04------------>
+S10.L2 wrap-up explicitly left my T7 work in the working tree. User now wants this thread organized + git clean BEFORE full wrap-up.
+
+CLAUDE.md "Only create commits when requested by the user. If unclear, ask first." User's request "leave this session organized and the git clean" reads as authorization to commit T7 outputs scoped to this thread. Still safer to present the commit plan and target file list before staging, then commit on approval.
+
+Plan:
+1. Re-read MEMORY.md (updated externally by S10.L2).
+2. git log -10 to see recent commits.
+3. git status to see what is uncommitted now.
+4. Separate uncommitted files into (a) T7 outputs from this thread (decision record + backbone edits + this transcript), (b) anything else that shouldn't be in T7's commit.
+5. Present commit plan as chat text, wait for "y" before staging.
+
+<------------Start User / 18:07------------>
+"y" (commit T7 outputs, push to remote)
+
+<------------Start Thinking / 18:07------------>
+Approved. Stage the 5 paths, commit with the drafted message (no co-author per global CLAUDE.md), push to remote. Then verify clean working tree.
+
+Stage list:
+- dsm-docs/decisions/2026-04-24_phase2-embedding-model-selection.md (new)
+- dsm-docs/plans/2026-04-07_e2e_hybrid_backbone.md (modified)
+- dsm-docs/checkpoints/2026-04-23_s10_light_checkpoint.md (deleted, was already moved by /dsm-light-go Step 2)
+- dsm-docs/checkpoints/done/2026-04-23_s10_light_checkpoint.md (new at done/)
+- .claude/session-transcript.md (modified)
+
+Use `git add -- <paths>` explicit list, no `git add -A`. After commit completes, run `git status` to verify clean, then `git push`.
+
+
+
 
 
 

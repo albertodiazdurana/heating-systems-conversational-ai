@@ -1,3 +1,5 @@
+**Consumed at:** Session 10 lightweight continuation start (2026-04-23)
+
 # Session 10 Lightweight Checkpoint — 2026-04-23
 
 **Session:** 10
