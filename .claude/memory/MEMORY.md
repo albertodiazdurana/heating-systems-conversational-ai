@@ -1,10 +1,10 @@
 # Heating Systems Conversational AI — Memory Index
 
 ## Latest Session
-**Session 9 — 2026-04-21/22:** Resource-constrained productive session on Sonnet 4.6 (91% all-models used). Setup: resource-aware sprint planning formalized (BL proposal to DSM Central, Sprint 2 plan annotation, subscription file corrected Thu 21:00/Mon 09:59). Sprint 2 Phase 1 T2-T5 complete: `haystack-ai 2.28.0` + `ollama-haystack 6.3.0` installed; EXP-002 spike Outcome A (full tool-calling round-trip with llama3.1:8b). Phase 2 benchmark run: e5-base gap 0.10/20.7 texts/s vs bge-m3 gap 0.26/6.4 texts/s; model selection deferred to Opus. New artifact type designed: `dsm_provenance_DAG.md` (BL-004 for Sprint 1 completion; second BL to DSM Central). Feedback file `2026-04-21_s9_backlogs.md` has two BL proposals.
+**Session 10 — 2026-04-23 / 2026-04-29 (full wrap-up):** Opus 4.7 (1M). Spanned 3 lightweight cycles + final full wrap-up on a single branch. Five deliverables: (1) /dsm-align v1.6.3→v1.7.0→v1.8.0 across cycles (with one scope-violation detour caught and corrected: out-of-scope `diff -q` on `~/.claude/commands/` fabricated spoke actions; user corrected in 4 turns). (2) Phase 1 T6 — Haystack upstream issue draft at `dsm-docs/research/2026-04-29_haystack-ollama-doc-gap-issue-draft.md`. (3) Phase 1 T7 / Phase 2 model selection — bge-m3 chosen over e5-base (gap 0.26 vs 0.10, 2.6× advantage). Decision record `dsm-docs/decisions/2026-04-24_phase2-embedding-model-selection.md`; 3 backbone edits (§2/§4/bilingual). Counter-evidence per §8.2.1 (BL-385); §8.7 (BL-402) skip-by-match. (4) BL-004 closed — provenance DAG fully mapped for Sprints 1+2. (5) Three feedback files pushed to Central (`s10_methodology`, `s10_backlogs`, `s10.L2_concurrent-session-guard`). 5 [skill]-and-[pattern]-tagged reasoning lessons.
 
 ## Previous Session
-**Session 8 — 2026-04-19/21:** Maintenance. `/dsm-align` surfaced DSM v1.5.4→v1.6.3 delta (9 spoke actions). No code work.
+**Session 9 — 2026-04-21/22:** Resource-constrained productive session on Sonnet 4.6 (91% all-models used). Sprint 2 Phase 1 T2-T5 complete (haystack-ai+ollama-haystack installed, EXP-002 Outcome A confirmed). Phase 2 benchmark run; model selection deferred to S10 Opus turn. dsm_provenance_DAG.md artifact type designed (BL-004, closed S10).
 
 ## Key decisions
 - **Orchestration:** hybrid LangGraph (agent) + Haystack (RAG subsystem behind a LangChain @tool boundary). See `dsm-docs/decisions/2026-04-07_orchestration-framework.md`.
@@ -17,13 +17,7 @@
 - **Resource-aware sprint planning (S9):** pool topology (all-models-weekly/sonnet-only) drives task ordering, not deferral. Convention added to Sprint 2 plan; BL sent to DSM Central.
 
 ## Pending
-- **Phase 1 T6+T7 (post-Thu 21:00 Opus):** T6 = draft Haystack upstream issue text; T7 = Gate 1 re-brief applying BL-402 (§8.7) + BL-385 (§8.2.1 counter-evidence).
-- **Phase 2 model selection (Opus):** bge-m3 vs e5-base decision based on benchmark. Lock winner into pyproject + backbone §2.
-- **DSM v1.6.x spoke actions still pending:** BL-385, BL-386/387, BL-344, BL-345 (DSM_7.0 §2.1), BL-239. BL-402 partially applied (resource-aware ordering). Full list in `.claude/last-align-report.md`.
-- **BL-004:** Complete Sprint 1 provenance section in `dsm-docs/plans/dsm_provenance_DAG.md` (5-task audit of Sprint 1 research/decisions not in active S9 context).
-- **Sprint 2 Phases 3-5:** ingestion, retrieval + `rag_search` tool, tests + EXP-001 hit@5 + upstream contribution filing. After Phase 2 decision.
-- **README §2 stale** (`pip install -e .` → `uv sync`): fix at Sprint 2 close.
-- `.venv.old-rc1/` safe to delete once Sprint 2 Phase 1 confirmed clean (confirmed in S9).
+Pending items are owned by the S10 checkpoint, see `dsm-docs/checkpoints/2026-04-29_s10_checkpoint.md`.
 
 ## Memories
 - [DSM Central propagation queue](project_dsm_central_pending.md) — pattern/ecosystem-scoped lessons awaiting upstream push to DSM Central.
