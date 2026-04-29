@@ -15,6 +15,9 @@ dependencies = [
     "haystack-ai>=2.28.0",
     "ollama-haystack>=6.3.0",
     "sentence-transformers>=5.4.1",
+    "chroma-haystack>=3.5.0",
+    "langchain-text-splitters>=0.3.0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.41.0",
 ]
 
 [dependency-groups]
