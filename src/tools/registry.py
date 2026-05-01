@@ -5,6 +5,7 @@ future caller (REPL, eval harness) share one source of truth.
 """
 
 from src.tools.heating_curve import heating_curve_tool
+from src.tools.rag_search import rag_search_tool
 from src.tools.standard_lookup import standard_lookup_tool
 from src.tools.unit_converter import (
     degree_days_tool,
@@ -18,4 +19,5 @@ TOOLS = [
     degree_days_tool,
     standard_lookup_tool,
     heating_curve_tool,
+    rag_search_tool,
 ]
