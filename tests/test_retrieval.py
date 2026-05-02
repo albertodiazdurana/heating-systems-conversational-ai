@@ -48,7 +48,7 @@ def test_build_retrieval_pipeline_connects_embedder_to_retriever() -> None:
     assert dst == "retriever"
 
 
-def test_retrieve_payload_has_no_filter_when_part_is_none(monkeypatch) -> None:
+def test_retrieve_payload_excludes_intro_by_default_when_no_part(monkeypatch) -> None:
     captured: dict = {}
 
     class FakePipeline:
@@ -60,11 +60,15 @@ def test_retrieve_payload_has_no_filter_when_part_is_none(monkeypatch) -> None:
     retrieve(query="What is DIN EN 12831?", part=None, top_k=3)
 
     assert captured["text_embedder"] == {"text": "What is DIN EN 12831?"}
-    assert "filters" not in captured["retriever"]
+    assert captured["retriever"]["filters"] == {
+        "field": "meta.section_header",
+        "operator": "!=",
+        "value": "intro",
+    }
     assert captured["retriever"]["top_k"] == 3
 
 
-def test_retrieve_payload_includes_filter_when_part_provided(monkeypatch) -> None:
+def test_retrieve_payload_combines_part_and_intro_filters(monkeypatch) -> None:
     captured: dict = {}
 
     class FakePipeline:
@@ -76,11 +80,31 @@ def test_retrieve_payload_includes_filter_when_part_provided(monkeypatch) -> Non
     retrieve(query="MLOps stack", part="Part III: Production Engineering & MLOps")
 
     assert captured["retriever"]["filters"] == {
-        "field": "meta.part",
-        "operator": "==",
-        "value": "Part III: Production Engineering & MLOps",
+        "operator": "AND",
+        "conditions": [
+            {
+                "field": "meta.part",
+                "operator": "==",
+                "value": "Part III: Production Engineering & MLOps",
+            },
+            {"field": "meta.section_header", "operator": "!=", "value": "intro"},
+        ],
     }
     assert captured["retriever"]["top_k"] == DEFAULT_TOP_K
+
+
+def test_retrieve_payload_has_no_filter_when_intro_allowed_and_no_part(monkeypatch) -> None:
+    captured: dict = {}
+
+    class FakePipeline:
+        def run(self, payload):
+            captured.update(payload)
+            return {"retriever": {"documents": []}}
+
+    monkeypatch.setattr(retrieval, "_get_cached_pipeline", lambda: FakePipeline())
+    retrieve(query="anything", part=None, exclude_intro=False)
+
+    assert "filters" not in captured["retriever"]
 
 
 def test_retrieve_default_top_k_is_five() -> None:

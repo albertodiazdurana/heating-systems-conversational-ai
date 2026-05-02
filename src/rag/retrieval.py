@@ -90,6 +90,7 @@ def retrieve(
     query: str,
     part: str | None = None,
     top_k: int = DEFAULT_TOP_K,
+    exclude_intro: bool = True,
 ) -> list[Document]:
     """Retrieve up to `top_k` documents for `query`, optionally filtered by part.
 
@@ -100,6 +101,13 @@ def retrieve(
             heating-guide parts (see scripts/ingest.py output for the list)
             or None for global search.
         top_k: max number of documents to return.
+        exclude_intro: when True (default), excludes chunks whose
+            `section_header == "intro"`. Intro chunks are navigational
+            and tend to dominate top-K via short-doc bias on broad
+            queries (verified empirically by EXP-001 q10 miss with
+            intro_dominance pattern). Set False to inspect them, e.g.
+            for debugging or for queries explicitly about a chapter
+            preamble.
 
     Returns:
         List of Haystack Documents in descending score order. Each Document
@@ -108,13 +116,21 @@ def retrieve(
     """
     pipeline = _get_cached_pipeline()
 
-    retriever_payload: dict = {"top_k": top_k}
+    conditions: list[dict] = []
     if part is not None:
-        retriever_payload["filters"] = {
-            "field": "meta.part",
-            "operator": "==",
-            "value": part,
-        }
+        conditions.append(
+            {"field": "meta.part", "operator": "==", "value": part}
+        )
+    if exclude_intro:
+        conditions.append(
+            {"field": "meta.section_header", "operator": "!=", "value": "intro"}
+        )
+
+    retriever_payload: dict = {"top_k": top_k}
+    if len(conditions) == 1:
+        retriever_payload["filters"] = conditions[0]
+    elif len(conditions) > 1:
+        retriever_payload["filters"] = {"operator": "AND", "conditions": conditions}
 
     result = pipeline.run(
         {
