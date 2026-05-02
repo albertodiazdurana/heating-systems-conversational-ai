@@ -3,7 +3,7 @@
 **Purpose:** draft GitHub issue text for Sprint 2 Phase 1 T6.
 **Target repo:** `deepset-ai/haystack-core-integrations`
 **Status:** draft, awaiting filing decision.
-**Verification date:** 2026-04-29 (live deepset doc URLs verified on this date).
+**Verification date:** 2026-04-29 (live deepset doc URLs); 2026-05-01 (code example empirically verified against pinned Haystack, two fixes applied: `Tool.from_function` → `create_tool_from_function` (the original was the wrong API name); added `temperature=0.0` + directive prompt so the example reliably emits tool_calls instead of free-form JSON-shaped text. Verification log: `/tmp/verify_haystack_ollama_doc_example.py`, observed `tool_calls=[ToolCall(tool_name='get_weather', arguments={'city': 'Berlin'}, ...)]`).
 **Provenance (internal only):** evidence assembled in
 `~/_projects/haystack-magic/dsm-docs/research/2026-04-29_ollama-tool-calling-doc-gap.md`.
 This provenance line is repo-internal and is not part of the outgoing issue text.
@@ -14,9 +14,14 @@ This provenance line is repo-internal and is not part of the outgoing issue text
 
 - **Suggested title:** Docs: surface tool-calling on the Ollama integration landing page
 - **Suggested labels:** `documentation`; add `integrations:ollama` if that label exists in the repo.
-- **Untested example:** the code block in Section 3 is illustrative, drawn from
-  the public API reference signature. Run it locally before filing to confirm
-  imports, model availability, and response shape.
+- **Verified example (2026-05-01):** the code block in Section 3 was run locally
+  against pinned Haystack + `llama3.1:8b` via Ollama. Two corrections applied:
+  the public API is `create_tool_from_function`, not `Tool.from_function`; and
+  `temperature=0.0` + a directive prompt are required for the example to
+  reliably emit `tool_calls` instead of free-form JSON-shaped text in `.text`.
+  Both corrections illustrate exactly the discoverability problem the issue
+  raises, the failure modes a reader would hit are the failure modes worth
+  surfacing in the docs.
 - **Post-filing follow-up:** if maintainers welcome a docs PR, send a small one
   with the example slotted into the integration landing page source.
 
@@ -45,7 +50,7 @@ A practitioner evaluating *"can I run tool calling on a local Ollama model in Ha
 Add one tool-calling example to the integration landing page. Minimal shape:
 
 ```python
-from haystack.tools import Tool
+from haystack.tools import create_tool_from_function
 from haystack_integrations.components.generators.ollama import OllamaChatGenerator
 from haystack.dataclasses import ChatMessage
 
@@ -53,14 +58,21 @@ def get_weather(city: str) -> str:
     """Get current weather for a city."""
     return f"Sunny, 22°C in {city}"
 
-weather_tool = Tool.from_function(get_weather)
+weather_tool = create_tool_from_function(get_weather)
 
-generator = OllamaChatGenerator(model="llama3.1", tools=[weather_tool])
+generator = OllamaChatGenerator(
+    model="llama3.1:8b",
+    generation_kwargs={"temperature": 0.0},
+    tools=[weather_tool],
+)
 
 response = generator.run(
-    messages=[ChatMessage.from_user("What's the weather in Berlin?")]
+    messages=[ChatMessage.from_user(
+        "What's the weather in Berlin? Use the get_weather tool."
+    )]
 )
 print(response["replies"][0].tool_calls)
+# -> [ToolCall(tool_name='get_weather', arguments={'city': 'Berlin'}, ...)]
 ```
 
 This single addition closes the worst surface.

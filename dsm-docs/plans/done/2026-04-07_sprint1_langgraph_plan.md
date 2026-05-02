@@ -1,7 +1,7 @@
 # Sprint 1 Plan — LangGraph Conversation Engine
 
 **Date:** 2026-04-07 (revised 2026-04-08; Template 8 retro-fit 2026-04-17)
-**Status:** Done (closed Session 6, 7/7 exit criteria met)
+**Status:** Done — closed Session 6 (7/7 §6 exit criteria); §6.5 boundary checklist retro-completed Session 11 (2026-04-29). Plan moved to `done/`.
 **Duration:** ~5 sessions (S3 concept → S4 cont implementation → S5 close)
 **Goal:** End-to-end conversational agent with 5 deterministic tools on
 LangGraph + Ollama, bilingual EN/DE, no RAG yet.
@@ -317,28 +317,17 @@ reference pattern.
 To be completed when all §6 exit-criteria boxes are checked. This is the
 sprint-close checklist that drives the closure work end-to-end.
 
-- [ ] Checkpoint document created (`dsm-docs/checkpoints/2026-04-XX_sprint1_close.md`)
-      with: final §6 box state, what shipped vs what was deferred, evidence
-      pointers (smoke-test results + commit hashes), decisions made during
-      the sprint, lessons learned.
-- [ ] Feedback files updated: per-session `YYYY-MM-DD_sN_backlogs.md` and/or
-      `YYYY-MM-DD_sN_methodology.md` in `dsm-docs/feedback-to-dsm/` capturing
-      sprint-level observations not already in per-phase entries.
-- [ ] Decision log updated (`dsm-docs/decisions/`) with any sprint-level
-      decisions not already filed (e.g., the model-selection cascade may
-      warrant its own decision artifact).
-- [ ] Tests passing (DSM 4.0): all unit + integration tests green on the
-      final commit.
-- [ ] Blog journal entry written (`dsm-docs/blog/journal.md`) summarizing
-      Sprint 1 narrative arc, surprises, and what changed methodology-wise.
-- [ ] Repository README updated (status line, model identifier, run-locally
-      section, tool list, architecture paragraph, roadmap checkbox) — covered
-      by step 12 in the Build order.
-- [ ] Pending feedback pushed to DSM Central via `/dsm-align` Step 6 or
-      direct push.
-- [ ] Next steps summary (3-5 sentences): goal of Sprint 2, key
-      deliverables, plan reference.
-- [ ] All §6 exit-criteria boxes checked.
+**Retro-completion note (Session 11, 2026-04-29):** This checklist was authored 2026-04-17 (S5) but the closure ritual was not executed top-down at sprint close, S6 closed against §6 exit criteria directly. Sprint 2 has been running since 2026-04-18 (5 sessions of Sprint 2 work, including bge-m3 selection, Haystack+Ollama spike confirmed, BL-004 closed). Boxes are reconciled retroactively below using existing evidence; items genuinely deferred to Sprint 2 close are marked accordingly.
+
+- [x] Checkpoint document created — `dsm-docs/checkpoints/done/2026-04-18_s5_sprint1_close_checkpoint.md` (Sprint 1 close checkpoint with §6 box state, shipped/deferred, evidence pointers including BL-003 closure handoff, decisions, lessons).
+- [x] Feedback files updated — `dsm-docs/feedback-to-dsm/done/2026-04-17_s5_backlogs.md` and `2026-04-17_s5_methodology.md` capture S5 sprint-level observations.
+- [x] Decision log updated — `dsm-docs/decisions/2026-04-07_orchestration-framework.md` covers the sprint's primary architectural decision; model-selection cascade is documented in `dsm-docs/research/2026-04-17_local-model-selection_research.md` (research artifact, acceptable per backbone).
+- [x] Tests passing — `tests/` was 55/55 green at S5 close (commit `1d9ab3f` per S5 close checkpoint); BL-003 closure (S6) added the Streamlit boot smoke test, evidence in `dsm-docs/handoffs/done/2026-04-18_s6_bl003_closure_smoke_test_results.md`.
+- [x] Blog journal entry — `dsm-docs/blog/journal.md` contains the [2026-04-14] "When the spike IS the contribution pipeline" entry that frames Sprint 1's hybrid-architecture decision and the Sprint 2 Haystack contribution pipeline. Sprint-1-narrative-arc capture is satisfied; richer retrospective deferred to project-end materials per DSM Blog Artifacts pipeline.
+- [N/A — deferred to Sprint 2 close] Repository README §2 update — README §2 currently says `pip install -e .` and is known stale (project moved to `uv sync`). Tracked in S10 checkpoint pending pool as "Sprint 2 close" fix; not blocking Sprint 1 closure.
+- [x] Feedback pushed to DSM Central — S6 wrap-up pushed S5 feedback files to Central inbox; subsequent `/dsm-align` runs (S9, S10) confirmed clean state.
+- [x] Next steps summary — `dsm-docs/plans/2026-04-18_sprint2_rag_haystack_plan.md` (filed 2026-04-18, the day after Sprint 1 close) is the next-steps document; it names goal (Haystack RAG subsystem + upstream contribution), key deliverables, and references the e2e backbone.
+- [x] All §6 exit-criteria boxes checked — header records 7/7 met (5/5 unit tests, graph smoke test, Streamlit boot via BL-003 closure, 5/5 manual smoke queries, README run-locally, pinned deps; the 7th, BL-003, was tracked as a documented gap and closed in S6).
 
 ## 7. Deferred to later sprints (explicit)
 
@@ -393,9 +382,7 @@ If you are picking up this sprint mid-flight (new session, context cold):
 5. **Re-read MEMORY.md** for the latest-session pointer to the most
    recent state.
 
-For Sprint 1 specifically as of 2026-04-17:
-- Implementation steps 1-10 done (Sessions 4 lt + 4 cont)
-- Step 11 in progress (Session 5: model selection re-grounded; Ollama
-  installed in WSL; pull + smoke test pending)
-- Step 12 pending (Session 5 or 6)
-- Sprint Boundary Checklist (§6.5) NOT yet started
+For Sprint 1 (historical, kept for archive):
+- As of 2026-04-17: Implementation steps 1-10 done (S4 lt + S4 cont), Step 11 in progress (S5), Step 12 pending.
+- Closed Session 6 (2026-04-18): all 12 steps complete; §6 exit criteria 7/7; BL-003 closed.
+- Session 11 (2026-04-29): §6.5 boundary checklist retro-completed; plan moved to `done/`.
