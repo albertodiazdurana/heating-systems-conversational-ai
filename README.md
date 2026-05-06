@@ -83,8 +83,7 @@ The Ollama install script registers a systemd service that starts on boot. NVIDI
 ```bash
 git clone https://github.com/albertodiazdurana/heating-systems-conversational-ai.git
 cd heating-systems-conversational-ai
-python3.11 -m venv .venv     # or python3.12; see BL-003 for Python rc1 caveat
-.venv/bin/pip install -e .
+uv sync     # creates .venv (Python >=3.11 per pyproject.toml) and installs deps
 ```
 
 ### 3. Run the smoke test (recommended way to verify end-to-end)
