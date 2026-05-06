@@ -20,6 +20,7 @@
 - **EXP-001 outcome (S12):** hit@5 = 0.83, hit@1 = 0.50 on 12-query EN/DE testset. Reranking remains a Sprint 3 stretch item; the two remaining misses (q04, q10) are the citation if Sprint 3 needs to prioritize it.
 - **Haystack contribution (S12 → S13):** issue #3263 filed S12; maintainer responded 2026-05-05; PR #473 (haystack-integrations) + PR #11268 (haystack) opened; tool_choice filed as upstream issue ollama-python#663 (server-side gap, not Haystack PR).
 - **OSS PR Definition of Ready (S13):** Read CONTRIBUTING.md + PR template + `.github/workflows/*.yml` BEFORE drafting any cross-repo PR. Cost ~10 min, prevents retroactive fixes. Ecosystem feedback proposes `Read-Before-Draft` as DSM_0.2 protocol addition.
+- **hatch (S13):** `hatch` 1.16.5 installed at user level via `uv tool install hatch`. Used for `hatch run release-note <name>` on deepset/haystack PRs (release notes are CI-required there). Reused for any future haystack PR (also `hatch run docs`, `hatch run fmt`, `hatch run test:unit`).
 - **Resource-aware sprint planning (S9):** pool topology (all-models-weekly/sonnet-only) drives task ordering, not deferral.
 
 ## Pending
