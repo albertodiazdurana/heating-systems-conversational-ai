@@ -1,3 +1,5 @@
+**Consumed at:** Session 13 start (2026-05-05)
+
 # Session 12 Checkpoint
 **Date:** 2026-05-01
 **Branch:** sprint-2/rag-pipeline (pre sprint-merge)

@@ -82,3 +82,70 @@ chosen architecture is idiosyncratic, searching framework vendor blogs
 produces a biased null result, because vendors under-publish compositions
 that de-center their product. Tutorial content and books are the honest
 signal.
+
+### [2026-05-01] Halt, then diagnose: what 0.75 vs 0.83 hid
+
+<!--
+DRAFT — first pass. Alternate titles to consider:
+  - EXP-001 missed the threshold and that was the data
+  - Reading the source after running the spike
+-->
+
+Sprint 2's closing experiment was EXP-001, a hit@5 retrieval evaluation
+on a 12-query bilingual testset. The exit threshold was 0.80. First run:
+0.75. Three misses out of twelve.
+
+The plan had a §37 escalation rule wired in for exactly this case:
+promote reranking from Sprint 3 stretch into Sprint 2 MUST. I reached
+for it. Then I stopped, because the rule says escalate, but it does not
+say which evidence justifies which escalation, and I had not yet looked
+at the misses.
+
+Reading the three failures: q04 was a cross-lingual abbreviation in
+German that no reranker would obviously help with; q10 returned only
+"intro" chunks for a chapter because every section's intro chunk is
+high-recall by construction and crowded out the specific section
+("14.4 Model Monitoring") the query actually wanted; q11 had been
+tagged wrong in the testset, the "expected" doc was a near-paraphrase
+of an also-correct doc that the retriever was returning. Two of
+three had non-retrieval root causes. One was a chunking-policy
+artifact, one was a labeling error.
+
+Two targeted fixes landed before any escalation: B1, a retrieval-time
+`exclude_intro=True` filter that owns the policy at the consuming
+layer rather than rewriting the chunking step; B2, an
+`accept_alternatives` field on the testset schema so paraphrase
+doc-ids count as correct. Re-ran. 0.83. PASS, but only one of the
+three first-run misses (q11) was fully resolved; q10 traded
+intro-dominance for a residual chunking-granularity issue (14.4 is
+short and gets outscored by neighbors), and q04 stayed broken. The
+threshold passed because we changed the gate's interpretation of q11,
+not because retrieval got fundamentally better.
+
+Reranking stayed in Sprint 3 stretch. The two remaining misses (q04
+cross-lingual, q10 chunking granularity) are now the citation if
+Sprint 3 prioritizes it, because reranking is a real candidate for
+*those* failure modes specifically. It was never a candidate for the
+labeling error.
+
+The first-order lesson is that plan-prescribed escalations are
+contracts, not reflexes. The escalation rule existed so I would not
+quietly fix-and-proceed past a missed threshold. The *halt* part of
+the rule is what mattered, not the *promote reranking* part. Once
+halted, the right next step is diagnose-then-decide, not
+escalate-then-explain.
+
+The second-order lesson is that the S9 rule "read §6 exit criteria
+strictly, not pragmatically" held under live pressure. Strict reading
+creates the halt. The halt creates the diagnosis window. The
+diagnosis exposes whether escalation is genuinely needed or whether a
+targeted fix is sufficient. Without the strict read, B1 and B2 would
+have shipped as adjustments after a quiet pass; with it, they shipped
+as documented gate decisions.
+
+The reading-habit takeaway: when an empirical result misses a gate, I
+want to read the failure cases in their full text before letting any
+plan-side machinery fire. The plan is a useful constraint and a
+useful prompt, but it cannot diagnose. Three failures in a small
+testset is twelve minutes of reading, and twelve minutes is enough to
+change which escalation is correct, or whether one is needed at all.

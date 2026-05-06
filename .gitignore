@@ -10,5 +10,7 @@ __pycache__/
 
 .claude/session-baseline.txt
 .claude/transcripts/
+.claude/cross-repo-writes-session.txt
+.claude/session.lock
 
 data/
