@@ -52,6 +52,7 @@
 - Each gate requires explicit user approval; gates are independent
 - What/why/how thinking block: before Gate 1, answer what the artifact is, why it is needed, and how it will be built, in the session transcript thinking block
 - Skill self-reference: before claiming any behavior of a DSM skill (`/dsm-go`, `/dsm-wrap-up`, `/dsm-align`, etc.), read `scripts/commands/{skill-name}.md` or `~/.claude/commands/{skill-name}.md`. Do not answer "does skill X do Y?" from memory.
+- Chunked drafting for prose deliverables (per DSM_0.2 §8.10): for project plans, proposals, reports, research papers, blog posts, and similar structured prose, the four gates take a specific shape: Gate 1 confirms purpose / audience / outcome / length / scope; Gate 2 proposes a TOC with per-section length budgets; Gate 3 drafts ONE section at a time with per-section user review and approval before the next; Gate 4 reviews the full assembled document for consistency. Full-file Write at Gate 3 is reserved for final assembly after all sections are individually approved. Triggered by document type, not length.
 
 ### Inbox Lifecycle (reinforces inherited protocol)
 - After processing an inbox entry, move it to `_inbox/done/`
@@ -63,7 +64,7 @@
 - Before suggesting implementation of anything that looks like a plan, verify that a formal BL exists in `dsm-docs/plans/`. If not, route through research → formalize → plan first.
 
 ### Punctuation
-Use "," instead of "—" for connecting phrases in any language. Never use "{word} , {word}" format. The correct format is "{word}, {word}"
+Use "," instead of "—" for connecting phrases in any language.
 
 ### Code Output Standards (reinforces Earn Your Assertions)
 - Show actual values: shapes, metrics, counts, paths
@@ -155,3 +156,10 @@ tests/               # pytest test suite
 ### Domain Context
 
 German residential heating systems. Key domain terms: Heizkennlinie (heating curve), Vorlauftemperatur (flow temperature), Spreizung (temperature spread), hydraulischer Abgleich (hydraulic balancing). Agent must handle bilingual (EN/DE) queries and respond in the user's language.
+
+### Punctuation (project-specific extension)
+
+Reinforces the canonical Punctuation rule with a project-specific lint:
+- Never use `{word} , {word}` format (space before comma). The correct format is `{word}, {word}`.
+
+This rule was added via external linter edit during S13. A proposal to promote it to canonical DSM_0.2 lives in `dsm-docs/feedback-to-dsm/`.

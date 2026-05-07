@@ -1,3 +1,5 @@
+**Pushed:** 2026-05-07 (out-of-band notification at S13 wrap-up)
+
 # Feedback: External-input frame capture (soft prompt injection)
 
 **Date:** 2026-05-07
