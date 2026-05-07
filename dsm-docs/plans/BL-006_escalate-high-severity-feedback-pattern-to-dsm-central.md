@@ -1,6 +1,6 @@
 # BL-006: Escalate the severity-graded ecosystem-feedback propagation pattern to DSM Central
 
-**Status:** Proposed (next session, S14)
+**Status:** In progress (S14 — feedback file drafted at `dsm-docs/feedback-to-dsm/2026-05-07_s14_severity-graded-feedback-propagation.md`, queued for /dsm-wrap-up Step 6 push)
 **Priority:** Medium
 **Date Created:** 2026-05-07
 **Origin:** STAA S13 lesson #6 (severity-graded ecosystem feedback propagation), user direction at /dsm-staa close
