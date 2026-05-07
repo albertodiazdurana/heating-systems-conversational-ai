@@ -9,6 +9,7 @@ Active backlog items and project plans. Completed items move to `done/`.
 |-----|-------|----------|
 | 005 | Blog post on OSS contribution & Take-AI-Bite experience (deferred, trigger-driven) | Low |
 | 006 | Escalate severity-graded ecosystem-feedback propagation pattern to DSM Central (next session) | Medium |
+| 007 | Escalate Voice-Attribution Review protocol to DSM Central (S14) | Medium |
 
 **Closed (see `done/`):**
 
