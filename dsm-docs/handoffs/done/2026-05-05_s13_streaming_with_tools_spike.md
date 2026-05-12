@@ -1,3 +1,6 @@
+**Date Completed:** 2026-05-07
+**Outcome Reference:** Consumed at session 14 start
+
 # S13 Spike: streaming + tool calls (OllamaChatGenerator)
 
 **Date:** 2026-05-06T14:42:21+00:00

@@ -1,7 +1,7 @@
 # BL-005: Blog post on OSS contribution & Take-AI-Bite experience
 
-**Status:** Proposed (deferred, trigger-driven)
-**Priority:** Low (until trigger fires)
+**Status:** Triggered, ready to draft (S14 — `deepset-ai/haystack#11268` merged 2026-05-08T07:57:58Z by @anakin87, merge commit `9e0798aa168ebb287d0cf9191af2b37eb66069f6`)
+**Priority:** Medium (trigger fired)
 **Date Created:** 2026-05-05
 **Origin:** S13 user request after PR #11268 opened
 **Author:** Alberto Diaz-Durana (with AI assistance)
@@ -12,9 +12,9 @@
 
 Activate this BL only when ONE of the following events fires. Until then, do not draft.
 
-- `deepset-ai/haystack-integrations#473` (Tool Calling on Ollama landing page) gets merged.
-- `deepset-ai/haystack#11268` (Streaming with Tools on OllamaChatGenerator reference) gets merged.
-- (Lower-priority trigger) `ollama/ollama-python#663` (tool_choice upstream feature request) gets a maintainer response or labeled action.
+- `deepset-ai/haystack-integrations#473` (Tool Calling on Ollama landing page) gets merged. **Status: still OPEN, REVIEW_REQUIRED, no maintainer activity yet.**
+- ✅ `deepset-ai/haystack#11268` (Streaming with Tools on OllamaChatGenerator reference) gets merged. **FIRED 2026-05-08T07:57:58Z** (merged by @anakin87, merge commit `9e0798aa168ebb287d0cf9191af2b37eb66069f6`).
+- (Lower-priority trigger) `ollama/ollama-python#663` (tool_choice upstream feature request) gets a maintainer response or labeled action. **Status: still OPEN, no maintainer comments yet.**
 
 ## Problem Statement
 

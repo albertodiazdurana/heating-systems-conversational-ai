@@ -149,3 +149,70 @@ plan-side machinery fire. The plan is a useful constraint and a
 useful prompt, but it cannot diagnose. Three failures in a small
 testset is twelve minutes of reading, and twelve minutes is enough to
 change which escalation is correct, or whether one is needed at all.
+
+### [2026-05-08] Investigation-first: how a code gap became a docs gap
+
+@anakin87 wrote "Thank you!" and merged at 07:57 UTC on 2026-05-08
+(merge commit `9e0798aa`). Six days from issue file (2026-05-02) to
+merge: a small docs PR, but the path it took says more about how to
+contribute than the patch itself.
+
+How the lifecycle ran. Filed
+`deepset-ai/haystack-core-integrations#3263` describing what I thought
+was a missing streaming-with-tools capability in Haystack's Ollama
+chat generator. Three days later a maintainer responded; a couple of
+volunteers offered to take the work. I declined the volunteer offers
+and kept the contribution. Two PRs followed,
+`deepset-ai/haystack-integrations#473` (the landing-page tool-calling
+example) and `deepset-ai/haystack#11268` (the
+`OllamaChatGenerator` reference section). One upstream issue,
+`ollama/ollama-python#663`, peeled off because it belonged in
+ollama-python, not in Haystack. Today PR #11268 merged; #473 and
+ollama-python#663 are still open.
+
+Two things changed during the work. The original framing was "Haystack
+is missing a feature." Reading
+`haystack-core-integrations/integrations/ollama/.../chat_generator.py`
+end-to-end, about 697 lines, showed the capability already worked at
+runtime; what was missing was the example that lets a reader know
+that. The "missing feature" collapsed into a missing documentation
+section. The second reframe came when I drafted the issue body and
+ran the example before filing: a plausible-looking
+`Tool.from_function` call (taken from a memory of older docs) raised
+on import, the real symbol is `create_tool_from_function`. Catching
+that pre-flight took two minutes; filing it would have cost a public
+correction. PR discipline followed the same shape, one example per
+PR, deferred follow-ups (multi-tool variants, async, non-chat
+generator coverage) kept out of scope. A separate Definition-of-Ready
+audit, prompted by an end-of-session question, caught a missing
+release note and an untemplated PR body before the maintainer's first
+read.
+
+Three repos, three reviewer dynamics. haystack-integrations#473 sits
+quiet, no review yet. haystack#11268 saw an engaged maintainer who
+left targeted review comments (remove the release note for a docs
+change, drop a redundant tip section, copy the new section to the
+2.28 versioned docs) and merged about a day later when I had
+addressed them. ollama-python#663 stays open with no comments, as
+expected for an upstream feature request without a sponsor. The same
+contribution touched three review styles, three fork ergonomics,
+three response cadences, and the only way to know which is which is
+to be in all three at once.
+
+Investigation-first, as credibility. Both of the reframes above came
+from reading, not from speculation. The "code gap" became a "docs
+gap" because the chat-generator source was already wired for tools
+and streaming; the "Haystack PR" became an upstream issue because
+`tool_choice` is a request-shape ollama-python doesn't currently
+forward, not a Haystack-level omission. Filing either contribution
+against the wrong target would have been wasted maintainer attention.
+Filing both against the right target turned a one-line idea into a
+small, well-scoped pipeline.
+
+What I'd take into the next contribution. The artifact that matters
+is the investigation, not the patch. The patch is small,
+~50 lines of docs, ~10 minutes to write. The investigation, reading
+the chat-generator source, running the example pre-flight, drafting
+and verifying the behavioral claim against six adversarial prompts,
+is what makes the patch land cleanly in six days instead of bouncing
+through review for two weeks.

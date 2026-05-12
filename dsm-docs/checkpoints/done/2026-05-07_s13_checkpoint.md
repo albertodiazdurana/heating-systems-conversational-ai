@@ -1,3 +1,5 @@
+**Consumed at:** Session 14 start (2026-05-07)
+
 # Session 13 Checkpoint
 **Date:** 2026-05-07 (initial wrap-up + post-wrap-up amendments same day)
 **Branch:** main (session branch + 2 chore branches merged + deleted)
