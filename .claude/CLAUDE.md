@@ -64,7 +64,7 @@
 - Before suggesting implementation of anything that looks like a plan, verify that a formal BL exists in `dsm-docs/plans/`. If not, route through research → formalize → plan first.
 
 ### Punctuation
-Use "," instead of "—" for connecting phrases in any language.
+Use ", " instead of " — " for connecting phrases in any language.
 
 ### Code Output Standards (reinforces Earn Your Assertions)
 - Show actual values: shapes, metrics, counts, paths

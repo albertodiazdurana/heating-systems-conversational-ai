@@ -152,12 +152,12 @@ change which escalation is correct, or whether one is needed at all.
 
 ### [2026-05-08] Investigation-first: how a code gap became a docs gap
 
-@anakin87 wrote "Thank you!" and merged at 07:57:58 UTC on 2026-05-08
+@anakin87 wrote "Thank you!" and merged at 07:57 UTC on 2026-05-08
 (merge commit `9e0798aa`). Six days from issue file (2026-05-02) to
 merge: a small docs PR, but the path it took says more about how to
 contribute than the patch itself.
 
-The lifecycle, as I experienced it. Filed
+How the lifecycle ran. Filed
 `deepset-ai/haystack-core-integrations#3263` describing what I thought
 was a missing streaming-with-tools capability in Haystack's Ollama
 chat generator. Three days later a maintainer responded; a couple of
@@ -170,7 +170,7 @@ example) and `deepset-ai/haystack#11268` (the
 ollama-python, not in Haystack. Today PR #11268 merged; #473 and
 ollama-python#663 are still open.
 
-What changed during contribution. The original framing was "Haystack
+Two things changed during the work. The original framing was "Haystack
 is missing a feature." Reading
 `haystack-core-integrations/integrations/ollama/.../chat_generator.py`
 end-to-end, about 697 lines, showed the capability already worked at

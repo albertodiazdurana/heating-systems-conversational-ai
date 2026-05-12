@@ -9,5 +9,6 @@ This file is gitignored and instance-specific.
 |------|------|-------------|--------|
 | dsm-central | ~/dsm-agentic-ai-data-science-methodology | Hub repository | - |
 | portfolio | ~/dsm-data-science-portfolio-working-folder | Portfolio project for README change notifications | - |
+| blog-poster | ~/dsm-blog-poster | Blog automation spoke project, receives notifications for blog-worthy events | - |
 | heating-guide | /home/berto/_projects/dsm-residential-heating-ds-guide | Knowledge base source (read-only, ~5,800 lines) | - |
 | heating-apps | /home/berto/_projects/dsm-residential-energy-apps | Companion Streamlit app, deterministic tool source | - |

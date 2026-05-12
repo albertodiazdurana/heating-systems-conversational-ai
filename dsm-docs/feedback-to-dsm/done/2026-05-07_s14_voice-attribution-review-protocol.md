@@ -1,3 +1,5 @@
+**Pushed:** 2026-05-12 (Step 6 inbox push)
+
 # Voice-Attribution Review Protocol
 
 **Type:** Backlog Proposal
